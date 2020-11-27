@@ -3,7 +3,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY . .
 RUN npm install
-RUN npm build
+RUN npm run build
 
 FROM pierrezemb/gostatic
 COPY --from=builder /app/dist/. /srv/http/.
