@@ -1,2 +1,3 @@
-# SpaceXSite
-A site for SpaceX info (for learning Go + React + Other JS stuff)
+# SpaceXInfo
+
+A site for SpaceX info, mainly built to learn React + Parcel + SASS + Other JS stuff
