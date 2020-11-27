@@ -7,6 +7,9 @@ RUN npm run build
 
 FROM pierrezemb/gostatic
 COPY --from=builder /app/dist/. /srv/http/.
-
-# From GoStatic docs
 EXPOSE 8043
+
+# Basically the same as GoStatic
+#docker run -d --name spacexinfo --restart unless-stopped \
+#    -p 80:8043 \
+#    psidex/spacexinfo
