@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Timer from './Timer';
+import Countdown from './Countdown';
 
 export default function Launch() {
     const [error, setError] = useState(null);
@@ -24,8 +24,7 @@ export default function Launch() {
     if (error) {
         return (
             <div>
-                Error:
-                {error.message}
+                {`Error: ${error.message}`}
             </div>
         );
     } if (!isLoaded) {
@@ -41,7 +40,10 @@ export default function Launch() {
         <div>
             <h1>{nextLaunch.name}</h1>
             {img}
-            <Timer futureDate={Date.parse(nextLaunch.date_utc)} />
+            <div className="inline">
+                <p>Launching in </p>
+                <Countdown futureDate={Date.parse(nextLaunch.date_utc)} />
+            </div>
             <p>{nextLaunch.details}</p>
         </div>
     );

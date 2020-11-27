@@ -15,7 +15,7 @@ function howFarFromNow(futureDate) {
     };
 }
 
-export default function Timer(props) {
+export default function Countdown(props) {
     const [time, setTime] = useState({
         days: 0, hours: 0, mins: 0, secs: 0,
     });
@@ -30,7 +30,7 @@ export default function Timer(props) {
 
     return (
         <p>
-            {`${time.days} days : ${time.hours} hours : ${time.mins} minutes : ${time.secs} seconds`}
+            {`${time.days} days, ${time.hours} hours, ${time.mins} minutes, ${time.secs} seconds`}
         </p>
     );
 }
