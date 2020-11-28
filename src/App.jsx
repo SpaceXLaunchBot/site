@@ -38,10 +38,8 @@ export default function App() {
         return <div>Loading...</div>;
     }
 
-    return (
-        <div>
-            <NumberCarousel number={launchInfo.flight_number} setNumber={setLaunchNum} />
-            <Launch launchInfo={launchInfo} />
-        </div>
-    );
+    return [
+        <NumberCarousel number={launchInfo.flight_number} setNumber={setLaunchNum} />,
+        <Launch launchInfo={launchInfo} />,
+    ];
 }

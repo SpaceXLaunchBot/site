@@ -6,10 +6,11 @@ export default function Countdown(props) {
     const { futureMoment } = props;
 
     useEffect(() => {
-        setDiffDuration(moment.duration(futureMoment.diff(moment())));
+        const setNow = () => setDiffDuration(moment.duration(futureMoment.diff(moment())));
+        setNow();
 
         const loop = setInterval(() => {
-            setDiffDuration(moment.duration(futureMoment.diff(moment())));
+            setNow();
         }, 1000);
 
         return function cleanup() {

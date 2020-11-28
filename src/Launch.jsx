@@ -10,14 +10,14 @@ export default function Launch(props) {
 
     let date;
     if (alreadyLaunched) {
-        date = <p>insert nice date words here</p>;
+        date = <p>{launchMoment.format('MMM. D, YYYY [at] h:mm A z')}</p>;
     } else {
         date = <Countdown futureMoment={launchMoment} />;
     }
 
     let img;
     if (launchInfo.links.patch.small !== null) {
-        img = <img src={launchInfo.links.patch.small} alt={`${launchInfo.name} mission patch`} />;
+        img = <img src={launchInfo.links.patch.small} className="launchPatch" alt={`${launchInfo.name} mission patch`} />;
     }
 
     return (
@@ -25,7 +25,7 @@ export default function Launch(props) {
             <h1>{launchInfo.name}</h1>
             {img}
             <div className="inline">
-                <p>{alreadyLaunched ? 'Launched at ' : 'Launching in '}</p>
+                <p>{alreadyLaunched ? 'Launched on ' : 'Launching in '}</p>
                 {date}
             </div>
             <p>{launchInfo.details}</p>
