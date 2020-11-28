@@ -1,50 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import moment from 'moment';
 import Countdown from './Countdown';
 
-export default function Launch() {
-    const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [nextLaunch, setNextLaunch] = useState({});
+export default function Launch(props) {
+    const { launchInfo } = props;
 
-    useEffect(() => {
-        fetch('https://api.spacexdata.com/v4/launches/next')
-            .then((res) => res.json())
-            .then(
-                (json) => {
-                    setNextLaunch(json);
-                    setIsLoaded(true);
-                },
-                (e) => {
-                    setIsLoaded(true);
-                    setError(e);
-                },
-            );
-    }, []);
+    const alreadyLaunched = launchInfo.date_unix <= Math.floor(Date.now() / 1000);
+    const launchMoment = moment(launchInfo.date_utc);
 
-    if (error) {
-        return (
-            <div>
-                {`Error: ${error.message}`}
-            </div>
-        );
-    } if (!isLoaded) {
-        return <div>Loading...</div>;
+    let date;
+    if (alreadyLaunched) {
+        date = <p>insert nice date words here</p>;
+    } else {
+        date = <Countdown futureMoment={launchMoment} />;
     }
 
     let img;
-    if (nextLaunch.links.patch.small !== null) {
-        img = <img src={nextLaunch.links.patch.small} alt={`${nextLaunch.name} mission patch`} />;
+    if (launchInfo.links.patch.small !== null) {
+        img = <img src={launchInfo.links.patch.small} alt={`${launchInfo.name} mission patch`} />;
     }
 
     return (
         <div>
-            <h1>{nextLaunch.name}</h1>
+            <h1>{launchInfo.name}</h1>
             {img}
             <div className="inline">
-                <p>Launching in </p>
-                <Countdown futureDate={Date.parse(nextLaunch.date_utc)} />
+                <p>{alreadyLaunched ? 'Launched at ' : 'Launching in '}</p>
+                {date}
             </div>
-            <p>{nextLaunch.details}</p>
+            <p>{launchInfo.details}</p>
         </div>
     );
 }
