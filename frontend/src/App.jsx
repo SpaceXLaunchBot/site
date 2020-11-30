@@ -1,32 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import './App.sass';
 import Launch from './Launch';
-import NumberCarousel from './NumberCarousel';
-import { GetLaunch, GetNextLaunch } from './SpaceX';
+import GetNextLaunch from './SpaceX';
 
 export default function App() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [launchInfo, setLaunchInfo] = useState({});
-    const [launchNum, setLaunchNum] = useState(0);
 
     useEffect(() => {
-        let dataPromise;
-        if (launchNum > 0) {
-            dataPromise = GetLaunch(launchNum);
-        } else {
-            dataPromise = GetNextLaunch();
-        }
-        dataPromise
+        GetNextLaunch()
             .then((json) => {
                 if (json === {}) {
-                    setError('API request failed');
+                    setError({ message: 'SpaceX API request failed' });
                 } else {
                     setLaunchInfo(json);
                 }
                 setIsLoaded(true);
             });
-    }, [launchNum]);
+    }, []);
 
     if (error) {
         return (
@@ -39,7 +31,6 @@ export default function App() {
     }
 
     return [
-        <NumberCarousel number={launchInfo.flight_number} setNumber={setLaunchNum} />,
         <Launch launchInfo={launchInfo} />,
     ];
 }

@@ -1,13 +1,15 @@
 name: CI
 
+# TODO: Re-enable this on GitHub when Dockerfile is in working order.
+
 on:
   push:
     branches: [ main ]
     paths:
       - 'Dockerfile'
-      - 'package.json'
-      - 'src/**'
-      - '.github/workflows/*.yml'
+      - 'frontend/**'
+      - 'server/**'
+      - '.github/workflows/**'
 
 jobs:
   build:
