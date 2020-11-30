@@ -10,6 +10,6 @@ COPY --from=builder /app/dist/. /srv/http/.
 EXPOSE 8043
 
 # Basically the same as GoStatic
-#docker run -d --name spacexinfo --restart unless-stopped \
+#docker run -d --name spacexlaunchbotsite --restart unless-stopped \
 #    -p 80:8043 \
-#    psidex/spacexinfo
+#    psidex/spacexlaunchbotsite

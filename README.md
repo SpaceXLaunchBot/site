@@ -1,6 +1,6 @@
-# SpaceXInfo
+# SpaceX Launch Bot Site
 
-A site for SpaceX info, mainly built to learn React + Parcel + SASS + Other JS stuff
+A website for [SpaceXLaunchBot](https://github.com/r-spacex/SpaceXLaunchBot), mainly built to learn React + Parcel + SASS + Other JS stuff
 
 ## Credits
 
