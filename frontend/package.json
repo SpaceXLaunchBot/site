@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "parcel src/index.html --open",
-    "build": "parcel build src/index.html",
+    "build": "parcel build src/index.html --out-dir static",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

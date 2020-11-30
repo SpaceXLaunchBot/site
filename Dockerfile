@@ -5,8 +5,10 @@ COPY frontend .
 RUN npm install
 RUN npm run build
 
+#EXPOSE 8080
+
 # TODO:
 #   - Build server
-#   - Move frontend to where server can serve
+#   - Move frontend to static dir that server can serve
 #   - Run server
 #   - How to integrate with seperate db container?
