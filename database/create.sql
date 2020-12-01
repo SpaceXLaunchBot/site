@@ -8,14 +8,10 @@ CREATE TABLE guild (
     guild_name text
 );
 
-CREATE TABLE channel (
-    channel_id text primary key,
-    channel_name text,
-    guild_id text references guild
-);
-
 CREATE TABLE subscribed_channels (
-    channel_id text primary key references channel,
+    channel_id text primary key,
+    guild_id text references guild,
+    channel_name text,
     notification_type notification,
     launch_mentions text
 );

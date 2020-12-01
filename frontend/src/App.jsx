@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.sass';
 import Launch from './Launch';
 import GetNextLaunch from './SpaceX';
+import Login from './Login';
 
 export default function App() {
     const [error, setError] = useState(null);
@@ -32,5 +33,6 @@ export default function App() {
 
     return [
         <Launch launchInfo={launchInfo} />,
+        <Login />,
     ];
 }

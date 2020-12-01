@@ -11,4 +11,4 @@ RUN npm run build
 #   - Build server
 #   - Move frontend to static dir that server can serve
 #   - Run server
-#   - How to integrate with seperate db container?
+#   - How to integrate with seperate database container?
