@@ -1,5 +1,5 @@
 export default function GetGuildsWithSubscribed(token) {
-    fetch('/api/guildswithsubscribed', {
+    return fetch('/api/guildswithsubscribed', {
         method: 'GET',
         headers: {
             'Discord-Bearer-Token': token,

@@ -32,7 +32,7 @@ export default function App() {
     }
 
     return [
-        <Launch launchInfo={launchInfo} />,
-        <Login />,
+        <Launch key={0} launchInfo={launchInfo} />,
+        <Login key={1} />,
     ];
 }
