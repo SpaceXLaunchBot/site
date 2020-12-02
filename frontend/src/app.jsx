@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import './App.sass';
-import Launch from './Launch';
-import GetNextLaunch from './SpaceX';
-import Login from './Login';
+import './app.sass';
+import { ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Launch from './components/launch';
+import GetNextLaunch from './spacexapi/nextlaunch';
+import Login from './components/login';
+import theme from './theme';
+import BotSettings from './components/botsettings';
 
 export default function App() {
     const [error, setError] = useState(null);
@@ -31,8 +35,11 @@ export default function App() {
         return <div>Loading...</div>;
     }
 
-    return [
-        <Launch key={0} launchInfo={launchInfo} />,
-        <Login key={1} />,
-    ];
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Launch launchInfo={launchInfo} />
+            <BotSettings />
+        </ThemeProvider>
+    );
 }

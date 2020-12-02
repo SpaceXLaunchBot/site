@@ -18,11 +18,10 @@ func NewApi(d database.Db) Api {
 	return Api{d: d}
 }
 
-// guildDetails is the API response that contains information about guilds and subscribed channels for a user.
+// guildDetails is part of the API response for GuildsWithSubscribed and holds information about a guild.
 type guildDetails struct {
-	Name               string             `json:"name"`
-	ID                 string             `json:"id"`
-	SubscribedChannels []database.Channel `json:"subscribed_channels"`
+	Name               string                       `json:"name"`
+	SubscribedChannels []database.SubscribedChannel `json:"subscribed_channels"`
 }
 
 // GuildsWithSubscribed takes a discord oauth token and returns a list of information about guilds and channels that
@@ -40,19 +39,34 @@ func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// For each admin guild, get channels that are subbed for that guild.
-	var details []guildDetails
+	var adminGuilds []string
+	adminGuildNames := make(map[string]string)
+
 	for _, guild := range guilds {
 		// Admin is 0x00000008: https://discord.com/developers/docs/topics/permissions
 		if 8&guild.Permissions != 0 {
-			// TODO: What happens if err?
-			subbed, _ := a.d.SubscribedChannels(guild.ID)
-			if len(subbed) > 0 {
-				details = append(details, guildDetails{
-					Name:               guild.Name,
-					ID:                 guild.ID,
-					SubscribedChannels: subbed,
-				})
+			adminGuilds = append(adminGuilds, guild.ID)
+			adminGuildNames[guild.ID] = guild.Name
+		}
+	}
+
+	// What will become out API response, {guild id : guild details}.
+	details := make(map[string]*guildDetails)
+
+	// TODO: Actually inform client of err instead of doing nothing. Check other errs as well.
+	subbedChannels, err := a.d.SubscribedChannels(adminGuilds)
+	if err != nil {
+		log.Printf("SubscribedChannels(adminGuilds) failed: %s", err)
+		return
+	}
+
+	for _, channel := range subbedChannels {
+		if d, ok := details[channel.GuildId]; ok {
+			d.SubscribedChannels = append(d.SubscribedChannels, channel)
+		} else {
+			details[channel.GuildId] = &guildDetails{
+				Name:               adminGuildNames[channel.GuildId],
+				SubscribedChannels: []database.SubscribedChannel{channel},
 			}
 		}
 	}

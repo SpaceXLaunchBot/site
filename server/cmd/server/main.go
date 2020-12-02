@@ -12,10 +12,14 @@ import (
 func main() {
 	c, err := config.Get()
 	if err != nil {
-		log.Fatalf("Config error: %s", err)
+		log.Fatalf("config.Get error: %s", err)
 	}
 
-	db := database.NewDb(c)
+	db, err := database.NewDb(c)
+	if err != nil {
+		log.Fatalf("database.NewDb error: %s", err)
+	}
+
 	a := api.NewApi(db)
 
 	router := mux.NewRouter().StrictSlash(true)
