@@ -30,6 +30,7 @@ func Get() (Config, error) {
 	}
 
 	log.Println("Configuration loaded")
+	log.Printf("db_user: %s", config.DbUser)
 	log.Printf("db_host: %s", config.DbHost)
 	log.Printf("db_name: %s", config.DbName)
 

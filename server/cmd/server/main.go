@@ -21,13 +21,14 @@ func main() {
 	}
 
 	a := api.NewApi(db)
+	r := mux.NewRouter().StrictSlash(true)
 
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/api/guildswithsubscribed", a.GuildsWithSubscribed)
+	r.HandleFunc("/api/guildswithsubscribed", a.GuildsWithSubscribed).Methods("GET")
+	r.HandleFunc("/api/updatesubscribedchannel", a.UpdateSubscribedChannel).Methods("POST")
 
 	// Make sure the working directory has /static in it!
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 
 	log.Println("Serving http on all available interfaces @ port 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }

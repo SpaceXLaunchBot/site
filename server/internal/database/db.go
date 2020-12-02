@@ -54,3 +54,12 @@ func (d Db) SubscribedChannels(guildIds []string) ([]SubscribedChannel, error) {
 	}
 	return channels, nil
 }
+
+// UpdateSubscribedChannels sets the notification type and launch mentions for a given channel ID.
+func (d Db) UpdateSubscribedChannels(channelId, NotificationType string, LaunchMentions sql.NullString) error {
+	const query = `
+		UPDATE subscribed_channels SET (notification_type, launch_mentions) = ($1, $2)
+		WHERE channel_id = $3;`
+	_, err := d.db.Exec(query, NotificationType, LaunchMentions, channelId)
+	return err
+}

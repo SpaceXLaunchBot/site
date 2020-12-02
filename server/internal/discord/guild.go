@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 )
 
-// Guild represents information about a Discord guild.
+// Guild represents information about a DiscordClient guild that a user is in.
 type Guild struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
@@ -13,6 +13,12 @@ type Guild struct {
 	//Owner          bool     `json:"owner"`
 	//Features       []string `json:"features"`
 	//PermissionsNew string   `json:"permissions_new"`
+}
+
+// HasAdminPerms determines if the user has admin permissions in the guild.
+func (g Guild) HasAdminPerms() bool {
+	// Admin is 0x00000008: https://discord.com/developers/docs/topics/permissions
+	return 8&g.Permissions != 0
 }
 
 // GuildList represents a list of Guilds.
