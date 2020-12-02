@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-    Grid, FormControl, FormLabel, TextField, Radio, RadioGroup, FormControlLabel,
+    Grid, FormControl, IconButton, TextField, Radio, RadioGroup, FormControlLabel, Button,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import Icon from '@material-ui/core/Icon';
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         marginBottom: '1em', // space at bottom when screen width is small
         marginLeft: '0.5em',
+        marginRight: '0.5em',
         '& label.Mui-focused': {
             color: theme.palette.text.primary,
         },
@@ -43,7 +45,7 @@ export default function Channel(props) {
                 <h3>{info.name}</h3>
             </Grid>
             <FormControl component="fieldset">
-                <RadioGroup row name="subscription-type">
+                <RadioGroup row name="subscription-type" defaultValue={info.notification_type}>
                     <FormControlLabel classes={{ root: classes.radioButton }} labelPlacement="top" value="all" control={<Radio />} label="All" />
                     <FormControlLabel classes={{ root: classes.radioButton }} labelPlacement="top" value="schedule" control={<Radio />} label="Schedule" />
                     <FormControlLabel classes={{ root: classes.radioButton }} labelPlacement="top" value="launch" control={<Radio />} label="Launch" />
@@ -56,7 +58,18 @@ export default function Channel(props) {
                 }}
                 id="standard-basic"
                 label="Launch Mentions"
+                defaultValue={info.launch_mentions.String}
             />
+            <IconButton
+                color="secondary"
+            >
+                <Icon>save</Icon>
+            </IconButton>
+            <IconButton
+                color="secondary"
+            >
+                <Icon>delete</Icon>
+            </IconButton>
         </Grid>
     );
 }
