@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/psidex/SpaceXLaunchBotSite/internal/database"
 	"github.com/psidex/SpaceXLaunchBotSite/internal/discord"
 	"log"
@@ -21,6 +22,7 @@ func NewApi(d database.Db) Api {
 // guildDetails is part of the API response for GuildsWithSubscribed and holds information about a guild.
 type guildDetails struct {
 	Name               string                       `json:"name"`
+	Icon               string                       `json:"icon"`
 	SubscribedChannels []database.SubscribedChannel `json:"subscribed_channels"`
 }
 
@@ -41,12 +43,16 @@ func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
 
 	var adminGuilds []string
 	adminGuildNames := make(map[string]string)
+	adminGuildIcons := make(map[string]string)
 
 	for _, guild := range guilds {
 		// Admin is 0x00000008: https://discord.com/developers/docs/topics/permissions
 		if 8&guild.Permissions != 0 {
 			adminGuilds = append(adminGuilds, guild.ID)
 			adminGuildNames[guild.ID] = guild.Name
+
+			iconUrl := fmt.Sprintf("https://cdn.discordapp.com/icons/%s/%s.png", guild.ID, guild.Icon)
+			adminGuildIcons[guild.ID] = iconUrl
 		}
 	}
 
@@ -66,6 +72,7 @@ func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
 		} else {
 			details[channel.GuildId] = &guildDetails{
 				Name:               adminGuildNames[channel.GuildId],
+				Icon:               adminGuildIcons[channel.GuildId],
 				SubscribedChannels: []database.SubscribedChannel{channel},
 			}
 		}
