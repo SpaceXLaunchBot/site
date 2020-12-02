@@ -49,6 +49,13 @@ func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if len(adminGuilds) == 0 {
+		// I think this is the right status code for this sort of error.
+		w.WriteHeader(http.StatusConflict)
+		_ = json.NewEncoder(w).Encode(apiError{Error: "you do not have admin permissions in any guilds"})
+		return
+	}
+
 	// What will become out API response, {guild id : guild details}.
 	details := make(map[string]*guildDetails)
 
@@ -58,6 +65,11 @@ func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
 		//  They also probably won't be user friendly.
 		w.WriteHeader(http.StatusInternalServerError)
 		_ = json.NewEncoder(w).Encode(apiError{Error: err.Error()})
+		return
+	}
+	if len(subbedChannels) == 0 {
+		w.WriteHeader(http.StatusConflict)
+		_ = json.NewEncoder(w).Encode(apiError{Error: "you do not have any subscribed channels in guilds that you administrate"})
 		return
 	}
 
