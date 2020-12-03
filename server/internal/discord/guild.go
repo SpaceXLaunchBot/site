@@ -25,9 +25,16 @@ func (g Guild) HasAdminPerms() bool {
 type GuildList []Guild
 
 // GetGuildList returns a GuildList of guilds that the user of the token is in.
-func GetGuildList(bearerToken string) (GuildList, error) {
+// Uses a cache.TimedCache to cache responses from the Discord API.
+func (c Client) GetGuildList(bearerToken string) (GuildList, error) {
+	if cached, ok := c.guildListCache.Get(bearerToken); ok {
+		if cv, ok := cached.(GuildList); ok {
+			return cv, nil
+		} // else continue with function
+	}
+
 	endpoint := "/users/@me/guilds"
-	body, err := apiRequest(endpoint, bearerToken)
+	body, err := c.apiRequest(endpoint, bearerToken)
 	if err != nil {
 		return GuildList{}, err
 	}
@@ -36,5 +43,7 @@ func GetGuildList(bearerToken string) (GuildList, error) {
 	if err = json.Unmarshal(body, &guildList); err != nil {
 		return GuildList{}, err
 	}
+
+	c.guildListCache.Set(bearerToken, guildList)
 	return guildList, nil
 }

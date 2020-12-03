@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/psidex/SpaceXLaunchBotSite/internal/database"
-	"github.com/psidex/SpaceXLaunchBotSite/internal/discord"
 	"log"
 	"net/http"
 )
@@ -28,7 +27,7 @@ func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	guilds, err := discord.GetGuildList(token)
+	guilds, err := a.discordClient.GetGuildList(token)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_ = json.NewEncoder(w).Encode(apiError{Error: err.Error()})

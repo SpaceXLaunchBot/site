@@ -5,8 +5,10 @@ import (
 	"github.com/psidex/SpaceXLaunchBotSite/internal/api"
 	"github.com/psidex/SpaceXLaunchBotSite/internal/config"
 	"github.com/psidex/SpaceXLaunchBotSite/internal/database"
+	"github.com/psidex/SpaceXLaunchBotSite/internal/discord"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -20,7 +22,8 @@ func main() {
 		log.Fatalf("database.NewDb error: %s", err)
 	}
 
-	a := api.NewApi(db)
+	d := discord.NewClient(time.Second*10, time.Second*10)
+	a := api.NewApi(db, d)
 	r := mux.NewRouter().StrictSlash(true)
 
 	r.HandleFunc("/api/guildswithsubscribed", a.GuildsWithSubscribed).Methods("GET")
