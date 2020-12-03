@@ -21,8 +21,12 @@ var ErrRateLimit = errors.New("hit Discord API rate limit, try again in a few se
 
 // Client contains methods for interacting with the Discord API.
 type Client struct {
-	httpClient     *http.Client
-	guildListCache *cache.TimedCache // Each endpoint has it's own rate limits so have caches for each endpoint.
+	httpClient *http.Client
+	// Each endpoint has it's own rate limits so have caches for each endpoint.
+	// This does mean that the data could be out of date by the lifespan of the cache, e.g. if a user is no longer an
+	// admin they might still be able to make changes, but I think that's unlikely and also a fine tradeoff for not
+	// getting banned from the Discord API for hitting it's rate limit.
+	guildListCache *cache.TimedCache
 }
 
 // NewClient creates a new Client.
