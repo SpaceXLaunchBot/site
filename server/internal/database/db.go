@@ -6,15 +6,16 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/psidex/SpaceXLaunchBotSite/internal/config"
+	"strings"
 )
 
-// SubscribedChannel represents a subscribed channel from the database. Can be marshaled to json (GuildId won't be).
+// SubscribedChannel represents a subscribed channel from the database.
 type SubscribedChannel struct {
-	Id               string         `db:"channel_id" json:"id"`
-	GuildId          string         `db:"guild_id" json:"-"`
-	Name             string         `db:"channel_name" json:"name"`
-	NotificationType string         `db:"notification_type" json:"notification_type"`
-	LaunchMentions   sql.NullString `db:"launch_mentions" json:"launch_mentions"`
+	Id               string         `db:"channel_id"`
+	GuildId          string         `db:"guild_id"`
+	Name             string         `db:"channel_name"`
+	NotificationType string         `db:"notification_type"`
+	LaunchMentions   sql.NullString `db:"launch_mentions"`
 }
 
 // Db represents a connection to the database and provides methods for interacting with it.
@@ -55,11 +56,19 @@ func (d Db) SubscribedChannels(guildIds []string) ([]SubscribedChannel, error) {
 	return channels, nil
 }
 
-// UpdateSubscribedChannels sets the notification type and launch mentions for a given channel ID.
-func (d Db) UpdateSubscribedChannels(channelId, NotificationType string, LaunchMentions sql.NullString) error {
+// UpdateSubscribedChannel sets the notification type and launch mentions for a given channel ID.
+func (d Db) UpdateSubscribedChannel(channelId, notificationType, launchMentions string) (changed bool, err error) {
+	sqlLaunchMentions := sql.NullString{
+		String: launchMentions,
+		Valid:  strings.TrimSpace(launchMentions) != "",
+	}
 	const query = `
 		UPDATE subscribed_channels SET (notification_type, launch_mentions) = ($1, $2)
 		WHERE channel_id = $3;`
-	_, err := d.db.Exec(query, NotificationType, LaunchMentions, channelId)
-	return err
+	res, err := d.db.Exec(query, notificationType, sqlLaunchMentions, channelId)
+	if err != nil {
+		return false, err
+	}
+	num, err := res.RowsAffected()
+	return num > 0, err
 }

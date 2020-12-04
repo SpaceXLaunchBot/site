@@ -5,9 +5,11 @@ import (
 	"github.com/psidex/SpaceXLaunchBotSite/internal/discord"
 )
 
-// apiError is the response when an error happens in an API request. All error messages should be user friendly.
-type apiError struct {
-	Error string `json:"error"`
+// apiResponse is for any generic response we send from the API. All error messages should be user friendly.
+// The default value for bool is false so if you want to return an error you don't need to worry about setting Success.
+type apiResponse struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
 }
 
 // Api contains methods that interface with the database and the Discord API through a REST API.

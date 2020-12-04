@@ -26,6 +26,7 @@ type Client struct {
 	// A cache like this is used so that if a user is spamming refresh or save or whatever, we won't spam the Discord
 	// API and constantly hit a rate limit. This won't save us from hitting the rate limit if we are getting lots of
 	// new different users (i.e. multiple per second), but I think that is unlikely.
+	// TODO: I don't actually know if the above it 100% true, rate limits might also be different per auth token?
 	// This does mean that the data could be out of date by the lifespan of the cache, e.g. if a user is no longer an
 	// admin they might still be able to make changes, but I think that's unlikely and also a fine tradeoff for not
 	// getting banned from the Discord API.
