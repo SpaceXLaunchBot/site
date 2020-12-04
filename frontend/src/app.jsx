@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './app.sass';
-import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Grid } from '@material-ui/core';
+import { ToastProvider } from 'react-toast-notifications';
 import Launch from './components/launch';
 import GetNextLaunch from './spacexapi/nextlaunch';
 import theme from './theme';
@@ -46,22 +47,25 @@ export default function App() {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Grid
-                container
-                direction="row"
-                justify="space-evenly"
-                alignItems="stretch"
-                classes={classes}
-            >
-                <Grid item xs={12} sm={6}>
-                    <Launch launchInfo={launchInfo} />
+        <ToastProvider autoDismiss>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-evenly"
+                    alignItems="stretch"
+                    classes={classes}
+                >
+                    {/* Both take up half a width on larger screens or full width on smaller */}
+                    <Grid item xs={12} sm={6}>
+                        <Launch launchInfo={launchInfo} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <BotSettings />
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <BotSettings />
-                </Grid>
-            </Grid>
-        </ThemeProvider>
+            </ThemeProvider>
+        </ToastProvider>
     );
 }

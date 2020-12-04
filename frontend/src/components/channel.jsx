@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import {
-    Grid, FormControl, IconButton, TextField, Radio, RadioGroup, FormControlLabel, Button,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    Icon,
+    IconButton,
+    Radio,
+    RadioGroup,
+    TextField,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Icon from '@material-ui/core/Icon';
+import { useToasts } from 'react-toast-notifications';
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -31,8 +38,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Channel(props) {
-    const { info } = props;
+    const { info, discordOAuthToken } = props;
+    const [notificationType, setNotificationType] = useState(info.notification_type);
+    const [launchMentions, setLaunchMentions] = useState(info.launch_mentions.String);
+    const { addToast } = useToasts();
     const classes = useStyles();
+
+    const textFieldChanged = (e) => {
+        setLaunchMentions(e.target.value);
+    };
+    const radioChanged = (e) => {
+        setNotificationType(e.target.value);
+    };
+
+    const saveBtnClicked = () => {
+        // Send POST request with discordOAuthToken.
+        addToast(`Saving settings for ${info.name}`, { appearance: 'info' });
+        addToast(`Saved settings for ${info.name}`, { appearance: 'success' });
+        addToast(`Cannot save settings for ${info.name}`, { appearance: 'error' });
+    };
+    const deleteBtnClicked = () => {
+        // Send DELETE request with discordOAuthToken.
+    };
+
     return (
         <Grid
             container
@@ -45,7 +73,7 @@ export default function Channel(props) {
                 <h3>{info.name}</h3>
             </Grid>
             <FormControl component="fieldset">
-                <RadioGroup row name="subscription-type" defaultValue={info.notification_type}>
+                <RadioGroup row name="subscription-type" value={notificationType} onChange={radioChanged}>
                     <FormControlLabel classes={{ root: classes.radioButton }} labelPlacement="top" value="all" control={<Radio />} label="All" />
                     <FormControlLabel classes={{ root: classes.radioButton }} labelPlacement="top" value="schedule" control={<Radio />} label="Schedule" />
                     <FormControlLabel classes={{ root: classes.radioButton }} labelPlacement="top" value="launch" control={<Radio />} label="Launch" />
@@ -53,21 +81,16 @@ export default function Channel(props) {
             </FormControl>
             <TextField
                 classes={{ root: classes.textField }}
-                InputLabelProps={{
-                    classes: { root: classes.inputPlaceholder },
-                }}
+                InputLabelProps={{ classes: { root: classes.inputPlaceholder } }}
                 id="standard-basic"
                 label="Launch Mentions"
-                defaultValue={info.launch_mentions.String}
+                value={launchMentions}
+                onChange={textFieldChanged}
             />
-            <IconButton
-                color="secondary"
-            >
+            <IconButton color="secondary" onClick={saveBtnClicked}>
                 <Icon>save</Icon>
             </IconButton>
-            <IconButton
-                color="secondary"
-            >
+            <IconButton color="secondary" onClick={deleteBtnClicked}>
                 <Icon>delete</Icon>
             </IconButton>
         </Grid>
