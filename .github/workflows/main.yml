@@ -1,14 +1,13 @@
 name: CI
 
-# TODO: Re-enable this on GitHub when Dockerfile is in working order.
-
 on:
   push:
     branches: [ main ]
     paths:
       - 'Dockerfile'
-      - 'frontend/**'
-      - 'server/**'
+      - 'go.*'
+      - 'cmd/**'
+      - 'internal/**'
       - '.github/workflows/**'
 
 jobs:
@@ -33,4 +32,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: psidex/spacexlaunchbotsite:latest
+          tags: psidex/spacexlaunchbot-site-backend:latest

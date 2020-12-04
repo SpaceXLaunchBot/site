@@ -1,5 +1,5 @@
--- CREATE DATABASE spacexlaunchbotsite
--- \c spacexlaunchbotsite
+-- CREATE DATABASE spacexlaunchbot
+-- \c spacexlaunchbot
 
 CREATE TYPE notification AS ENUM ('all', 'schedule', 'launch');
 CREATE TABLE subscribed_channels (
