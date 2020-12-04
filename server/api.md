@@ -26,18 +26,18 @@ This will be returned from any endpoint if an error occurs.
         "icon": "https://cdn.discordapp.com/icons/{discord snowflake}/{discord snowflake}.png",
         "subscribed_channels": [
             {
-            "id": "{discord snowflake}",
-            "name": "Channel Name",
-            "notification_type": "{all|schedule|launch}",
-            "launch_mentions": "mentions"
+            	"id": "{discord snowflake}",
+            	"name": "Channel Name",
+            	"notification_type": "{all|schedule|launch}",
+            	"launch_mentions": "mentions"
             },
             {
-              etc.
+              "etc."
             }
         ]
     },
-    {
-      etc.
+    "etc." {
+      
     }
 }
 ```
