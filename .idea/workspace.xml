@@ -2,40 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f8f801e9-74bc-410c-93c5-0cd191f08991" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/create.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/create.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.eslintrc.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app.sass" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/botsettings.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/channel.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/guild.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/launch.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/login.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/internalapi/guildswithsubscribed.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/spacexapi/nextlaunch.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/theme.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/yarn.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/api.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/cmd/server/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/internal/api/api.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/internal/api/guildswithsubscribed.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/internal/api/updatesubscribedchannel.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/internal/cache/timedcache.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/internal/config/config.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/internal/database/db.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/internal/discord/discord.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/internal/discord/guild.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

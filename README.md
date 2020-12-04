@@ -1,6 +1,6 @@
 # SpaceXLaunchBot Site Backend
 
-This repo contains the webserver written in Go.
+The back-end for the SpaceXLaunchBot site written in Go.
 
 ## Credits
 
