@@ -10,6 +10,7 @@ type Config struct {
 	DbUser string `mapstructure:"db_user"`
 	DbPass string `mapstructure:"db_pass"`
 	DbHost string `mapstructure:"db_host"`
+	DbPort int    `mapstructure:"db_port"`
 	DbName string `mapstructure:"db_name"`
 }
 
@@ -32,6 +33,7 @@ func Get() (Config, error) {
 	log.Println("Configuration loaded")
 	log.Printf("db_user: %s", config.DbUser)
 	log.Printf("db_host: %s", config.DbHost)
+	log.Printf("db_port: %d", config.DbPort)
 	log.Printf("db_name: %s", config.DbName)
 
 	return config, nil

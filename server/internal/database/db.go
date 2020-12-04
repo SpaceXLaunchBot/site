@@ -25,7 +25,10 @@ type Db struct {
 
 // NewDb creates a new Db.
 func NewDb(c config.Config) (Db, error) {
-	conStr := fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable", c.DbUser, c.DbPass, c.DbHost, c.DbName)
+	conStr := fmt.Sprintf(
+		"postgresql://%s:%s@%s:%d/%s?sslmode=disable",
+		c.DbUser, c.DbPass, c.DbHost, c.DbPort, c.DbName,
+	)
 	db, err := sqlx.Connect("postgres", conStr)
 	if err != nil {
 		return Db{}, err
