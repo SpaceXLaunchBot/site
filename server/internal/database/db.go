@@ -57,15 +57,16 @@ func (d Db) SubscribedChannels(guildIds []string) ([]SubscribedChannel, error) {
 }
 
 // UpdateSubscribedChannel sets the notification type and launch mentions for a given channel ID.
-func (d Db) UpdateSubscribedChannel(channelId, notificationType, launchMentions string) (changed bool, err error) {
+// guildId is required to ensure that the channel exists in that guild.
+func (d Db) UpdateSubscribedChannel(channelId, guildId, notificationType, launchMentions string) (changed bool, err error) {
 	sqlLaunchMentions := sql.NullString{
 		String: launchMentions,
 		Valid:  strings.TrimSpace(launchMentions) != "",
 	}
 	const query = `
 		UPDATE subscribed_channels SET (notification_type, launch_mentions) = ($1, $2)
-		WHERE channel_id = $3;`
-	res, err := d.db.Exec(query, notificationType, sqlLaunchMentions, channelId)
+		WHERE channel_id = $3 AND guild_id = $4;`
+	res, err := d.db.Exec(query, notificationType, sqlLaunchMentions, channelId, guildId)
 	if err != nil {
 		return false, err
 	}

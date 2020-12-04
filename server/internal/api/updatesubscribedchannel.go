@@ -50,8 +50,11 @@ func (a Api) UpdateSubscribedChannel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// NOTE: The guild ID is required here to prevent someone passing the above checks (i.e. they are an admin in the
+	//  provided guild) and then being able to edit a channel from another guild.
 	changed, err := a.db.UpdateSubscribedChannel(
 		requestedUpdate.ID,
+		requestedUpdate.GuildID,
 		requestedUpdate.NotificationType,
 		requestedUpdate.LaunchMentions,
 	)

@@ -22,7 +22,7 @@ var ErrRateLimit = errors.New("hit Discord API rate limit, try again in a few se
 // Client contains methods for interacting with the Discord API.
 type Client struct {
 	httpClient *http.Client
-	// Note: Each Discord API endpoint has it's own rate limits so have caches for each endpoint.
+	// NOTE: Each Discord API endpoint has it's own rate limits so have caches for each endpoint.
 	// A cache like this is used so that if a user is spamming refresh or save or whatever, we won't spam the Discord
 	// API and constantly hit a rate limit. This won't save us from hitting the rate limit if we are getting lots of
 	// new different users (i.e. multiple per second), but I think that is unlikely.
@@ -55,7 +55,7 @@ func (c Client) apiRequest(endpoint, bearerToken string) ([]byte, error) {
 
 	res, err := c.httpClient.Do(req)
 	if err != nil {
-		return []byte{}, errors.New(fmt.Sprintf("request to Discord API failed: %s", err))
+		return []byte{}, err
 	}
 
 	if res.StatusCode == 401 {
