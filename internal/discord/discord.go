@@ -3,7 +3,7 @@ package discord
 import (
 	"errors"
 	"fmt"
-	"github.com/psidex/SpaceXLaunchBotSite/internal/cache"
+	"github.com/SpaceXLaunchBot/site-backend/internal/cache"
 	"io/ioutil"
 	"net/http"
 	"net/url"

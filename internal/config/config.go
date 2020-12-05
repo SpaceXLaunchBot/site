@@ -7,17 +7,25 @@ import (
 
 // Config contains the application configuration, to be unmarshalled into by Viper.
 type Config struct {
-	DbUser string `mapstructure:"db_user"`
-	DbPass string `mapstructure:"db_pass"`
-	DbHost string `mapstructure:"db_host"`
-	DbPort int    `mapstructure:"db_port"`
-	DbName string `mapstructure:"db_name"`
+	DbHost string `mapstructure:"SLB_DB_HOST"`
+	DbPort int    `mapstructure:"SLB_DB_PORT"`
+	DbUser string `mapstructure:"POSTGRES_USER"`
+	DbPass string `mapstructure:"POSTGRES_PASSWORD"`
+	DbName string `mapstructure:"POSTGRES_DB"`
 }
 
-// Get looks for and read any config file found into the Config struct.
+// Get looks in ./config.env and environment variables for needed values.
 func Get() (Config, error) {
 	viper.SetConfigName("config")
+	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
+
+	viper.SetDefault("SLB_DB_HOST", "localhost")
+	viper.SetDefault("SLB_DB_PORT", 5432)
+	viper.SetDefault("POSTGRES_USER", "slb")
+	viper.SetDefault("POSTGRES_DB", "spacexlaunchbot")
+
+	viper.AutomaticEnv()
 
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -31,10 +39,10 @@ func Get() (Config, error) {
 	}
 
 	log.Println("Configuration loaded")
-	log.Printf("db_user: %s", config.DbUser)
-	log.Printf("db_host: %s", config.DbHost)
-	log.Printf("db_port: %d", config.DbPort)
-	log.Printf("db_name: %s", config.DbName)
+	log.Printf("DbHost: %s", config.DbHost)
+	log.Printf("DbPort: %d", config.DbPort)
+	log.Printf("DbUser: %s", config.DbUser)
+	log.Printf("DbName: %s", config.DbName)
 
 	return config, nil
 }

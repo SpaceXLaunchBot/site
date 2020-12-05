@@ -1,4 +1,4 @@
-module github.com/psidex/SpaceXLaunchBotSite
+module github.com/SpaceXLaunchBot/site-backend
 
 go 1.15
 

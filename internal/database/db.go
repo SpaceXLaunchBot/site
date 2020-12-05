@@ -3,9 +3,9 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"github.com/SpaceXLaunchBot/site-backend/internal/config"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/psidex/SpaceXLaunchBotSite/internal/config"
 	"strings"
 )
 

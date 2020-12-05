@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/psidex/SpaceXLaunchBotSite/internal/database"
-	"github.com/psidex/SpaceXLaunchBotSite/internal/discord"
+	"github.com/SpaceXLaunchBot/site-backend/internal/database"
+	"github.com/SpaceXLaunchBot/site-backend/internal/discord"
 )
 
 // apiResponse is for any generic response we send from the API. All error messages should be user friendly.
