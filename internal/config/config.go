@@ -25,15 +25,17 @@ func Get() (Config, error) {
 	viper.SetDefault("POSTGRES_USER", "slb")
 	viper.SetDefault("POSTGRES_DB", "spacexlaunchbot")
 
-	viper.AutomaticEnv()
+	_ = viper.BindEnv("SLB_DB_HOST")
+	_ = viper.BindEnv("SLB_DB_PORT")
+	_ = viper.BindEnv("POSTGRES_USER")
+	_ = viper.BindEnv("POSTGRES_PASSWORD")
+	_ = viper.BindEnv("POSTGRES_DB")
 
-	err := viper.ReadInConfig()
-	if err != nil {
-		return Config{}, err
-	}
+	// Will error if config is just env variables not from a env file.
+	_ = viper.ReadInConfig()
 
 	var config Config
-	err = viper.Unmarshal(&config)
+	err := viper.Unmarshal(&config)
 	if err != nil {
 		return Config{}, err
 	}
