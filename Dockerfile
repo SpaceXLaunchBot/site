@@ -1,4 +1,5 @@
 FROM node:12.4-alpine AS staticbuilder
+RUN apk --no-cache add git 
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 RUN git clone https://github.com/SpaceXLaunchBot/site-frontend.git /app
