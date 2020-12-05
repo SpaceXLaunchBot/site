@@ -32,4 +32,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: psidex/spacexlaunchbot-site-backend:latest
+          tags: psidex/spacexlaunchbot-webserver:latest
