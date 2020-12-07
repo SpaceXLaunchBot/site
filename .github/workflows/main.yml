@@ -5,7 +5,8 @@ on:
     branches: [ main ]
     paths:
       - 'Dockerfile'
-      - 'go.*'
+      - 'go.mod'
+      - 'go.sum'
       - 'cmd/**'
       - 'internal/**'
       - '.github/workflows/**'
