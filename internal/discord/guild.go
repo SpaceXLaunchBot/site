@@ -27,12 +27,6 @@ type GuildList []Guild
 // GetGuildList returns a GuildList of guilds that the user of the token is in.
 // Uses a cache.TimedCache to cache responses from the Discord API.
 func (c Client) GetGuildList(bearerToken string) (GuildList, error) {
-	if cached, ok := c.guildListCache.Get(bearerToken); ok {
-		if cv, ok := cached.(GuildList); ok {
-			return cv, nil
-		} // else continue with function
-	}
-
 	endpoint := "/users/@me/guilds"
 	body, err := c.apiRequest(endpoint, bearerToken)
 	if err != nil {
@@ -44,6 +38,5 @@ func (c Client) GetGuildList(bearerToken string) (GuildList, error) {
 		return GuildList{}, err
 	}
 
-	c.guildListCache.Set(bearerToken, guildList)
 	return guildList, nil
 }

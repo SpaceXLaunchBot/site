@@ -8,7 +8,6 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"time"
 )
 
 func main() {
@@ -22,12 +21,13 @@ func main() {
 		log.Fatalf("database.NewDb error: %s", err)
 	}
 
-	d := discord.NewClient(time.Second*10, time.Second*10)
+	d := discord.NewClient()
 	a := api.NewApi(db, d)
 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc("/api/guildswithsubscribed", a.GuildsWithSubscribed).Methods("GET")
-	r.HandleFunc("/api/updatesubscribedchannel", a.UpdateSubscribedChannel).Methods("POST")
+	r.HandleFunc("/api/subscribed", a.SubscribedChannels).Methods("GET")
+	r.HandleFunc("/api/channel", a.DeleteChannel).Methods("DELETE")
+	r.HandleFunc("/api/channel", a.UpdateChannel).Methods("PUT")
 
 	// Make sure the working directory has /static in it!
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))

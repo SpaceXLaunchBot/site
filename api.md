@@ -1,23 +1,27 @@
 # API Docs
 
-All requests require the header "Discord-Bearer-Token".
+All requests to the API require the header `"authorization"` to be set with a valid Discord OAuth token. The token
+should be authorized with the `identity` and `guilds` scopes. This token is used to verify that you are an admin in any
+given channels/servers that you want to view/update/delete.
 
 ## Error
 
-This will be returned from any endpoint if an error occurs.
-
-### Response
+If an error ever occurs with any endpoint, this will be the response.
 
 ```json
 {
   "success": false,
-  "error": "Error message"
+  "error": "User friendly error message"
 }
 ```
 
-## `GET` `/api/guildswithsubscribed`
+## `GET` `/api/subscribed`
+
+Returns information about guilds and channels that the user is in that are subscribed to the notification service.
 
 ### Response
+
+This response can contain multiple guilds with multiple subscribed channels.
 
 ```json
 {
@@ -30,19 +34,37 @@ This will be returned from any endpoint if an error occurs.
             	"name": "Channel Name",
             	"notification_type": "{all|schedule|launch}",
             	"launch_mentions": "mentions"
-            },
-            {
-              "etc."
             }
         ]
-    },
-    "etc." {
-      
     }
 }
 ```
 
-## `POST` `/api/updatesubscribedchannel`
+## `DELETE` `/api/channel`
+
+Removes a subscribed channel from the database that matches the given information.
+
+### Request Body
+
+```json
+{
+	"id": "{discord snowflake}",
+	"guild_id": "{discord snowflake}"
+}
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "error": ""
+}
+```
+
+## `PUT` `/api/channel`
+
+Updates a subscribed channel in the database with the given information.
 
 ### Request Body
 

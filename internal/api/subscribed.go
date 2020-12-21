@@ -22,28 +22,19 @@ type guildDetails struct {
 	SubscribedChannels []subscribedChannel `json:"subscribed_channels"`
 }
 
-// guildsWithSubscribedResponse represents the JSON response from the GuildsWithSubscribed endpoint.
-type guildsWithSubscribedResponse map[string]*guildDetails
+// SubscribedChannelsResponse represents the JSON response from the SubscribedChannels endpoint.
+type SubscribedChannelsResponse map[string]*guildDetails
 
-// GuildsWithSubscribed takes a discord oauth token and returns a list of information about guilds and channels that
-// the user is in that are subscribed to the notification service.
-func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
+// SubscribedChannels returns a list of information about guilds user is authed in that are subscribed to the notification service.
+func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	token := r.Header.Get("Discord-Bearer-Token")
-	if token == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "no Discord-Bearer-Token header"})
+	guilds, sentErr := a.getGuildList(w, r)
+	if sentErr == true {
 		return
 	}
 
-	guilds, err := a.discordClient.GetGuildList(token)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "error getting information from Discord API"})
-		return
-	}
-
+	// TODO: 3 data structures is ez but possibly not the most efficient.
 	var adminGuilds []string
 	adminGuildNames := make(map[string]string)
 	adminGuildIcons := make(map[string]string)
@@ -66,10 +57,10 @@ func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// What will become out API response, {guild id : guild details}.
-	details := make(guildsWithSubscribedResponse)
+	details := make(SubscribedChannelsResponse)
 
-	subbedChannels, err := a.db.SubscribedChannels(adminGuilds)
-	if err != nil {
+	subbedChannels, wClosed := a.db.SubscribedChannels(adminGuilds)
+	if wClosed != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_ = json.NewEncoder(w).Encode(apiResponse{Error: "database error :("})
 		return
@@ -101,8 +92,8 @@ func (a Api) GuildsWithSubscribed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(w).Encode(details)
-	if err != nil {
-		log.Printf("Failed to encode GuildsWithSubscribed response: %s", err)
+	wClosed = json.NewEncoder(w).Encode(details)
+	if wClosed != nil {
+		log.Printf("Failed to encode SubscribedChannels response: %s", wClosed)
 	}
 }

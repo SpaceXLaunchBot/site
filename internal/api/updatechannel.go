@@ -5,36 +5,27 @@ import (
 	"net/http"
 )
 
-type updateSubscribedChannelJson struct {
+type updateChannelJson struct {
 	ID               string `json:"id"`
 	GuildID          string `json:"guild_id"`
 	NotificationType string `json:"notification_type"`
 	LaunchMentions   string `json:"launch_mentions"`
 }
 
-// UpdateSubscribedChannel takes a discord oauth token and information about a channel to change in the database.
-func (a Api) UpdateSubscribedChannel(w http.ResponseWriter, r *http.Request) {
+// UpdateChannel updates information about a channel in the database.
+func (a Api) UpdateChannel(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	token := r.Header.Get("Discord-Bearer-Token")
-	if token == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "no Discord-Bearer-Token header"})
+	guilds, sentErr := a.getGuildList(w, r)
+	if sentErr == true {
 		return
 	}
 
-	var requestedUpdate updateSubscribedChannelJson
+	var requestedUpdate updateChannelJson
 	err := json.NewDecoder(r.Body).Decode(&requestedUpdate)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_ = json.NewEncoder(w).Encode(apiResponse{Error: "failed to decode JSON body"})
-		return
-	}
-
-	guilds, err := a.discordClient.GetGuildList(token)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "error getting information from Discord API"})
 		return
 	}
 
@@ -51,7 +42,9 @@ func (a Api) UpdateSubscribedChannel(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// NOTE: The guild ID is required here to prevent someone passing the above checks (i.e. they are an admin in the
-	//  provided guild) and then being able to edit a channel from another guild.
+	//  provided guild) and then being able to edit a channel from another guild. We could check this by first querying
+	//  the database for the guild ID given the channel ID, but this would be uselessly slower when the client already
+	//  knows the guild ID.
 	changed, err := a.db.UpdateSubscribedChannel(
 		requestedUpdate.ID,
 		requestedUpdate.GuildID,
