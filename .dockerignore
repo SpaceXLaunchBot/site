@@ -1,3 +1,7 @@
 .git
 .github
 *.md
+
+.cache
+node_modules
+static
