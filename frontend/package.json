@@ -12,20 +12,20 @@
   "author": "https://github.com/psidex",
   "license": "GPL-3.0",
   "dependencies": {
-    "@material-ui/core": "^4.11.1",
+    "@material-ui/core": "^4.11.3",
     "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-toast-notifications": "^2.4.0"
   },
   "devDependencies": {
-    "eslint": "7.2.0",
+    "eslint": "7.18.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsx-a11y": "6.4.1",
-    "eslint-plugin-react": "7.21.5",
-    "eslint-plugin-react-hooks": "4.0.0",
+    "eslint-plugin-react": "7.22.0",
+    "eslint-plugin-react-hooks": "4.2.0",
     "parcel-bundler": "^1.12.4",
-    "sass": "^1.29.0"
+    "sass": "^1.32.5"
   }
 }

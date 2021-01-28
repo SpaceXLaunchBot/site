@@ -1,4 +1,4 @@
-module github.com/SpaceXLaunchBot/site-backend
+module github.com/SpaceXLaunchBot/site
 
 go 1.15
 

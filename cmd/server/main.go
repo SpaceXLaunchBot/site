@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/SpaceXLaunchBot/site-backend/internal/api"
-	"github.com/SpaceXLaunchBot/site-backend/internal/config"
-	"github.com/SpaceXLaunchBot/site-backend/internal/database"
-	"github.com/SpaceXLaunchBot/site-backend/internal/discord"
+	"github.com/SpaceXLaunchBot/site/internal/api"
+	"github.com/SpaceXLaunchBot/site/internal/config"
+	"github.com/SpaceXLaunchBot/site/internal/database"
+	"github.com/SpaceXLaunchBot/site/internal/discord"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

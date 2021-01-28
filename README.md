@@ -1,6 +1,6 @@
 # SpaceXLaunchBot Site Backend
 
-The back-end for the SpaceXLaunchBot site written in Go.
+The site for SpaceXLaunchBot, written in Go, Javascript & React
 
 ## Credits
 

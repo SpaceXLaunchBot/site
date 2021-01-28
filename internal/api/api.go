@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/SpaceXLaunchBot/site-backend/internal/database"
-	"github.com/SpaceXLaunchBot/site-backend/internal/discord"
+	"github.com/SpaceXLaunchBot/site/internal/database"
+	"github.com/SpaceXLaunchBot/site/internal/discord"
 	"net/http"
 )
 
