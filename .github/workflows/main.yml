@@ -4,16 +4,22 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'Dockerfile'
-      - '.github/workflows/**'
+      - '**.go'
+      - '**.js'
+      - '**.jsx'
+      - '**.html'
+      - '**.css'
+      - '**.scss'
+      - '**.json'
+      - '**.lock'
+      - '**.png'
+      - '**.svg'
+      - '**.ico'
+      - 'robots.txt'
       - 'go.mod'
       - 'go.sum'
-      - 'cmd/**'
-      - 'internal/**'
-      - '.github/workflows/**'
-      - 'frontend/src/**'
-      - 'frontend/package.json'
-      - 'frontend/yarn.lock'
+      - 'Dockerfile'
+      - '.github/workflows/*.yml'
 
 jobs:
   build:

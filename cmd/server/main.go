@@ -29,8 +29,7 @@ func main() {
 	r.HandleFunc("/api/channel", a.DeleteChannel).Methods("DELETE")
 	r.HandleFunc("/api/channel", a.UpdateChannel).Methods("PUT")
 
-	// Make sure the working directory has /static in it!
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend_build")))
 
 	log.Println("Serving http on all available interfaces @ port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
