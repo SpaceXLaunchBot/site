@@ -4,9 +4,6 @@ frontend_build
 storage
 node_modules
 
-.git
-!.git/refs/heads/master
-
 *.syso
 *.zip
 *.log
