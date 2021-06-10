@@ -30,12 +30,12 @@ func NewApi(db database.Db, client discord.Client) Api {
 	}
 }
 
-// getGuildList acts like a middleware and gets a GuildList using the authorization header (or sends an error to the client).
+// getGuildList acts like a middleware and gets a GuildList using the Authorization header (or sends an error to the client).
 func (a Api) getGuildList(w http.ResponseWriter, r *http.Request) (list discord.GuildList, sentErr bool) {
-	token := r.Header.Get("authorization")
+	token := r.Header.Get("Authorization")
 	if token == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "no authorization header"})
+		_ = json.NewEncoder(w).Encode(apiResponse{Error: "no Authorization header"})
 		return discord.GuildList{}, true
 	}
 

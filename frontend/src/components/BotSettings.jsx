@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@material-ui/core';
-import Login from './login';
-import Channel from './channel';
-import Guild from './guild';
-import GetGuildsWithSubscribed from '../internalapi/guildswithsubscribed';
+import Login from './Login';
+import Channel from './Channel';
+import Guild from './Guild';
+import getSubscribed from '../internalapi/subscribed';
 
 export default function BotSettings() {
   const [discordOAuthToken, setDiscordOAuthToken] = useState(localStorage.getItem('discord-oauth-token') || '');
@@ -11,7 +11,7 @@ export default function BotSettings() {
   const [loaded, setLoaded] = useState(false);
   const [subscribedInfo, setSubscribedInfo] = useState({});
 
-  useEffect(() => {
+  useEffect(async () => {
     // We use a local var here as the set state functions are async and don't change the state
     // variable straight away.
     let localToken = discordOAuthToken;
@@ -32,11 +32,9 @@ export default function BotSettings() {
       // Effects run asynchronously away from the actual render, so this will re-render
       // when setLoggedIn gets called above and the below web request will still be
       // happening in the background.
-      GetGuildsWithSubscribed(localToken)
-        .then((json) => {
-          setSubscribedInfo(json);
-          setLoaded(true);
-        });
+      const json = await getSubscribed(localToken);
+      setSubscribedInfo(json);
+      setLoaded(true);
     }
   }, []);
 

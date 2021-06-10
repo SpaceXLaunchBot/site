@@ -1,4 +1,4 @@
-export default function GetNextLaunch() {
+export default function getNextLaunch() {
   return fetch('https://api.spacexdata.com/v4/launches/next', {
     method: 'GET',
     headers: {

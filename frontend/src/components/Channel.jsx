@@ -11,7 +11,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useToasts } from 'react-toast-notifications';
-import UpdateSubscribedChannel from '../internalapi/updatesubscribedchannel';
+import updateChannel from '../internalapi/update';
+import deleteChannel from '../internalapi/delete';
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -53,7 +54,7 @@ export default function Channel(props) {
     setNotificationType(e.target.value);
   };
 
-  const saveBtnClicked = () => {
+  const saveBtnClicked = async () => {
     addToast(`Saving settings for ${info.name}`, { appearance: 'info' });
     const body = {
       id: info.id,
@@ -61,18 +62,26 @@ export default function Channel(props) {
       notification_type: notificationType,
       launch_mentions: launchMentions,
     };
-    UpdateSubscribedChannel(discordOAuthToken, body)
-      .then((res) => {
-        if (res.success === true) {
-          addToast(`Saved settings for ${info.name}`, { appearance: 'success' });
-        } else {
-          addToast(`Error saving settings for ${info.name}: ${res.error}`, { appearance: 'error' });
-        }
-      });
+    const json = await updateChannel(discordOAuthToken, body);
+    if (json.success === true) {
+      addToast(`Saved settings for ${info.name}`, { appearance: 'success' });
+    } else {
+      addToast(`Error saving settings for ${info.name}: ${json.error}`, { appearance: 'error' });
+    }
   };
 
-  const deleteBtnClicked = () => {
-    // Send DELETE request with discordOAuthToken.
+  const deleteBtnClicked = async () => {
+    addToast(`Unsubscribing channel ${info.name}`, { appearance: 'info' });
+    const body = {
+      id: info.id,
+      guild_id: guildId,
+    };
+    const json = await deleteChannel(discordOAuthToken, body);
+    if (json.success === true) {
+      addToast(`Unsubscribed ${info.name}`, { appearance: 'success' });
+    } else {
+      addToast(`Error unsubscribing channel ${info.name}: ${json.error}`, { appearance: 'error' });
+    }
   };
 
   return (

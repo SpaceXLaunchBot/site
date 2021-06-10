@@ -4,9 +4,9 @@ import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Grid } from '@material-ui/core';
 import { ToastProvider } from 'react-toast-notifications';
-import Launch from './components/launch';
+import Launch from './components/Launch';
 import theme from './theme';
-import BotSettings from './components/botsettings';
+import BotSettings from './components/BotSettings';
 
 const useStyles = makeStyles(() => ({
   root: {

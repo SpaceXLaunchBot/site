@@ -46,7 +46,7 @@ func (c Client) apiRequest(endpoint, bearerToken string) ([]byte, error) {
 
 	if cached, ok := c.cache.Get(cacheKey); ok {
 		return cached.([]byte), nil
-	} // else continue with function
+	}
 
 	apiUrl, _ := url.Parse(apiBase)
 	apiUrl.Path = path.Join(apiUrl.Path, endpoint)
@@ -56,7 +56,7 @@ func (c Client) apiRequest(endpoint, bearerToken string) ([]byte, error) {
 		return []byte{}, err
 	}
 
-	req.Header.Set("authorization", fmt.Sprintf("Bearer %s", bearerToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", bearerToken))
 
 	res, err := c.httpClient.Do(req)
 	if err != nil {

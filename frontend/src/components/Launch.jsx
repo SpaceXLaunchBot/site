@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import GetNextLaunch from '../spacexapi/nextlaunch';
+import getNextLaunch from '../spacexapi/nextlaunch';
 
 export default function Launch() {
   const [error, setError] = useState(null);
@@ -8,7 +8,7 @@ export default function Launch() {
   const [launchInfo, setLaunchInfo] = useState({});
 
   useEffect(() => {
-    GetNextLaunch()
+    getNextLaunch()
       .then((json) => {
         if (json === {}) {
           setError({ message: 'SpaceX API request failed' });
