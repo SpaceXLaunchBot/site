@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import getNextLaunch from '../spacexapi/nextlaunch';
+import '../css/Launch.scss';
 
 export default function Launch() {
   const [error, setError] = useState(null);

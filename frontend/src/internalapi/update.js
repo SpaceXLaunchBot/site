@@ -1,5 +1,5 @@
 export default async function updateChannel(token, body) {
-  const res = fetch('/api/channel', {
+  const res = await fetch('/api/channel', {
     method: 'PUT',
     headers: {
       Authorization: token,

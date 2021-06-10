@@ -16,7 +16,7 @@ import deleteChannel from '../internalapi/delete';
 export default function Channel(props) {
   const { info, guildId, discordOAuthToken } = props;
   const [notificationType, setNotificationType] = useState(info.notification_type);
-  const [launchMentions, setLaunchMentions] = useState(info.launch_mentions.String);
+  const [launchMentions, setLaunchMentions] = useState(info.launch_mentions);
   const { addToast } = useToasts();
 
   const textFieldChanged = (e) => {
@@ -62,6 +62,7 @@ export default function Channel(props) {
       direction="row"
       justify="center"
       alignItems="center"
+      className="channelGrid"
     >
       <Grid item xs={12}>
         <h3>{info.name}</h3>
@@ -69,9 +70,27 @@ export default function Channel(props) {
       <Grid item xs={12} md={6}>
         <FormControl component="fieldset">
           <RadioGroup row name="subscription-type" value={notificationType} onChange={radioChanged}>
-            <FormControlLabel labelPlacement="top" value="all" control={<Radio />} label="All" />
-            <FormControlLabel labelPlacement="top" value="schedule" control={<Radio />} label="Schedule" />
-            <FormControlLabel labelPlacement="top" value="launch" control={<Radio />} label="Launch" />
+            <FormControlLabel
+              labelPlacement="top"
+              value="all"
+              control={<Radio />}
+              label="All"
+              className="radioButton"
+            />
+            <FormControlLabel
+              labelPlacement="top"
+              value="schedule"
+              control={<Radio />}
+              label="Schedule"
+              className="radioButton"
+            />
+            <FormControlLabel
+              labelPlacement="top"
+              value="launch"
+              control={<Radio />}
+              label="Launch"
+              className="radioButton"
+            />
           </RadioGroup>
         </FormControl>
       </Grid>
@@ -81,13 +100,14 @@ export default function Channel(props) {
           label="Launch Mentions"
           value={launchMentions}
           onChange={textFieldChanged}
+          className="launchMentionsInput"
         />
       </Grid>
       <Grid item xs={12}>
-        <IconButton color="secondary" onClick={saveBtnClicked}>
+        <IconButton onClick={saveBtnClicked}>
           <Icon>save</Icon>
         </IconButton>
-        <IconButton color="secondary" onClick={deleteBtnClicked}>
+        <IconButton onClick={deleteBtnClicked}>
           <Icon>delete</Icon>
         </IconButton>
       </Grid>
