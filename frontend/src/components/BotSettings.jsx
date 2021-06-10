@@ -5,34 +5,50 @@ import Channel from './Channel';
 import Guild from './Guild';
 import getSubscribed from '../internalapi/subscribed';
 
+function monthDiff(dateFrom, dateTo) {
+  // https://stackoverflow.com/a/4312956/6396652
+  return dateTo.getMonth() - dateFrom.getMonth()
+    + (12 * (dateTo.getFullYear() - dateFrom.getFullYear()));
+}
+
 export default function BotSettings() {
-  const [discordOAuthToken, setDiscordOAuthToken] = useState(localStorage.getItem('discord-oauth-token') || '');
+  const [discordOAuthToken, setDiscordOAuthToken] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [subscribedInfo, setSubscribedInfo] = useState({});
 
   useEffect(async () => {
-    // We use a local var here as the set state functions are async and don't change the state
-    // variable straight away.
-    let localToken = discordOAuthToken;
+    let storedToken = localStorage.getItem('discord-oauth-token');
+    const storedLoginTime = localStorage.getItem('discord-login-time');
 
-    if (localToken === '') {
-      const fragment = new URLSearchParams(window.location.hash.slice(1));
-      if (fragment.has('access_token')) {
-        window.history.pushState(null, document.title, '/');
-        localToken = fragment.get('access_token');
-        localStorage.setItem('discord-oauth-token', localToken);
-        setDiscordOAuthToken(localToken);
+    if (storedLoginTime !== null) {
+      const now = new Date();
+      const before = new Date(parseInt(storedLoginTime, 10));
+      if (monthDiff(now, before) >= 1) {
+        localStorage.removeItem('discord-oauth-token');
+        storedToken = null;
       }
     }
 
-    // If we either already have or just discovered an access token.
-    if (localToken !== '') {
+    // Attempt to get token from url.
+    if (storedToken === null) {
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
+      if (fragment.has('access_token')) {
+        window.history.pushState(null, document.title, '/');
+        storedToken = fragment.get('access_token');
+        localStorage.setItem('discord-oauth-token', storedToken);
+        localStorage.setItem('discord-login-time', `${Date.now()}`);
+        setDiscordOAuthToken(storedToken);
+      }
+    }
+
+    // We either found a token in localstorage or the url.
+    if (storedToken !== null) {
       setLoggedIn(true);
       // Effects run asynchronously away from the actual render, so this will re-render
       // when setLoggedIn gets called above and the below web request will still be
       // happening in the background.
-      const json = await getSubscribed(localToken);
+      const json = await getSubscribed(storedToken);
       setSubscribedInfo(json);
       setLoaded(true);
     }
