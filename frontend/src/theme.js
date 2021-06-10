@@ -1,5 +1,7 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
+// TODO: Move into css file(s)
+
 // Based on https://discord.com/branding
 const theme = createMuiTheme({
   palette: {
