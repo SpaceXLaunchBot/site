@@ -1,9 +1,7 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -21,9 +19,6 @@ type guildDetails struct {
 	Icon               string              `json:"icon"`
 	SubscribedChannels []subscribedChannel `json:"subscribed_channels"`
 }
-
-// SubscribedChannelsResponse represents the JSON response from the SubscribedChannels endpoint.
-type SubscribedChannelsResponse map[string]*guildDetails
 
 // SubscribedChannels returns a list of information about guilds user is authed in that are subscribed to the notification service.
 func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
@@ -50,24 +45,19 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(adminGuilds) == 0 {
-		// I think this is the right status code for this sort of error.
-		w.WriteHeader(http.StatusConflict)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "you do not have admin permissions in any guilds"})
+		endWithResponse(w, responseNotAdminInAny)
 		return
 	}
 
-	// What will become out API response, {guild id : guild details}.
-	details := make(SubscribedChannelsResponse)
+	response := newSubscribedResponse()
 
 	subbedChannels, wClosed := a.db.SubscribedChannels(adminGuilds)
 	if wClosed != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "database error :("})
+		endWithResponse(w, responseDatabaseError)
 		return
 	}
 	if len(subbedChannels) == 0 {
-		w.WriteHeader(http.StatusConflict)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "you do not have any subscribed channels in guilds that you administrate"})
+		endWithResponse(w, responseNoSubscribedInAny)
 		return
 	}
 
@@ -79,10 +69,10 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 			LaunchMentions:   channel.LaunchMentions.String,
 		}
 
-		if d, ok := details[channel.GuildId]; ok {
+		if d, ok := response.Subscribed[channel.GuildId]; ok {
 			d.SubscribedChannels = append(d.SubscribedChannels, channelStruct)
 		} else {
-			details[channel.GuildId] = &guildDetails{
+			response.Subscribed[channel.GuildId] = &guildDetails{
 				Name:               adminGuildNames[channel.GuildId],
 				Icon:               adminGuildIcons[channel.GuildId],
 				SubscribedChannels: []subscribedChannel{channelStruct},
@@ -91,9 +81,5 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	w.WriteHeader(http.StatusOK)
-	wClosed = json.NewEncoder(w).Encode(details)
-	if wClosed != nil {
-		log.Printf("Failed to encode SubscribedChannels response: %s", wClosed)
-	}
+	endWithResponse(w, response)
 }

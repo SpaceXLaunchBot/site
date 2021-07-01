@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/SpaceXLaunchBot/site/internal/config"
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v4/stdlib" // Provides Postgres "pgx" driver for sql
+	"github.com/jmoiron/sqlx"          // Mainly used so we can marshal rows straight to structs
 	"strings"
 )
 
@@ -29,14 +29,14 @@ func NewDb(c config.Config) (Db, error) {
 		"postgresql://%s:%s@%s:%d/%s?sslmode=disable",
 		c.DbUser, c.DbPass, c.DbHost, c.DbPort, c.DbName,
 	)
-	db, err := sqlx.Connect("postgres", conStr)
+	db, err := sqlx.Connect("pgx", conStr)
 	if err != nil {
 		return Db{}, err
 	}
 	return Db{db}, nil
 }
 
-// SubscribedChannels returns a slice of SubscribedChannels that are exist in the given guild ids.
+// SubscribedChannels returns a slice of SubscribedChannels that exist in the given guild ids.
 func (d Db) SubscribedChannels(guildIds []string) ([]SubscribedChannel, error) {
 	var channels []SubscribedChannel
 	query, args, err := sqlx.In(`
@@ -49,7 +49,7 @@ func (d Db) SubscribedChannels(guildIds []string) ([]SubscribedChannel, error) {
 		return channels, err
 	}
 
-	// Rebind takes the general form of query created by In and converts to what Postgres wants.
+	// Rebind takes query with sql bind vars ("?") from sqlx.In and turns them into $1, $2, etc. for Postgres.
 	query = d.db.Rebind(query)
 
 	err = d.db.Select(&channels, query, args...)
@@ -77,6 +77,7 @@ func (d Db) UpdateSubscribedChannel(channelId, guildId, notificationType, launch
 	return num > 0, err
 }
 
+// DeleteSubscribedChannel removes a given channel from the subscribed_channels table.
 func (d Db) DeleteSubscribedChannel(channelId, guildId string) (changed bool, err error) {
 	query := "DELETE FROM subscribed_channels WHERE channel_id = $1 AND guild_id = $2;"
 	res, err := d.db.Exec(query, channelId, guildId)

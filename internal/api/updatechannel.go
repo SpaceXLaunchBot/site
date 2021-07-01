@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// updateChannelJson is a struct to marshal the api request data into.
 type updateChannelJson struct {
 	ID               string `json:"id"`
 	GuildID          string `json:"guild_id"`
@@ -24,8 +25,7 @@ func (a Api) UpdateChannel(w http.ResponseWriter, r *http.Request) {
 	var requestedUpdate updateChannelJson
 	err := json.NewDecoder(r.Body).Decode(&requestedUpdate)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "failed to decode JSON body"})
+		endWithResponse(w, responseBadJson)
 		return
 	}
 
@@ -36,8 +36,7 @@ func (a Api) UpdateChannel(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if !allowedToEdit {
-		w.WriteHeader(http.StatusUnauthorized)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "you are not an admin in that server"})
+		endWithResponse(w, responseNotAdmin)
 		return
 	}
 
@@ -52,16 +51,13 @@ func (a Api) UpdateChannel(w http.ResponseWriter, r *http.Request) {
 		requestedUpdate.LaunchMentions,
 	)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "database error :("})
+		endWithResponse(w, responseDatabaseError)
 		return
 	}
 	if !changed {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(apiResponse{Error: "no channel with that ID in the given guild"})
+		endWithResponse(w, responseChannelNotInGuild)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(apiResponse{Success: true})
+	endWithResponse(w, responseAllOk)
 }

@@ -69,9 +69,9 @@ export default function BotSettings() {
 
   // TODO: fix
   // eslint-disable-next-line guard-for-in
-  for (const guildId in subscribedInfo) {
+  for (const guildId in subscribedInfo.subscribed) {
     const subbedChannelsElems = [];
-    for (const channel of subscribedInfo[guildId].subscribed_channels) {
+    for (const channel of subscribedInfo.subscribed[guildId].subscribed_channels) {
       subbedChannelsElems.push(
         <Channel
           key={channel.id}
@@ -82,7 +82,7 @@ export default function BotSettings() {
       );
     }
 
-    const guildInfo = subscribedInfo[guildId];
+    const guildInfo = subscribedInfo.subscribed[guildId];
     guilds.push(
       <Guild key={guildId} name={guildInfo.name} icon={guildInfo.icon}>
         {subbedChannelsElems}

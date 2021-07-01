@@ -6,12 +6,15 @@ given channels/servers that you want to view/update/delete.
 
 ## Error
 
-If an error ever occurs with any endpoint, this will be the response.
+If an error ever occurs with any endpoint, the response will take this form.
+
+`status_code` will be the HTTP code that was returned by the server.
 
 ```json
 {
   "success": false,
-  "error": "User friendly error message"
+  "error": "User friendly error message",
+  "status_code": 401
 }
 ```
 
@@ -25,18 +28,23 @@ This response can contain multiple guilds with multiple subscribed channels.
 
 ```json
 {
+  "success": true,
+  "status_code": 200,
+  "subscribed": {
     "{discord snowflake}": {
-        "name": "Guild Name",
-        "icon": "https://cdn.discordapp.com/icons/{discord snowflake}/{discord snowflake}.png",
-        "subscribed_channels": [
-            {
-            	"id": "{discord snowflake}",
-            	"name": "Channel Name",
-            	"notification_type": "{all|schedule|launch}",
-            	"launch_mentions": "mentions"
-            }
-        ]
-    }
+      "name": "Guild Name",
+      "icon": "https://cdn.discordapp.com/icons/{discord snowflake}/{discord snowflake}.png",
+      "subscribed_channels": [
+        {
+          "id": "{discord snowflake}",
+          "name": "Channel Name",
+          "notification_type": "{all|schedule|launch}",
+          "launch_mentions": "mentions"
+        }
+      ]
+    },
+    "etc": {...}
+  }
 }
 ```
 
@@ -58,7 +66,7 @@ Removes a subscribed channel from the database that matches the given informatio
 ```json
 {
   "success": true,
-  "error": ""
+  "status_code": 200
 }
 ```
 
@@ -82,6 +90,6 @@ Updates a subscribed channel in the database with the given information.
 ```json
 {
   "success": true,
-  "error": ""
+  "status_code": 200
 }
 ```
