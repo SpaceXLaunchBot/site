@@ -32,9 +32,9 @@ func (a Api) getGuildList(w http.ResponseWriter, r *http.Request) (list discord.
 
 	guilds, err := a.discordClient.GetGuildList(token)
 	if err != nil {
-		// Add context to general error message.
 		resp := responseDiscordApiError
-		resp.Error = resp.Error + err.Error()
+		// Add context to general error message.
+		resp.Error += err.Error()
 		endWithResponse(w, resp)
 		return discord.GuildList{}, true
 	}

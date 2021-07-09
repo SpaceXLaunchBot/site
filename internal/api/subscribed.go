@@ -69,8 +69,8 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 			LaunchMentions:   channel.LaunchMentions.String,
 		}
 
-		if d, ok := response.Subscribed[channel.GuildId]; ok {
-			d.SubscribedChannels = append(d.SubscribedChannels, channelStruct)
+		if details, ok := response.Subscribed[channel.GuildId]; ok {
+			details.SubscribedChannels = append(details.SubscribedChannels, channelStruct)
 		} else {
 			response.Subscribed[channel.GuildId] = &guildDetails{
 				Name:               adminGuildNames[channel.GuildId],

@@ -38,12 +38,12 @@ export default function BotSettings() {
         storedToken = fragment.get('access_token');
         localStorage.setItem('discord-oauth-token', storedToken);
         localStorage.setItem('discord-login-time', `${Date.now()}`);
-        setDiscordOAuthToken(storedToken);
       }
     }
 
     // We either found a token in localstorage or the url.
     if (storedToken !== null) {
+      setDiscordOAuthToken(storedToken);
       setLoggedIn(true);
       // Effects run asynchronously away from the actual render, so this will re-render
       // when setLoggedIn gets called above and the below web request will still be
