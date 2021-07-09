@@ -28,6 +28,7 @@ func main() {
 	r.HandleFunc("/api/subscribed", a.SubscribedChannels).Methods("GET")
 	r.HandleFunc("/api/channel", a.DeleteChannel).Methods("DELETE")
 	r.HandleFunc("/api/channel", a.UpdateChannel).Methods("PUT")
+	r.HandleFunc("/api/metrics", a.Metrics).Methods("GET")
 
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend_build")))
 

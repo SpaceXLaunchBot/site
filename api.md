@@ -93,3 +93,7 @@ Updates a subscribed channel in the database with the given information.
   "status_code": 200
 }
 ```
+
+## `GET` `/api/metrics`
+
+Returns some basic metrics about the bot. Currently a WIP.
