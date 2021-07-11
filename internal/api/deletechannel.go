@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// deleteChannelJson is a struct to marshal the api request data into.
 type deleteChannelJson struct {
 	ID      string `json:"id"`
 	GuildID string `json:"guild_id"`

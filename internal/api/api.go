@@ -3,7 +3,9 @@ package api
 import (
 	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/SpaceXLaunchBot/site/internal/discord"
+	"github.com/patrickmn/go-cache"
 	"net/http"
+	"time"
 )
 
 // TODO: Maybe cache in Api http handlers instead of in the discord package.
@@ -12,6 +14,7 @@ import (
 type Api struct {
 	db            database.Db
 	discordClient discord.Client
+	cache         *cache.Cache
 }
 
 // NewApi creates a new Api.
@@ -19,6 +22,7 @@ func NewApi(db database.Db, client discord.Client) Api {
 	return Api{
 		db:            db,
 		discordClient: client,
+		cache:         cache.New(10*time.Second, 10*time.Minute),
 	}
 }
 

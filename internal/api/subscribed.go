@@ -2,22 +2,22 @@ package api
 
 import (
 	"fmt"
+	"github.com/SpaceXLaunchBot/site/internal/database"
+	"log"
 	"net/http"
 )
 
-// subscribedChannel holds information about a subscribed channel.
-type subscribedChannel struct {
-	Id               string `json:"id"`
-	Name             string `json:"name"`
-	NotificationType string `json:"notification_type"`
-	LaunchMentions   string `json:"launch_mentions"`
+// subscribedResponse is the API response for the subscribed channels API route.
+type subscribedResponse struct {
+	genericResponse
+	Subscribed map[string]*guildDetails `json:"subscribed"`
 }
 
 // guildDetails holds information about a guild.
 type guildDetails struct {
-	Name               string              `json:"name"`
-	Icon               string              `json:"icon"`
-	SubscribedChannels []subscribedChannel `json:"subscribed_channels"`
+	Name               string                             `json:"name"`
+	Icon               string                             `json:"icon"`
+	SubscribedChannels []database.SubscribedChannelRecord `json:"subscribed_channels"`
 }
 
 // SubscribedChannels returns a list of information about guilds user is authed in that are subscribed to the notification service.
@@ -38,9 +38,7 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 		if guild.HasAdminPerms() {
 			adminGuilds = append(adminGuilds, guild.ID)
 			adminGuildNames[guild.ID] = guild.Name
-
-			iconUrl := fmt.Sprintf("https://cdn.discordapp.com/icons/%s/%s.png", guild.ID, guild.Icon)
-			adminGuildIcons[guild.ID] = iconUrl
+			adminGuildIcons[guild.ID] = fmt.Sprintf("https://cdn.discordapp.com/icons/%s/%s.png", guild.ID, guild.Icon)
 		}
 	}
 
@@ -49,10 +47,9 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := newSubscribedResponse()
-
-	subbedChannels, wClosed := a.db.SubscribedChannels(adminGuilds)
-	if wClosed != nil {
+	subbedChannels, err := a.db.SubscribedChannels(adminGuilds)
+	if err != nil {
+		log.Printf("ERROR: %s", err.Error())
 		endWithResponse(w, responseDatabaseError)
 		return
 	}
@@ -61,21 +58,25 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	response := subscribedResponse{}
+	response.Success = true
+	response.Subscribed = make(map[string]*guildDetails)
+
+	nonNilStr := ""
+
 	for _, channel := range subbedChannels {
-		channelStruct := subscribedChannel{
-			Id:               channel.Id,
-			Name:             channel.Name,
-			NotificationType: channel.NotificationType,
-			LaunchMentions:   channel.LaunchMentions.String,
+		if channel.LaunchMentions == nil {
+			// If the pointer is nil point it to an empty string.
+			channel.LaunchMentions = &nonNilStr
 		}
 
 		if details, ok := response.Subscribed[channel.GuildId]; ok {
-			details.SubscribedChannels = append(details.SubscribedChannels, channelStruct)
+			details.SubscribedChannels = append(details.SubscribedChannels, channel)
 		} else {
 			response.Subscribed[channel.GuildId] = &guildDetails{
 				Name:               adminGuildNames[channel.GuildId],
 				Icon:               adminGuildIcons[channel.GuildId],
-				SubscribedChannels: []subscribedChannel{channelStruct},
+				SubscribedChannels: []database.SubscribedChannelRecord{channel},
 			}
 		}
 

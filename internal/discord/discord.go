@@ -41,6 +41,7 @@ func NewClient() Client {
 }
 
 // apiRequest performs a DiscordClient API request.
+// Caches all requests with default expiration.
 func (c Client) apiRequest(endpoint, bearerToken string) ([]byte, error) {
 	cacheKey := endpoint + bearerToken
 

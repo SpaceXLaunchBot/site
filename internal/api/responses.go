@@ -1,3 +1,6 @@
+// Contains generic response related variables and functions.
+// Other files in this directory may contain other response declarations.
+
 package api
 
 import (
@@ -13,20 +16,6 @@ type genericResponse struct {
 	StatusCode int    `json:"status_code"` // Should be a HTTP code.
 }
 
-// subscribedResponse is the API response specifically for the subscribed channels API route.
-type subscribedResponse struct {
-	genericResponse
-	Subscribed map[string]*guildDetails `json:"subscribed"`
-}
-
-// newSubscribedResponse initializes a new subscribedResponse.
-func newSubscribedResponse() subscribedResponse {
-	r := subscribedResponse{}
-	r.Success = true
-	r.Subscribed = make(map[string]*guildDetails)
-	return r
-}
-
 // endWithResponse writes the response r to w.
 // Doesn't actually "end" the ResponseWriter but it shouldn't be used after calling this.
 func endWithResponse(w http.ResponseWriter, r interface{}) {
@@ -39,6 +28,12 @@ func endWithResponse(w http.ResponseWriter, r interface{}) {
 		w.WriteHeader(resp.StatusCode)
 		_ = json.NewEncoder(w).Encode(resp)
 	} else if resp, ok := r.(subscribedResponse); ok {
+		if resp.StatusCode == 0 {
+			resp.StatusCode = http.StatusOK
+		}
+		w.WriteHeader(resp.StatusCode)
+		_ = json.NewEncoder(w).Encode(resp)
+	} else if resp, ok := r.(metricsResponse); ok {
 		if resp.StatusCode == 0 {
 			resp.StatusCode = http.StatusOK
 		}

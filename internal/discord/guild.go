@@ -25,7 +25,6 @@ func (g Guild) HasAdminPerms() bool {
 type GuildList []Guild
 
 // GetGuildList returns a GuildList of guilds that the user of the token is in.
-// Uses a cache.TimedCache to cache responses from the Discord API.
 func (c Client) GetGuildList(bearerToken string) (GuildList, error) {
 	endpoint := "/users/@me/guilds"
 	body, err := c.apiRequest(endpoint, bearerToken)
