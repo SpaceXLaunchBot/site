@@ -1,64 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@material-ui/core';
-import Login from './Login';
-import Channel from './Channel';
-import Guild from './Guild';
+import Loader from 'react-loader-spinner';
+import Channel from '../components/Channel';
+import Guild from '../components/Guild';
 import getSubscribed from '../internalapi/subscribed';
 
-function monthDiff(dateFrom, dateTo) {
-  // https://stackoverflow.com/a/4312956/6396652
-  return dateTo.getMonth() - dateFrom.getMonth()
-    + (12 * (dateTo.getFullYear() - dateFrom.getFullYear()));
-}
-
-export default function BotSettings() {
-  const [discordOAuthToken, setDiscordOAuthToken] = useState('');
+export default function Settings(props) {
+  const { discordOAuthToken } = props;
   const [loggedIn, setLoggedIn] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [subscribedInfo, setSubscribedInfo] = useState({});
 
   useEffect(async () => {
-    let storedToken = localStorage.getItem('discord-oauth-token');
-    const storedLoginTime = localStorage.getItem('discord-login-time');
-
-    if (storedLoginTime !== null) {
-      const now = new Date();
-      const before = new Date(parseInt(storedLoginTime, 10));
-      if (monthDiff(now, before) >= 1) {
-        localStorage.removeItem('discord-oauth-token');
-        storedToken = null;
-      }
-    }
-
-    // Attempt to get token from url.
-    if (storedToken === null) {
-      const fragment = new URLSearchParams(window.location.hash.slice(1));
-      if (fragment.has('access_token')) {
-        window.history.pushState(null, document.title, '/');
-        storedToken = fragment.get('access_token');
-        localStorage.setItem('discord-oauth-token', storedToken);
-        localStorage.setItem('discord-login-time', `${Date.now()}`);
-      }
-    }
-
-    // We either found a token in localstorage or the url.
-    if (storedToken !== null) {
-      setDiscordOAuthToken(storedToken);
+    if (discordOAuthToken !== '') {
       setLoggedIn(true);
       // Effects run asynchronously away from the actual render, so this will re-render
       // when setLoggedIn gets called above and the below web request will still be
       // happening in the background.
-      const json = await getSubscribed(storedToken);
+      const json = await getSubscribed(discordOAuthToken);
       setSubscribedInfo(json);
       setLoaded(true);
     }
-  }, []);
+  }, [discordOAuthToken]);
 
   if (!loggedIn) {
-    return <Login />;
+    return <h2>Login Required</h2>;
   }
   if (!loaded) {
-    return <p>Loading subscribed channel info...</p>;
+    return (
+      <Loader
+        className="loader"
+        type="Grid"
+        color="#00BFFF"
+        height={25}
+        width={25}
+      />
+    );
   }
   if (subscribedInfo.success === false) {
     return <p>{`Error: ${subscribedInfo.error}`}</p>;

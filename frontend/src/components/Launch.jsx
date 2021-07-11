@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import Loader from 'react-loader-spinner';
 import getNextLaunch from '../spacexapi/nextlaunch';
 import '../css/Launch.scss';
 
 export default function Launch() {
   const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [launchInfo, setLaunchInfo] = useState({});
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function Launch() {
         } else {
           setLaunchInfo(json);
         }
-        setIsLoaded(true);
+        setLoaded(true);
       });
   }, []);
 
@@ -26,8 +27,18 @@ export default function Launch() {
         {`Error: ${error.message}`}
       </div>
     );
-  } if (!isLoaded) {
-    return <div>Loading...</div>;
+  }
+
+  if (!loaded) {
+    return (
+      <Loader
+        className="loader"
+        type="Grid"
+        color="#00BFFF"
+        height={25}
+        width={25}
+      />
+    );
   }
 
   const launchMoment = moment(launchInfo.date_utc);

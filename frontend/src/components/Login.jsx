@@ -9,6 +9,6 @@ if (window.location.hostname === 'localhost') {
 export default function Login() {
   return (
   // eslint-disable-next-line no-return-assign
-    <Button variant="contained" color="secondary" onClick={() => window.location.href = oauthUrl}>Login with Discord</Button>
+    <Button variant="contained" color="secondary" onClick={() => window.location.href = oauthUrl}>Login</Button>
   );
 }
