@@ -10,6 +10,10 @@ import (
 	"net/http"
 )
 
+func serveIndex(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./frontend_build/index.html")
+}
+
 func main() {
 	c, err := config.Get()
 	if err != nil {
@@ -29,6 +33,11 @@ func main() {
 	r.HandleFunc("/api/channel", a.DeleteChannel).Methods("DELETE")
 	r.HandleFunc("/api/channel", a.UpdateChannel).Methods("PUT")
 	r.HandleFunc("/api/metrics", a.Metrics).Methods("GET")
+
+	// Due to React Router we have these routes that should all just server the index file.
+	r.HandleFunc("/", serveIndex)
+	r.HandleFunc("/settings", serveIndex)
+	r.HandleFunc("/stats", serveIndex)
 
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend_build")))
 
