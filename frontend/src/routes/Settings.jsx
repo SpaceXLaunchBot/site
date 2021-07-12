@@ -4,16 +4,15 @@ import Loader from 'react-loader-spinner';
 import Channel from '../components/Channel';
 import Guild from '../components/Guild';
 import getSubscribed from '../internalapi/subscribed';
+import '../css/Settings.scss';
 
 export default function Settings(props) {
-  const { discordOAuthToken } = props;
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { discordOAuthToken, loggedIn } = props;
   const [loaded, setLoaded] = useState(false);
   const [subscribedInfo, setSubscribedInfo] = useState({});
 
   useEffect(async () => {
-    if (discordOAuthToken !== '') {
-      setLoggedIn(true);
+    if (loggedIn) {
       // Effects run asynchronously away from the actual render, so this will re-render
       // when setLoggedIn gets called above and the below web request will still be
       // happening in the background.
@@ -21,7 +20,7 @@ export default function Settings(props) {
       setSubscribedInfo(json);
       setLoaded(true);
     }
-  }, [discordOAuthToken]);
+  }, [loggedIn]);
 
   if (!loggedIn) {
     return <h2>Login Required</h2>;

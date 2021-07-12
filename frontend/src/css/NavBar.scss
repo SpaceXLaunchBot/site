@@ -1,0 +1,65 @@
+@import './Colours.scss';
+
+.navbar {
+  // Comments are CSS before changing div to Grid.
+  //display: flex;
+  //justify-content: space-between;
+  //align-content: center;
+  //width: 100%;
+  //margin: auto;
+  //padding-left: 10em;
+  //padding-right: 10em;
+  background-color: $colour-background-secondary;
+
+  img {
+    height: 3em;
+    border-radius: 50%;
+  }
+
+  .navbarTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      // Overwrite style from a because this will be inside of one.
+      color: white;
+    }
+
+    img {
+      margin-right: 1em;
+    }
+  }
+
+  .navbarLinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      margin-right: 2em;
+    }
+  }
+
+  .userInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    //border-style: solid;
+    //border-color: white;
+    //border-width: 0.1em;
+    //border-radius: 0.5em;
+
+    padding: 0.1em 0.75em;
+
+    p {
+      padding-right: 0.5em;
+    }
+
+    button {
+      padding: 0.1em 0.5em;
+      margin-left: 1.5em;
+    }
+  }
+}

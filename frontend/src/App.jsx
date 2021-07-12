@@ -17,6 +17,15 @@ function isWithinAWeek(momentDate) {
 
 export default function App() {
   const [discordOAuthToken, setDiscordOAuthToken] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const logOut = () => {
+    localStorage.removeItem('discord-oauth-token');
+    localStorage.removeItem('discord-login-time');
+    localStorage.removeItem('user-data');
+    setDiscordOAuthToken('');
+    setLoggedIn(false);
+  };
 
   useEffect(async () => {
     let storedToken = localStorage.getItem('discord-oauth-token');
@@ -25,7 +34,7 @@ export default function App() {
     // Delete stored token if it's older than a week.
     if (storedLoginTime !== null) {
       if (!isWithinAWeek(moment(parseInt(storedLoginTime, 10)))) {
-        localStorage.removeItem('discord-oauth-token');
+        logOut();
         storedToken = null;
       }
     }
@@ -44,6 +53,7 @@ export default function App() {
     // We either found a token in localstorage or the url.
     if (storedToken !== null) {
       setDiscordOAuthToken(storedToken);
+      setLoggedIn(true);
     }
   }, []);
 
@@ -53,13 +63,13 @@ export default function App() {
       <StylesProvider injectFirst>
         <CssBaseline />
         <BrowserRouter>
-          <NavBar />
+          <NavBar discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} logOut={logOut} />
           <Switch>
             <Route path="/stats">
               <Stats />
             </Route>
             <Route path="/settings">
-              <Settings discordOAuthToken={discordOAuthToken} />
+              <Settings discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
             </Route>
             <Route path="/">
               <Home />

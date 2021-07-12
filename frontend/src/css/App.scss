@@ -1,8 +1,4 @@
-$colour-text: #FFFFFF;
-$colour-highlight: #7289DA;
-$colour-background: #2C2F33;
-$colour-background-secondary: #393E43;
-$color-outline: #686D73;
+@import './Colours.scss';
 
 //
 //
@@ -28,45 +24,6 @@ a:hover {
     color: white;
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-content: center;
-    width: 100%;
-    margin: auto;
-    background-color: $colour-background-secondary;
-    border-radius: 0.2em;
-    padding-left: 10em;
-    padding-right: 10em;
-
-    .navbarTitle {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        h1 {
-            // Overwrite style from a because this will be inside of one.
-            color: white;
-        }
-
-        img {
-            height: 3em;
-            border-radius: 50%;
-            margin-right: 1em;
-        }
-    }
-
-    .navbarLinks {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        a {
-            margin-right: 2em;
-        }
-    }
-}
-
 .loader {
     position: absolute;
     top: 50%;
@@ -74,56 +31,8 @@ a:hover {
     transform: translate(-50%, -50%);
 }
 
-.chart {
-    margin: 2em auto auto;
-}
-
 .launchPatch {
     width: 10em;
-}
-
-.guild {
-    border-style: solid;
-    border-radius: 1em;
-    border-color: $colour-background-secondary;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-
-    .guildHeader{
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-
-        .guildIcon {
-            border-radius: 50%;
-            width: 5em;
-            margin-right: 1em;
-        }
-
-        .guildName {
-            margin-top: 0.5em;
-            margin-bottom: 0.5em;
-        }
-    }
-
-    .channelGrid {
-        background-color: $colour-background-secondary;
-        // Centers it with space at bottom
-        margin: 0 auto 1em;
-        border-radius: 1em;
-        width: 75%;
-
-        .launchMentionsInput {
-            // Space at bottom when screen width is small
-            margin-bottom: 1em;
-            margin-left: 0.5em;
-            margin-right: 0.5em;
-        }
-
-        .radioButton {
-            margin-left: 0;
-            margin-right: 0.5em;
-        }
-    }
 }
 
 //

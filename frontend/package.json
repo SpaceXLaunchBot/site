@@ -30,7 +30,8 @@
     ],
     "rules": {
       "react/prop-types": "off",
-      "no-restricted-syntax": "off"
+      "no-restricted-syntax": "off",
+      "no-console":  "off"
     }
   },
   "browserslist": {

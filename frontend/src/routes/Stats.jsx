@@ -4,6 +4,7 @@ import {
 } from 'recharts';
 import Loader from 'react-loader-spinner';
 import getMetrics from '../internalapi/metrics';
+import '../css/Stats.scss';
 
 export default function Stats() {
   const [counts, setCounts] = useState({});
