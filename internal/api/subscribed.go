@@ -82,5 +82,5 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	endWithResponse(w, response)
+	endWithResponse(w, &response)
 }

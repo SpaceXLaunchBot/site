@@ -94,6 +94,6 @@ Updates a subscribed channel in the database with the given information.
 }
 ```
 
-## `GET` `/api/metrics`
+## `GET` `/api/stats`
 
-Returns some basic metrics about the bot. Currently a WIP.
+Returns some basic stats about the bot. Currently a WIP.

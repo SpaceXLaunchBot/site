@@ -6,32 +6,34 @@ import (
 	"net/http"
 )
 
-// subscribedResponse is the API response for the metrics API route.
-type metricsResponse struct {
+// subscribedResponse is the API response for the stats API route.
+type statsResponse struct {
 	genericResponse
 	CountRecords []database.CountRecord `json:"counts"`
 }
 
-// Metrics returns metric information.
-func (a Api) Metrics(w http.ResponseWriter, r *http.Request) {
+// Stats is the endpoint handler for statistics derived from collected metrics.
+func (a Api) Stats(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	// We can cache this endpoint per IP to prevent refresh spam.
 	cacheKey := r.URL.String() + r.RemoteAddr
 	if cachedResp, ok := a.cache.Get(cacheKey); ok {
-		endWithResponse(w, cachedResp)
-		return
+		if cachedResponseAsserted, ok := cachedResp.(statsResponse); ok {
+			endWithResponse(w, &cachedResponseAsserted)
+			return
+		}
 	}
 
-	metrics, err := a.db.Metrics()
+	dbStats, err := a.db.Stats()
 	if err != nil {
 		endWithResponse(w, responseDatabaseError)
 		return
 	}
 
-	response := metricsResponse{}
+	response := statsResponse{}
 	response.Success = true
-	response.CountRecords = metrics
+	response.CountRecords = dbStats
 	a.cache.Set(cacheKey, response, cache.DefaultExpiration)
-	endWithResponse(w, response)
+	endWithResponse(w, &response)
 }

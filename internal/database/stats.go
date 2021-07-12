@@ -9,8 +9,8 @@ type CountRecord struct {
 	Hour            int    `db:"hour" json:"hour"`
 }
 
-// Metrics WIP.
-func (d Db) Metrics() ([]CountRecord, error) {
+// Stats WIP.
+func (d Db) Stats() ([]CountRecord, error) {
 	var ms []CountRecord
 
 	err := d.sqlxHandle.Select(&ms, `

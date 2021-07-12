@@ -3,7 +3,7 @@ import {
   CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import Loader from 'react-loader-spinner';
-import getMetrics from '../internalapi/stats';
+import getStats from '../internalapi/stats';
 import '../css/Stats.scss';
 
 export default function Stats() {
@@ -11,7 +11,7 @@ export default function Stats() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(async () => {
-    const m = await getMetrics();
+    const m = await getStats();
     setCounts(m.counts);
     setLoaded(true);
   }, []);
