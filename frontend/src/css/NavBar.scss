@@ -36,30 +36,28 @@
     justify-content: center;
     align-items: center;
 
-    a {
+    > * {
       margin-right: 2em;
     }
-  }
 
-  .userInfo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    //border-style: solid;
-    //border-color: white;
-    //border-width: 0.1em;
-    //border-radius: 0.5em;
-
-    padding: 0.1em 0.75em;
-
-    p {
-      padding-right: 0.5em;
+    .invisible {
+      display: none;
     }
 
-    button {
-      padding: 0.1em 0.5em;
-      margin-left: 1.5em;
+    .userInfo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      p {
+        padding-right: 0.5em;
+      }
+
+      button {
+        padding: 0.1em 0.5em;
+        margin-left: 1.5em;
+      }
     }
   }
+
 }

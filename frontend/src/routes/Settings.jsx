@@ -13,9 +13,6 @@ export default function Settings(props) {
 
   useEffect(async () => {
     if (loggedIn) {
-      // Effects run asynchronously away from the actual render, so this will re-render
-      // when setLoggedIn gets called above and the below web request will still be
-      // happening in the background.
       const json = await getSubscribed(discordOAuthToken);
       setSubscribedInfo(json);
       setLoaded(true);

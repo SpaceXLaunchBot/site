@@ -5,26 +5,24 @@ import getNextLaunch from '../spacexapi/nextlaunch';
 import '../css/Launch.scss';
 
 export default function Launch() {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [loaded, setLoaded] = useState(false);
   const [launchInfo, setLaunchInfo] = useState({});
 
-  useEffect(() => {
-    getNextLaunch()
-      .then((json) => {
-        if (json === {}) {
-          setError({ message: 'SpaceX API request failed' });
-        } else {
-          setLaunchInfo(json);
-        }
-        setLoaded(true);
-      });
+  useEffect(async () => {
+    const json = await getNextLaunch();
+    if (json === {}) {
+      setError('SpaceX API request failed');
+    } else {
+      setLaunchInfo(json);
+    }
+    setLoaded(true);
   }, []);
 
-  if (error) {
+  if (error !== '') {
     return (
       <div>
-        {`Error: ${error.message}`}
+        {`Error: ${error}`}
       </div>
     );
   }

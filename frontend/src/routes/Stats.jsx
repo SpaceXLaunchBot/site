@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
-  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend,
+  CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import Loader from 'react-loader-spinner';
-import getMetrics from '../internalapi/metrics';
+import getMetrics from '../internalapi/stats';
 import '../css/Stats.scss';
 
 export default function Stats() {

@@ -3,7 +3,7 @@ import './css/App.scss';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ToastProvider } from 'react-toast-notifications';
 import { StylesProvider } from '@material-ui/core/styles';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import moment from 'moment';
 import NavBar from './components/NavBar';
 import Settings from './routes/Settings';

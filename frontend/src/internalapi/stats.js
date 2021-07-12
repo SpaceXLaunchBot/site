@@ -1,4 +1,4 @@
-export default async function getMetrics() {
+export default async function getStats() {
   const res = await fetch('/api/metrics', {
     method: 'GET',
   });
