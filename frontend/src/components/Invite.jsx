@@ -1,9 +1,11 @@
 import React from 'react';
 import '../css/Invite.scss';
 
+const inviteUrl = 'https://discord.com/oauth2/authorize?client_id=411618411169447950&scope=bot&permissions=19456';
+
 export default function Invite() {
   const inviteClicked = () => {
-    console.log('clicked');
+    window.open(inviteUrl, '_blank');
   };
 
   return (
