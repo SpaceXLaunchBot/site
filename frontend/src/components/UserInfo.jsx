@@ -13,7 +13,6 @@ async function getUserData(token) {
     avatarUrl: `https://cdn.discordapp.com/avatars/${json.id}/${json.avatar}.png`,
   };
 }
-
 export default function UserInfo(props) {
   const { discordOAuthToken, loggedIn } = props;
   const [userData, setUserData] = useState({});
@@ -38,8 +37,8 @@ export default function UserInfo(props) {
 
   return (
     <div className="userInfo">
+      <img className="userName" src={userData.avatarUrl} alt={'User\'s avatar'} />
       <p>{userData.userName}</p>
-      <img src={userData.avatarUrl} alt={'User\'s avatar'} />
     </div>
   );
 }

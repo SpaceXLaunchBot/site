@@ -20,10 +20,11 @@ export default function NavBar(props) {
         <Link to="/"><h1>SpaceXLaunchBot</h1></Link>
       </Grid>
       <Grid item xs={12} sm={6} className="navbarLinks">
-        <Link to="/settings">Bot Settings</Link>
+        <Link to="/commands">Commands</Link>
+        <Link to="/settings">Server Settings</Link>
         <Link to="/stats">Stats</Link>
-        {/* No styling required, just having this adds enough space. */}
-        <div className="spacer" />
+        <a href="https://github.com/SpaceXLaunchBot/" rel="noreferrer" target="_blank">GitHub</a>
+        {/* TODO: Make logging out like on mee6's website instead of having button always there. */}
         <UserInfo discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
         <Login loggedIn={loggedIn} logOut={logOut} />
       </Grid>

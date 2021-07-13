@@ -1,15 +1,9 @@
 @import './Colours.scss';
 
 .navbar {
-  // Comments are CSS before changing div to Grid.
-  //display: flex;
-  //justify-content: space-between;
-  //align-content: center;
-  //width: 100%;
-  //margin: auto;
-  //padding-left: 10em;
-  //padding-right: 10em;
-  background-color: $colour-background-secondary;
+  background: $colour-background-secondary;
+  background: linear-gradient(180deg, $colour-background-secondary 0%, $colour-background-secondary 85%, $colour-background 100%);
+  margin-bottom: 2em;
 
   img {
     height: 3em;
@@ -49,15 +43,13 @@
       justify-content: center;
       align-items: center;
 
-      p {
-        padding-right: 0.5em;
+      .userName {
+        font-weight: bold;
       }
 
-      button {
-        padding: 0.1em 0.5em;
-        margin-left: 1.5em;
+      p {
+        margin-left: 0.5em;
       }
     }
   }
-
 }

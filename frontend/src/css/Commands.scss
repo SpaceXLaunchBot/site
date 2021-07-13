@@ -1,0 +1,17 @@
+@import './Colours.scss';
+
+table {
+  max-width: 75%;
+  background-color: $colour-background-secondary;
+  border-radius: 0.5em;
+  margin: auto;
+
+  .MuiTableCell-root {
+    color: $colour-text;
+    border-color: $colour-outline;
+  }
+  .MuiTableCell-head{
+    color: $colour-text-secondary;
+    font-weight: bold;
+  }
+}

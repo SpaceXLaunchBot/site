@@ -9,6 +9,7 @@ import NavBar from './components/NavBar';
 import Settings from './routes/Settings';
 import Home from './routes/Home';
 import Stats from './routes/Stats';
+import Commands from './routes/Commands';
 
 function isWithinAWeek(momentDate) {
   const aWeekAgo = moment().subtract(7, 'days').startOf('day');
@@ -65,6 +66,9 @@ export default function App() {
         <BrowserRouter>
           <NavBar discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} logOut={logOut} />
           <Switch>
+            <Route path="/commands">
+              <Commands />
+            </Route>
             <Route path="/stats">
               <Stats />
             </Route>

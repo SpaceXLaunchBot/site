@@ -13,7 +13,7 @@ body {
 }
 
 a {
-    color: rgb(155, 157, 159);
+    color: $colour-text-secondary;
     text-decoration: none;
     -o-transition: .5s;
     -moz-transition: .5s;
@@ -35,6 +35,33 @@ a:hover {
     width: 10em;
 }
 
+// TODO: Move into Home.scss, move scss files to be next to relevant jsx files.
+.invite {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgb(88,101,242);
+    background: linear-gradient(90deg, rgba(88,101,242,1) 0%, rgba(235,69,158,1) 100%);
+    transition: background 0.5s ease;
+
+    border-radius: 0.5em;
+
+    width: 15em;
+    margin: auto;
+    height: 3.5em;
+
+    img {
+        height: 3em;
+        //margin-right: 1em;
+    }
+}
+.invite:hover {
+    cursor: pointer;
+    // TODO: Nice gradient transition.
+    background: linear-gradient(90deg, rgba(235,69,158,1) 0%, rgba(88,101,242,1) 100%);
+}
+
 //
 //
 // Global MUI Styling - https://material-ui.com/guides/interoperability/#global-css
@@ -42,7 +69,7 @@ a:hover {
 //
 
 .MuiRadio-colorSecondary {
-    color: $color-outline;
+    color: $colour-outline;
 }
 
 .material-icons, .MuiRadio-colorSecondary.Mui-checked {
@@ -54,5 +81,5 @@ a:hover {
 }
 
 .MuiFormLabel-root {
-    color: $color-outline;
+    color: $colour-outline;
 }
