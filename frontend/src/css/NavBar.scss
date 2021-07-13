@@ -1,14 +1,11 @@
-@import './Colours.scss';
+@import 'Colours';
 
 .navbar {
   background: $colour-background-secondary;
   background: linear-gradient(180deg, $colour-background-secondary 0%, $colour-background-secondary 85%, $colour-background 100%);
   margin-bottom: 2em;
-
-  img {
-    height: 3em;
-    border-radius: 50%;
-  }
+  padding-top: 1em;
+  padding-bottom: 1em;
 
   .navbarTitle {
     display: flex;
@@ -18,6 +15,7 @@
     h1 {
       // Overwrite style from a because this will be inside of one.
       color: white;
+      margin: 0;
     }
 
     img {
@@ -32,24 +30,6 @@
 
     > * {
       margin-right: 2em;
-    }
-
-    .invisible {
-      display: none;
-    }
-
-    .userInfo {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .userName {
-        font-weight: bold;
-      }
-
-      p {
-        margin-left: 0.5em;
-      }
     }
   }
 }

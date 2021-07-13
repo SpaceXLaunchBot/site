@@ -47,8 +47,9 @@ export default function Launch() {
   }
 
   return (
-    <div>
-      <h1>{launchInfo.name}</h1>
+    <div className="launch">
+      <h2>Next Launch</h2>
+      <p>{launchInfo.name}</p>
       {img}
       <p>{`Launching ${launchMoment.format('D MMM YYYY [at] HH:mm')}`}</p>
       <p>{launchInfo.details}</p>

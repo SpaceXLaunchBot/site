@@ -2,3 +2,18 @@ $colour-embed-highlight: #EE0F47;
 $colour-embed-background: #2F3136;
 $colour-embed-text-primary: #FFFFFF;
 $colour-embed-text-secondary: #BBBABE;
+
+.launch {
+  display: grid;
+  border-style: solid;
+  border-width: 0.1em;
+  border-radius: 0.1em;
+  width: 30%;
+  margin: auto;
+  margin-top: 2em;
+  text-align: left;
+
+  .launchPatch {
+    width: 10em;
+  }
+}

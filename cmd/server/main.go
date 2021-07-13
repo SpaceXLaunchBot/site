@@ -36,6 +36,7 @@ func main() {
 
 	// Due to React Router we have these routes that should all just server the index file.
 	r.HandleFunc("/", serveIndex)
+	r.HandleFunc("/commands", serveIndex)
 	r.HandleFunc("/settings", serveIndex)
 	r.HandleFunc("/stats", serveIndex)
 

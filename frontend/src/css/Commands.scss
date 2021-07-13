@@ -1,6 +1,6 @@
-@import './Colours.scss';
+@import 'Colours';
 
-table {
+.commandsTable {
   max-width: 75%;
   background-color: $colour-background-secondary;
   border-radius: 0.5em;
@@ -13,5 +13,6 @@ table {
   .MuiTableCell-head{
     color: $colour-text-secondary;
     font-weight: bold;
+    font-size: 1.2em;
   }
 }

@@ -1,0 +1,35 @@
+@import 'gradientMixin';
+
+.invite {
+  @include gradientAnimation(rgba(88,101,242,1), rgb(245, 0, 87), .6s);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 0.5em;
+
+  width: 15em;
+  margin: auto;
+  height: 3.5em;
+
+  p {
+    font-weight: bold;
+    margin-left: 0.5em;
+  }
+
+  img {
+    height: 1.5em;
+  }
+
+  &:before {
+    // This and the one in hover are needed because gradientAnimation resets the radius for some reason.
+    border-radius: 0.5em;
+  }
+  &:hover {
+    cursor: pointer;
+    &:before {
+      border-radius: 0.5em;
+    }
+  }
+}

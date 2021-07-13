@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Box } from '@material-ui/core';
 import Loader from 'react-loader-spinner';
 import Channel from '../components/Channel';
 import Guild from '../components/Guild';
@@ -64,8 +63,8 @@ export default function Settings(props) {
   }
 
   return (
-    <Box>
+    <div>
       {guilds}
-    </Box>
+    </div>
   );
 }

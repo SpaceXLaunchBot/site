@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../css/UserInfo.scss';
 
 async function getUserData(token) {
   const res = await fetch('https://discord.com/api/users/@me', {
@@ -37,8 +38,8 @@ export default function UserInfo(props) {
 
   return (
     <div className="userInfo">
-      <img className="userName" src={userData.avatarUrl} alt={'User\'s avatar'} />
-      <p>{userData.userName}</p>
+      <img className="circleImg" src={userData.avatarUrl} alt={'User\'s avatar'} />
+      <p className="userName">{userData.userName}</p>
     </div>
   );
 }

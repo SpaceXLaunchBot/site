@@ -1,4 +1,4 @@
-@import './Colours.scss';
+@import 'Colours';
 
 //
 //
@@ -19,9 +19,10 @@ a {
     -moz-transition: .5s;
     -webkit-transition: .5s;
     transition: .5s;
-}
-a:hover {
-    color: white;
+
+    &:hover {
+        color: white;
+    }
 }
 
 .loader {
@@ -31,39 +32,9 @@ a:hover {
     transform: translate(-50%, -50%);
 }
 
-.launchPatch {
-    width: 10em;
-}
-
-// TODO: Move into Home.scss, move scss files to be next to relevant jsx files.
-.invite {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: rgb(88,101,242);
-    background: linear-gradient(90deg, rgba(88,101,242,1) 0%, rgba(235,69,158,1) 100%);
-    transition: background 0.5s ease;
-
-    border-radius: 0.5em;
-
-    width: 15em;
-    margin: auto;
-    height: 3.5em;
-
-    p {
-        font-weight: bold;
-        margin-left: 0.5em;
-    }
-
-    img {
-        height: 1.5em;
-    }
-}
-.invite:hover {
-    cursor: pointer;
-    // TODO: Nice gradient transition.
-    background: linear-gradient(90deg, rgba(235,69,158,1) 0%, rgba(88,101,242,1) 100%);
+.circleImg {
+    height: 3em;
+    border-radius: 50%;
 }
 
 //

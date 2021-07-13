@@ -16,7 +16,7 @@ export default function NavBar(props) {
       className="navbar"
     >
       <Grid item xs={12} sm={6} className="navbarTitle">
-        <img alt="SpaceXLaunchBot icon" src="/logo192.png" />
+        <img className="circleImg" alt="SpaceXLaunchBot icon" src="/logo192.png" />
         <Link to="/"><h1>SpaceXLaunchBot</h1></Link>
       </Grid>
       <Grid item xs={12} sm={6} className="navbarLinks">
