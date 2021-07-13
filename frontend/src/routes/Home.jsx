@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div>
       <div className="invite" onClick={inviteClicked} onKeyDown={inviteClicked} role="button" tabIndex={0}>
-        <img src="/discordicon.png" alt="Discord Icon" />
+        <img src="/discordlogo.svg" alt="Discord Icon" />
         <p>Add SpaceXLaunchBot</p>
       </div>
       <Launch />
