@@ -51,9 +51,13 @@ a:hover {
     margin: auto;
     height: 3.5em;
 
+    p {
+        font-weight: bold;
+        margin-left: 0.5em;
+    }
+
     img {
-        height: 3em;
-        //margin-right: 1em;
+        height: 1.5em;
     }
 }
 .invite:hover {
