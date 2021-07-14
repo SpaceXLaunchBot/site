@@ -1,8 +1,6 @@
 @import 'colours';
 
-$spacing: 4em;
-
-$mui-breakpoint-sm: 600px;
+$defaultSpacing: 4em;
 
 .navbar {
   background: $colour-background-secondary;
@@ -15,7 +13,7 @@ $mui-breakpoint-sm: 600px;
     display: flex;
     justify-content: left;
     align-items: center;
-    padding-left: $spacing;
+    padding-left: $defaultSpacing;
 
     h1 {
       // Overwrite style from a because this will be inside of one.
@@ -34,7 +32,7 @@ $mui-breakpoint-sm: 600px;
     align-items: center;
 
     > * {
-      margin-right: $spacing;
+      margin-right: $defaultSpacing;
     }
   }
 }

@@ -15,11 +15,11 @@ async function getUserData(token) {
     avatarUrl: `https://cdn.discordapp.com/avatars/${json.id}/${json.avatar}.png`,
   };
 }
+
 export default function UserInfo(props) {
   const { discordOAuthToken, loggedIn } = props;
   const [userData, setUserData] = useState({});
-  // TODO: Rename.
-  const matches = useMediaQuery('(max-width:750px)');
+  const lessThan750px = useMediaQuery('(max-width:750px)');
 
   useEffect(async () => {
     if (loggedIn) {
@@ -39,14 +39,13 @@ export default function UserInfo(props) {
     return <div className="invisible" />;
   }
 
-  const classes = matches ? 'circleImg avatarImgSmall' : 'circleImg';
+  const classes = lessThan750px ? 'circleImg avatarImgSmall' : 'circleImg';
 
   return (
     <div className="userInfo">
-      {/* TODO: Make this smaller when matches is true */}
       <img className={classes} src={userData.avatarUrl} alt={'User\'s avatar'} />
       {/* https://reactjs.org/docs/conditional-rendering.html#inline-if-with-logical--operator */}
-      {matches === false && <p className="userName">{userData.userName}</p>}
+      {lessThan750px === false && <p className="userName">{userData.userName}</p>}
     </div>
   );
 }

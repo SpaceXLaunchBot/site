@@ -16,3 +16,9 @@
     font-size: 1.2em;
   }
 }
+
+@media (max-width: $mui-breakpoint-sm) {
+  .commandsTable {
+    max-width: 95%;
+  }
+}
