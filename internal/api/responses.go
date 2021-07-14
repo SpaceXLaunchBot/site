@@ -40,11 +40,11 @@ func endWithResponse(w http.ResponseWriter, r response) {
 
 // Define some common responses.
 var responseAllOk = &genericResponse{Success: true}
-var responseNoAuthHeader = &genericResponse{Error: "no Authorization header", StatusCode: http.StatusUnauthorized}
-var responseDiscordApiError = &genericResponse{Error: "error getting information from Discord API: ", StatusCode: http.StatusServiceUnavailable}
-var responseDatabaseError = &genericResponse{Error: "database error :(", StatusCode: http.StatusInternalServerError}
-var responseChannelNotInGuild = &genericResponse{Error: "no channel with that ID in the given guild"}
-var responseNotAdmin = &genericResponse{Error: "you are not an admin in that server", StatusCode: http.StatusForbidden}
-var responseNotAdminInAny = &genericResponse{Error: "you do not have admin permissions in any guilds"}
-var responseNoSubscribedInAny = &genericResponse{Error: "you do not have any subscribed channels in guilds that you administrate"}
-var responseBadJson = &genericResponse{Error: "failed to decode JSON body", StatusCode: http.StatusBadRequest}
+var responseNoAuthHeader = &genericResponse{Error: "No Authorization header", StatusCode: http.StatusUnauthorized}
+var responseDiscordApiError = &genericResponse{Error: "Error getting information from Discord API: ", StatusCode: http.StatusServiceUnavailable}
+var responseDatabaseError = &genericResponse{Error: "Database error :(", StatusCode: http.StatusInternalServerError}
+var responseChannelNotInGuild = &genericResponse{Error: "No channel with that ID in the given guild"}
+var responseNotAdmin = &genericResponse{Error: "You are not an admin in that server", StatusCode: http.StatusForbidden}
+var responseNotAdminInAny = &genericResponse{Error: "You do not have admin permissions in any guilds"}
+var responseNoSubscribedInAny = &genericResponse{Error: "You do not have any subscribed channels in guilds that you administrate"}
+var responseBadJson = &genericResponse{Error: "Failed to decode JSON body", StatusCode: http.StatusBadRequest}

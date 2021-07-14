@@ -8,19 +8,33 @@ type CountRecord struct {
 	Date            string `db:"date" json:"d"`
 }
 
-// Stats WIP.
-func (d Db) Stats() ([]CountRecord, error) {
-	var ms []CountRecord
+type ActionCount struct {
+	Action string `db:"action" json:"a"`
+	Count  int    `db:"count" json:"c"`
+}
 
-	err := d.sqlxHandle.Select(&ms, `
+// Stats WIP.
+func (d Db) Stats() ([]CountRecord, []ActionCount, error) {
+	var counts []CountRecord
+	var actionCounts []ActionCount
+
+	err := d.sqlxHandle.Select(&counts, `
 		SELECT
 			guild_count, subscribed_count,
-			to_char("time", 'YYYY-MM-DD HH:00:00') as "date"
+			to_char("time", 'YYYY-MM-DD HH24:00:00') AS "date"
 		FROM counts;`,
 	)
 
+	err = d.sqlxHandle.Select(&actionCounts, `
+		SELECT
+			action,
+			count(action) as "count"
+		FROM metrics
+		GROUP BY action;`,
+	)
+
 	if err != nil {
-		return ms, err
+		return counts, actionCounts, err
 	}
-	return ms, nil
+	return counts, actionCounts, nil
 }

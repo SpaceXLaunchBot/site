@@ -17,7 +17,12 @@ export default function Settings(props) {
         const json = await getSubscribed(discordOAuthToken);
         setSubscribedInfo(json);
       } catch (e) {
-        setError(e.toString());
+        // https://davidwalsh.name/detect-error-type-javascript
+        if (e.constructor === SyntaxError) {
+          setError('Server returned invalid JSON');
+        } else {
+          setError(e.toString());
+        }
       }
       setLoaded(true);
     }
@@ -38,20 +43,11 @@ export default function Settings(props) {
     );
   }
 
-  // TODO: DRY code!
-  if (error !== '') {
+  if (error !== '' || subscribedInfo.success === false) {
     return (
       <div>
         <h2>Failed to get data</h2>
-        <p>{error}</p>
-      </div>
-    );
-  }
-  if (subscribedInfo.success === false) {
-    return (
-      <div>
-        <h2>Failed to get data</h2>
-        <p>{subscribedInfo.error}</p>
+        <p>{error !== '' ? error : subscribedInfo.error}</p>
       </div>
     );
   }

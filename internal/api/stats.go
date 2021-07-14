@@ -10,6 +10,7 @@ import (
 type statsResponse struct {
 	genericResponse
 	CountRecords []database.CountRecord `json:"counts"`
+	ActionCounts []database.ActionCount `json:"action_counts"`
 }
 
 // Stats is the endpoint handler for statistics derived from collected metrics.
@@ -25,7 +26,7 @@ func (a Api) Stats(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	dbStats, err := a.db.Stats()
+	countRecords, actionCounts, err := a.db.Stats()
 	if err != nil {
 		endWithResponse(w, responseDatabaseError)
 		return
@@ -33,7 +34,8 @@ func (a Api) Stats(w http.ResponseWriter, r *http.Request) {
 
 	response := statsResponse{}
 	response.Success = true
-	response.CountRecords = dbStats
+	response.CountRecords = countRecords
+	response.ActionCounts = actionCounts
 	a.cache.Set(cacheKey, response, cache.DefaultExpiration)
 	endWithResponse(w, &response)
 }

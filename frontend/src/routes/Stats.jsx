@@ -8,7 +8,8 @@ import getStats from '../internalapi/stats';
 import '../css/Stats.scss';
 
 export default function Stats() {
-  const [counts, setCounts] = useState({});
+  const [counts, setCounts] = useState([]);
+  // const [actionCounts, setActionCounts] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState('');
   // Maybe this should be passed down thru props to reduce useMediaQuery usage?
@@ -18,8 +19,13 @@ export default function Stats() {
     try {
       const s = await getStats();
       setCounts(s.counts);
+      // setActionCounts(s.action_counts);
     } catch (e) {
-      setError(e.toString());
+      if (e.constructor === SyntaxError) {
+        setError('Server returned invalid JSON');
+      } else {
+        setError(e.toString());
+      }
     }
     setLoaded(true);
   }, []);
@@ -45,6 +51,7 @@ export default function Stats() {
     );
   }
 
+  // TODO: Look into ResponsiveContainer.
   const chartWidths = lessThan750px ? 400 : 600;
 
   return (

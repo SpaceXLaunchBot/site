@@ -59,7 +59,7 @@ export default function App() {
   }, []);
 
   return (
-    <ToastProvider autoDismiss>
+    <ToastProvider autoDismiss placement="bottom-center">
       {/* See https://material-ui.com/guides/interoperability/#controlling-priority-2 */}
       <StylesProvider injectFirst>
         <CssBaseline />

@@ -1,0 +1,45 @@
+@import 'colours';
+
+.welcome {
+  text-align: left;
+  margin-left: 10%;
+  margin-top: 5%;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: auto auto;
+
+  width: 50%;
+
+  margin-top: 2em;
+  margin-left: 40%
+}
+
+@media (min-height: 800px) {
+  .features {
+    margin-top: 10em;
+  }
+}
+
+@media (max-width: 950px) {
+  .features {
+    grid-template-columns: auto;
+  }
+}
+
+@media (max-width: $mui-breakpoint-sm) {
+  .welcome {
+    text-align: center;
+    margin: auto;
+
+    .invite {
+      margin: auto;
+    }
+  }
+  .features {
+    margin: auto;
+    margin-top: 2em;
+    width: 90%;
+  }
+}

@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"github.com/SpaceXLaunchBot/site/internal/database"
-	"log"
 	"net/http"
 )
 
@@ -49,7 +48,6 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 
 	subbedChannels, err := a.db.SubscribedChannels(adminGuilds)
 	if err != nil {
-		log.Printf("ERROR: %s", err.Error())
 		endWithResponse(w, responseDatabaseError)
 		return
 	}
@@ -79,7 +77,6 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 				SubscribedChannels: []database.SubscribedChannelRecord{channel},
 			}
 		}
-
 	}
 
 	endWithResponse(w, &response)
