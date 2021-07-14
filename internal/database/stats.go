@@ -8,6 +8,8 @@ type CountRecord struct {
 	Date            string `db:"date" json:"d"`
 }
 
+// ActionCount contains information about each metric action and how many times it has happened.
+// Can be marshalled straight to JSON.
 type ActionCount struct {
 	Action string `db:"action" json:"a"`
 	Count  int    `db:"count" json:"c"`
@@ -24,6 +26,9 @@ func (d Db) Stats() ([]CountRecord, []ActionCount, error) {
 			to_char("time", 'YYYY-MM-DD HH24:00:00') AS "date"
 		FROM counts;`,
 	)
+	if err != nil {
+		return counts, actionCounts, err
+	}
 
 	err = d.sqlxHandle.Select(&actionCounts, `
 		SELECT
@@ -32,9 +37,9 @@ func (d Db) Stats() ([]CountRecord, []ActionCount, error) {
 		FROM metrics
 		GROUP BY action;`,
 	)
-
 	if err != nil {
 		return counts, actionCounts, err
 	}
+
 	return counts, actionCounts, nil
 }
