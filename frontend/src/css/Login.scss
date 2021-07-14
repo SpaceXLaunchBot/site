@@ -1,6 +1,17 @@
 .logOut, .logOutImg {
   height: 1.5em;
 }
+
 .logOut:hover {
   cursor: pointer;
+}
+
+.logOutImg {
+  // Filters idea from https://stackoverflow.com/a/53336754/6396652
+  // Calculated using https://codepen.io/sosuke/pen/Pjoqqp
+  transition: filter 100ms ease;
+  filter: invert(14%) sepia(81%) saturate(6243%) hue-rotate(332deg) brightness(93%) contrast(108%);
+  &:hover {
+    filter: invert(15%) sepia(41%) saturate(6746%) hue-rotate(319deg) brightness(104%) contrast(99%);
+  }
 }

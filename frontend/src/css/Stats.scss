@@ -1,3 +1,17 @@
+@import 'colours';
+
 .chart {
   margin: auto;
+
+  .recharts-cartesian-axis-tick-value {
+    fill: $colour-text;
+  }
+
+  .recharts-default-tooltip {
+    // Looks like important is the only way to do this.
+    background-color: $colour-background-secondary !important;
+    border-color: $colour-outline !important;
+    border-style: solid !important;
+    border-width: 0.1em !important;
+  }
 }

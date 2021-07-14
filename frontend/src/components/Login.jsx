@@ -7,20 +7,12 @@ const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=78281071054
 
 export default function Login(props) {
   const { loggedIn, logOut } = props;
-
-  const setRed = (e) => {
-    e.target.setAttribute('src', '/logout-red.svg');
-  };
-
-  const setPink = (e) => {
-    e.target.setAttribute('src', '/logout-pink.svg');
-  };
+  // TODO: Make smaller like avatar image?
 
   if (!loggedIn) {
     return (
       <Button
         variant="contained"
-        color="secondary"
         // eslint-disable-next-line no-return-assign
         onClick={() => window.location.href = oauthUrl}
       >
@@ -33,11 +25,7 @@ export default function Login(props) {
     <div className="logOut" onClick={logOut} onKeyDown={logOut} role="button" tabIndex={0}>
       <img
         className="logOutImg"
-        src="/logout-pink.svg"
-        onMouseOver={setRed}
-        onMouseOut={setPink}
-        onFocus={setRed}
-        onBlur={setPink}
+        src="/logout.svg"
         alt="Log Out"
         title="Log Out"
       />

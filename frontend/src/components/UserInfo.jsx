@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../css/UserInfo.scss';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 async function getUserData(token) {
   const res = await fetch('https://discord.com/api/users/@me', {
@@ -17,6 +18,8 @@ async function getUserData(token) {
 export default function UserInfo(props) {
   const { discordOAuthToken, loggedIn } = props;
   const [userData, setUserData] = useState({});
+  // TODO: Rename.
+  const matches = useMediaQuery('(max-width:750px)');
 
   useEffect(async () => {
     if (loggedIn) {
@@ -36,10 +39,14 @@ export default function UserInfo(props) {
     return <div className="invisible" />;
   }
 
+  const classes = matches ? 'circleImg avatarImgSmall' : 'circleImg';
+
   return (
     <div className="userInfo">
-      <img className="circleImg" src={userData.avatarUrl} alt={'User\'s avatar'} />
-      <p className="userName">{userData.userName}</p>
+      {/* TODO: Make this smaller when matches is true */}
+      <img className={classes} src={userData.avatarUrl} alt={'User\'s avatar'} />
+      {/* https://reactjs.org/docs/conditional-rendering.html#inline-if-with-logical--operator */}
+      {matches === false && <p className="userName">{userData.userName}</p>}
     </div>
   );
 }

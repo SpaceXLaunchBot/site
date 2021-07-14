@@ -8,12 +8,17 @@ import '../css/Settings.scss';
 export default function Settings(props) {
   const { discordOAuthToken, loggedIn } = props;
   const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState('');
   const [subscribedInfo, setSubscribedInfo] = useState({});
 
   useEffect(async () => {
     if (loggedIn) {
-      const json = await getSubscribed(discordOAuthToken);
-      setSubscribedInfo(json);
+      try {
+        const json = await getSubscribed(discordOAuthToken);
+        setSubscribedInfo(json);
+      } catch (e) {
+        setError(e.toString());
+      }
       setLoaded(true);
     }
   }, [loggedIn]);
@@ -32,8 +37,23 @@ export default function Settings(props) {
       />
     );
   }
+
+  // TODO: DRY code!
+  if (error !== '') {
+    return (
+      <div>
+        <h2>Failed to get data</h2>
+        <p>{error}</p>
+      </div>
+    );
+  }
   if (subscribedInfo.success === false) {
-    return <p>{`Error: ${subscribedInfo.error}`}</p>;
+    return (
+      <div>
+        <h2>Failed to get data</h2>
+        <p>{subscribedInfo.error}</p>
+      </div>
+    );
   }
 
   // The IDs are used as keys, just because they are there and are unique.
