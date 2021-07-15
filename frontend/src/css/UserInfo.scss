@@ -14,3 +14,14 @@
 .invisible {
   display: none;
 }
+
+.avatarImgSmall {
+  height: 2em;
+}
+
+.MuiPaper-root, .MuiPaper-root .MuiMenuItem-root {
+  // The drawer.
+  .avatarImgSmall {
+    margin-right: 1em;
+  }
+}

@@ -3,17 +3,9 @@
 $defaultSpacing: 4em;
 
 .MuiPaper-root, .MuiPaper-root .MuiMenuItem-root {
+  // The drawer.
   color: $colour-text;
   background-color: $colour-background;
-
-  .avatarImgSmall {
-    // Because we don't want it to have margin when it's in the navbar but now it's rendering in the drawer so we do.
-    margin-right: 1em;
-  }
-}
-
-.avatarImgSmall {
-  height: 2em;
 }
 
 .navbar {
@@ -43,6 +35,7 @@ $defaultSpacing: 4em;
     }
 
     img {
+      // Applies to spacex avatar not user avatar.
       margin-right: 1em;
     }
   }
