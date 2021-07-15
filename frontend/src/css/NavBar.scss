@@ -1,6 +1,12 @@
 @import 'vars';
 
-$defaultSpacing: 4em;
+// Idea from https://stackoverflow.com/a/28986779/6396652
+@mixin setNavBarSpacing($spacing) {
+  .navbar {
+    .navbarTitle {padding-left: $spacing;}
+    .navbarLinks > * {margin-right: $spacing;}
+  }
+}
 
 .MuiPaper-root, .MuiPaper-root .MuiMenuItem-root {
   // The drawer.
@@ -8,6 +14,7 @@ $defaultSpacing: 4em;
   background-color: $colour-background;
 }
 
+@include setNavBarSpacing($spacing: 4em);
 .navbar {
   background: $colour-background-secondary;
   background: linear-gradient(180deg, $colour-background-secondary 0%, $colour-background-secondary 85%, $colour-background 100%);
@@ -19,7 +26,6 @@ $defaultSpacing: 4em;
     display: flex;
     justify-content: left;
     align-items: center;
-    padding-left: $defaultSpacing;
 
     .drawerOpener {
       position: absolute;
@@ -44,37 +50,10 @@ $defaultSpacing: 4em;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-
-    > * {
-      margin-right: $defaultSpacing;
-    }
   }
 }
 
-@media (max-width: 1200px) {
-  .navbar {
-    .navbarTitle {padding-left: 2em;}
-    .navbarLinks > * {margin-right: 2em;}
-  }
-}
-
-@media (max-width: 950px) {
-  .navbar {
-    .navbarTitle {padding-left: 1em;}
-    .navbarLinks > * {margin-right: 1em;}
-  }
-}
-
-@media (max-width: 850px) {
-  .navbar {
-    .navbarTitle {padding-left: 5px;}
-    .navbarLinks > * {margin-right: 5px;}
-  }
-}
-
-//@media (max-width: $mui-breakpoint-sm) {
-//  .navbar {
-//    .navbarTitle {justify-content: center;}
-//    .navbarLinks {justify-content: center;}
-//  }
-//}
+@media (max-width: 1300px) {@include setNavBarSpacing($spacing: 2em)}
+@media (max-width: 1050px) {@include setNavBarSpacing($spacing: 1em)}
+@media (max-width: 900px) {@include setNavBarSpacing($spacing: 5px)}
+@media (max-width: $mui-breakpoint-sm) {.navbar {margin-bottom: 0}}

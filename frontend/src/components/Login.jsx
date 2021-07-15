@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Icon } from '@material-ui/core';
 import '../css/Login.scss';
 
 const loc = encodeURI(`${window.location.protocol}//${window.location.host}`);
@@ -20,15 +20,9 @@ export default function Login(props) {
     );
   }
 
-  // TODO: Use ExitToApp material icon instead?
   return (
     <div className="logOut" onClick={logOut} onKeyDown={logOut} role="button" tabIndex={0}>
-      <img
-        className="logOutImg"
-        src="/logout.svg"
-        alt="Log Out"
-        title="Log Out"
-      />
+      <Icon className="logOutIcon" alt="Log Out" title="Log Out">exit_to_app</Icon>
     </div>
   );
 }

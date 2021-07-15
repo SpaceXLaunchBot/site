@@ -8,10 +8,26 @@ import Login from './Login';
 import '../css/NavBar.scss';
 import UserInfo from './UserInfo';
 
+function ExternalLink(props) {
+  const { href, text, children } = props;
+  // We accept children so a MenuItem can be inserted.
+  return (
+    <a
+      href={href}
+      rel="noreferrer"
+      target="_blank"
+    >
+      {text}
+      {children}
+    </a>
+  );
+}
+
 export default function NavBar(props) {
   const { discordOAuthToken, loggedIn, logOut } = props;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const lessThan600px = useMediaQuery('(max-width:600px)');
+  const lessThan750px = useMediaQuery('(max-width:750px)');
 
   const drawerOpenClicked = () => {
     setDrawerOpen(true);
@@ -48,8 +64,12 @@ export default function NavBar(props) {
         <Link to="/commands">Commands</Link>
         <Link to="/settings">Server Settings</Link>
         <Link to="/stats">Stats</Link>
-        <a href="https://top.gg/bot/411618411169447950/" rel="noreferrer" target="_blank">Top.gg</a>
-        <a href="https://github.com/SpaceXLaunchBot/" rel="noreferrer" target="_blank">GitHub</a>
+        {!lessThan750px
+        && ([
+          <ExternalLink href="https://top.gg/bot/411618411169447950/" text="Top.gg" key={0} />,
+          <ExternalLink href="https://github.com/SpaceXLaunchBot/" text="GitHub" key={1} />,
+          <ExternalLink href="https://www.buymeacoffee.com/psidex" text="Donate" key={2} />,
+        ])}
         <UserInfo discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
         <Login loggedIn={loggedIn} logOut={logOut} />
       </Grid>
@@ -61,12 +81,15 @@ export default function NavBar(props) {
         <Link to="/commands"><MenuItem>Commands</MenuItem></Link>
         <Link to="/settings"><MenuItem>Server Settings</MenuItem></Link>
         <Link to="/stats"><MenuItem>Stats</MenuItem></Link>
-        <a href="https://top.gg/bot/411618411169447950/" rel="noreferrer" target="_blank">
+        <ExternalLink href="https://top.gg/bot/411618411169447950/">
           <MenuItem>Top.gg</MenuItem>
-        </a>
-        <a href="https://github.com/SpaceXLaunchBot/" rel="noreferrer" target="_blank">
+        </ExternalLink>
+        <ExternalLink href="https://github.com/SpaceXLaunchBot/">
           <MenuItem>GitHub</MenuItem>
-        </a>
+        </ExternalLink>
+        <ExternalLink href="https://www.buymeacoffee.com/psidex">
+          <MenuItem>Donate</MenuItem>
+        </ExternalLink>
         <MenuItem>
           <UserInfo discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
           <Login loggedIn={loggedIn} logOut={logOut} />
