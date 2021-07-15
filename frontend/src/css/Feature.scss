@@ -1,3 +1,5 @@
+@import 'vars';
+
 .feature {
   width: 100%;
   text-align: left;
@@ -9,14 +11,22 @@
     align-items: center;
 
     .featureIcon {
-      height: 2em;
-      width: 2em;
-      margin-right: 1em;
+      color: $colour-text;
+      margin-right: 0.5em;
     }
   }
 
   p {
     margin-top: 0;
     overflow-wrap: break-word;
+  }
+}
+
+@media (min-width: 950px) {
+  // See Home.scss, when it's 2 columns we want some more spacing between the texts.
+  .feature {
+    p {
+      width: 90%;
+    }
   }
 }

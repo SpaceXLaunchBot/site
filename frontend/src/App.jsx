@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  lazy, Suspense, useEffect, useState,
+} from 'react';
 import './css/App.scss';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ToastProvider } from 'react-toast-notifications';
 import { StylesProvider } from '@material-ui/core/styles';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import moment from 'moment';
+import Loader from './components/Loader';
 import NavBar from './components/NavBar';
-import Settings from './routes/Settings';
-import Home from './routes/Home';
-import Stats from './routes/Stats';
-import Commands from './routes/Commands';
+
+// https://create-react-app.dev/docs/code-splitting/
+// https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
+// NOTE: We use the babel eslint parser from babel-eslint, normal eslint doesn't like import().
+const Commands = lazy(() => import('./routes/Commands'));
+const Stats = lazy(() => import('./routes/Stats'));
+const Settings = lazy(() => import('./routes/Settings'));
+const Home = lazy(() => import('./routes/Home'));
 
 function isWithinAWeek(momentDate) {
   const aWeekAgo = moment().subtract(7, 'days').startOf('day');
@@ -65,20 +72,22 @@ export default function App() {
         <CssBaseline />
         <BrowserRouter>
           <NavBar discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} logOut={logOut} />
-          <Switch>
-            <Route path="/commands">
-              <Commands />
-            </Route>
-            <Route path="/stats">
-              <Stats />
-            </Route>
-            <Route path="/settings">
-              <Settings discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
+          <Suspense fallback={<Loader />}>
+            <Switch>
+              <Route path="/commands">
+                <Commands />
+              </Route>
+              <Route path="/stats">
+                <Stats />
+              </Route>
+              <Route path="/settings">
+                <Settings discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
+              </Route>
+              <Route path="/">
+                <Home />
+              </Route>
+            </Switch>
+          </Suspense>
         </BrowserRouter>
       </StylesProvider>
     </ToastProvider>

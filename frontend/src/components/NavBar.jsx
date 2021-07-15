@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Drawer, Grid, MenuItem } from '@material-ui/core';
-import { AiOutlineMenu } from 'react-icons/all';
+import {
+  Drawer, Grid, Icon, MenuItem,
+} from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Login from './Login';
 import '../css/NavBar.scss';
@@ -12,7 +13,7 @@ export default function NavBar(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const lessThan600px = useMediaQuery('(max-width:600px)');
 
-  const drawerOpenBtnClicked = () => {
+  const drawerOpenClicked = () => {
     setDrawerOpen(true);
   };
 
@@ -25,6 +26,7 @@ export default function NavBar(props) {
   // close it when you select a menu item, since you can see them in the background a user might be
   // clicking through multiple pages to see what they are.
   // ALSO: Not sure about 2 copies of all links for header and drawer, maybe some way to DRY?
+  // ALSO: Logout menuitem isn't nested inside so user has to click on svg which is bad maybe
 
   return (
     <Grid
@@ -38,7 +40,7 @@ export default function NavBar(props) {
       <Grid item xs={12} sm={3} className="navbarTitle">
         <img className="circleImg" alt="SpaceXLaunchBot icon" src="/logo192.png" />
         <Link to="/"><h1>SpaceXLaunchBot</h1></Link>
-        {lessThan600px && <AiOutlineMenu className="drawerOpener" onClick={drawerOpenBtnClicked} />}
+        {lessThan600px && <Icon className="drawerOpener" onClick={drawerOpenClicked}>menu</Icon>}
       </Grid>
       {!lessThan600px
       && (
@@ -54,37 +56,22 @@ export default function NavBar(props) {
       )}
       {lessThan600px
       && (
-        <Drawer className="menuDrawer" width={400} anchor="right" open={drawerOpen}>
-          <Link to="/"><MenuItem>Home</MenuItem></Link>
-          <Link to="/commands"><MenuItem>Commands</MenuItem></Link>
-          <Link to="/settings"><MenuItem>Server Settings</MenuItem></Link>
-          <Link to="/stats"><MenuItem>Stats</MenuItem></Link>
-          <a
-            href="https://top.gg/bot/411618411169447950/"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <MenuItem>
-              Top.gg
-            </MenuItem>
-          </a>
-          <a
-            href="https://github.com/SpaceXLaunchBot/"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <MenuItem>
-              GitHub
-            </MenuItem>
-          </a>
-          <MenuItem>
-            <UserInfo
-              discordOAuthToken={discordOAuthToken}
-              loggedIn={loggedIn}
-            />
-            <Login loggedIn={loggedIn} logOut={logOut} />
-          </MenuItem>
-        </Drawer>
+      <Drawer className="menuDrawer" width={400} anchor="right" open={drawerOpen}>
+        <Link to="/"><MenuItem>Home</MenuItem></Link>
+        <Link to="/commands"><MenuItem>Commands</MenuItem></Link>
+        <Link to="/settings"><MenuItem>Server Settings</MenuItem></Link>
+        <Link to="/stats"><MenuItem>Stats</MenuItem></Link>
+        <a href="https://top.gg/bot/411618411169447950/" rel="noreferrer" target="_blank">
+          <MenuItem>Top.gg</MenuItem>
+        </a>
+        <a href="https://github.com/SpaceXLaunchBot/" rel="noreferrer" target="_blank">
+          <MenuItem>GitHub</MenuItem>
+        </a>
+        <MenuItem>
+          <UserInfo discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
+          <Login loggedIn={loggedIn} logOut={logOut} />
+        </MenuItem>
+      </Drawer>
       )}
     </Grid>
   );

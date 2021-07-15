@@ -7,7 +7,6 @@ const oauthUrl = `https://discord.com/api/oauth2/authorize?client_id=78281071054
 
 export default function Login(props) {
   const { loggedIn, logOut } = props;
-  // TODO: Make smaller like avatar image?
 
   if (!loggedIn) {
     return (
@@ -21,7 +20,7 @@ export default function Login(props) {
     );
   }
 
-  // TODO: Use icon from react icons?
+  // TODO: Use ExitToApp material icon instead?
   return (
     <div className="logOut" onClick={logOut} onKeyDown={logOut} role="button" tabIndex={0}>
       <img

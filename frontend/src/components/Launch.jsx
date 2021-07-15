@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import Loader from 'react-loader-spinner';
+import Loader from './Loader';
 import getNextLaunch from '../spacexapi/nextlaunch';
 import '../css/Launch.scss';
 
@@ -28,15 +28,7 @@ export default function Launch() {
   }
 
   if (!loaded) {
-    return (
-      <Loader
-        className="loader"
-        type="Grid"
-        color="#00BFFF"
-        height={25}
-        width={25}
-      />
-    );
+    return <Loader />;
   }
 
   const launchMoment = moment(launchInfo.date_utc);

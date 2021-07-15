@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 export default function Guild(props) {
   const { name, icon, children } = props;
   return (
-    <Box className="guild">
+    <div className="guild">
       <Grid
         container
         direction="row"
@@ -16,6 +16,6 @@ export default function Guild(props) {
         <h2 className="guildName">{name}</h2>
       </Grid>
       {children}
-    </Box>
+    </div>
   );
 }

@@ -1,8 +1,7 @@
-@import 'colours';
+@import 'vars';
 @import 'gradientMixin';
 
 .invite {
-  //@include gradientAnimation(rgba(88,101,242,1), rgb(245, 0, 87), .6s);
   @include gradientAnimation($colour-discord-purple, $colour-button, .6s);
 
   display: flex;
@@ -12,7 +11,6 @@
   border-radius: 0.5em;
 
   width: 15em;
-  //margin: auto;
   height: 3.5em;
 
   p {

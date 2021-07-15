@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
   CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis,
 } from 'recharts';
-import Loader from 'react-loader-spinner';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Loader from '../components/Loader';
 import getStats from '../internalapi/stats';
 import '../css/Stats.scss';
 
@@ -31,15 +31,7 @@ export default function Stats() {
   }, []);
 
   if (!loaded) {
-    return (
-      <Loader
-        className="loader"
-        type="Grid"
-        color="#00BFFF"
-        height={25}
-        width={25}
-      />
-    );
+    return <Loader />;
   }
 
   if (error !== '') {

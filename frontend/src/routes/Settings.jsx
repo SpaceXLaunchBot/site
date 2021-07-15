@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Loader from 'react-loader-spinner';
+import Loader from '../components/Loader';
 import Channel from '../components/Channel';
 import Guild from '../components/Guild';
 import getSubscribed from '../internalapi/subscribed';
@@ -32,15 +32,7 @@ export default function Settings(props) {
     return <h2>Login Required</h2>;
   }
   if (!loaded) {
-    return (
-      <Loader
-        className="loader"
-        type="Grid"
-        color="#00BFFF"
-        height={25}
-        width={25}
-      />
-    );
+    return <Loader />;
   }
 
   if (error !== '' || subscribedInfo.success === false) {
@@ -79,7 +71,7 @@ export default function Settings(props) {
   }
 
   return (
-    <div>
+    <div className="settings">
       {guilds}
     </div>
   );

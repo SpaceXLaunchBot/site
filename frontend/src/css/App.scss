@@ -1,4 +1,4 @@
-@import 'colours';
+@import 'vars';
 
 //
 //
@@ -25,13 +25,6 @@ a {
     }
 }
 
-.loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 .circleImg {
     height: 3em;
     border-radius: 50%;
@@ -42,22 +35,6 @@ a {
 // Global MUI Styling - https://material-ui.com/guides/interoperability/#global-css
 //
 //
-
-.MuiRadio-colorSecondary {
-    color: $colour-outline;
-}
-
-.material-icons, .MuiRadio-colorSecondary.Mui-checked {
-    color: $colour-highlight;
-}
-
-.MuiInput-input[type="text"] {
-    color: $colour-text;
-}
-
-.MuiFormLabel-root {
-    color: $colour-outline;
-}
 
 .MuiButton-root {
     color: $colour-text;
