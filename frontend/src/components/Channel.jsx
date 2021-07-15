@@ -96,7 +96,6 @@ export default function Channel(props) {
       </Grid>
       <Grid item xs={12} md={6}>
         <TextField
-          id="standard-basic"
           label="Launch Mentions"
           value={launchMentions}
           onChange={textFieldChanged}
