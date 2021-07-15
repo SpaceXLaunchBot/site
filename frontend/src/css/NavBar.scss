@@ -2,6 +2,20 @@
 
 $defaultSpacing: 4em;
 
+.MuiPaper-root, .MuiPaper-root .MuiMenuItem-root {
+  color: $colour-text;
+  background-color: $colour-background;
+
+  .avatarImgSmall {
+    // Because we don't want it to have margin when it's in the navbar but now it's rendering in the drawer so we do.
+    margin-right: 1em;
+  }
+}
+
+.avatarImgSmall {
+  height: 2em;
+}
+
 .navbar {
   background: $colour-background-secondary;
   background: linear-gradient(180deg, $colour-background-secondary 0%, $colour-background-secondary 85%, $colour-background 100%);
@@ -14,6 +28,13 @@ $defaultSpacing: 4em;
     justify-content: left;
     align-items: center;
     padding-left: $defaultSpacing;
+
+    .drawerOpener {
+      position: absolute;
+      right: 1em;
+      height: 1.5em;
+      width: 1.5em;
+    }
 
     h1 {
       // Overwrite style from a because this will be inside of one.
@@ -58,9 +79,9 @@ $defaultSpacing: 4em;
   }
 }
 
-@media (max-width: $mui-breakpoint-sm) {
-  .navbar {
-    .navbarTitle {justify-content: center;}
-    .navbarLinks {justify-content: center;}
-  }
-}
+//@media (max-width: $mui-breakpoint-sm) {
+//  .navbar {
+//    .navbarTitle {justify-content: center;}
+//    .navbarLinks {justify-content: center;}
+//  }
+//}

@@ -21,7 +21,7 @@ export default function Login(props) {
     );
   }
 
-  // TODO: Use icon from react icons.
+  // TODO: Use icon from react icons?
   return (
     <div className="logOut" onClick={logOut} onKeyDown={logOut} role="button" tabIndex={0}>
       <img
