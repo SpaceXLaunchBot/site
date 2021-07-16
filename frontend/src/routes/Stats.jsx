@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   PolarAngleAxis,
@@ -88,7 +87,6 @@ export default function Stats() {
       </LineChart>
       <h3>Command Usage</h3>
       <RadarChart className="chart" outerRadius={100} width={chartWidth} height={250} data={actionCounts}>
-        <Legend verticalAlign="bottom" />
         <PolarGrid stroke={scssVars.colourOutline} />
         <PolarAngleAxis dataKey="a" />
         <PolarRadiusAxis angle={30} domain={[0, Math.max(...Object.values(actionCounts))]} />
