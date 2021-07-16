@@ -1,0 +1,27 @@
+// Any / all vars that are shared or will potentially be shared between lots of files.
+// The .module in the file name is required for :export to work.
+
+$colour-text: #FFFFFF;
+$colour-text-secondary: rgb(155, 157, 159);
+$colour-highlight: #7289DA;
+$colour-button: #F50057;
+$colour-button-hover: #C51162;
+$colour-background: #2C2F33;
+$colour-background-secondary: #393E43;
+$colour-outline: #686D73;
+$colour-discord-purple: #5865F2;
+
+$mui-breakpoint-sm: 600px;
+
+// So we can import them into a js/jsx file.
+:export {
+  colourText: $colour-text;
+  colourTextSecondary: $colour-text-secondary;
+  colourHighlight: $colour-highlight;
+  colourButton: $colour-button;
+  colourButtonHover: $colour-button-hover;
+  colourBackground: $colour-background;
+  colourBackgroundSecondary: $colour-background-secondary;
+  colourOutline: $colour-outline;
+  colourDiscordPurple: $colour-discord-purple;
+}

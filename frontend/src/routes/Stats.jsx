@@ -16,6 +16,7 @@ import {
 import Loader from '../components/Loader';
 import getStats from '../internalapi/stats';
 import '../css/Stats.scss';
+import scssVars from '../css/vars.module.scss';
 
 export default function Stats() {
   const [counts, setCounts] = useState([]);
@@ -72,7 +73,7 @@ export default function Stats() {
       <h3>Server Count</h3>
       <LineChart className="chart" width={chartWidth} height={250} data={counts}>
         <Line strokeWidth={2} dot={false} name="Server Count" type="monotone" dataKey="g" stroke="#a7a3ff" />
-        <CartesianGrid stroke="#686D73" />
+        <CartesianGrid stroke={scssVars.colourOutline} />
         <XAxis tickMargin={10} dataKey="d" />
         <YAxis tickCount={6} type="number" width={35} domain={['dataMin - 10', 'dataMax + 10']} />
         <Tooltip />
@@ -80,7 +81,7 @@ export default function Stats() {
       <h3>Subscribed Channel Count</h3>
       <LineChart className="chart" width={chartWidth} height={250} data={counts}>
         <Line strokeWidth={2} dot={false} name="Subscribed Channel Count" type="monotone" dataKey="s" stroke="#13f088" />
-        <CartesianGrid stroke="#686D73" />
+        <CartesianGrid stroke={scssVars.colourOutline} />
         <XAxis tickMargin={10} dataKey="d" />
         <YAxis tickCount={6} type="number" width={35} domain={['dataMin - 10', 'dataMax + 10']} />
         <Tooltip />
@@ -88,7 +89,7 @@ export default function Stats() {
       <h3>Command Usage</h3>
       <RadarChart className="chart" outerRadius={100} width={chartWidth} height={250} data={actionCounts}>
         <Legend verticalAlign="bottom" />
-        <PolarGrid stroke="#686D73" />
+        <PolarGrid stroke={scssVars.colourOutline} />
         <PolarAngleAxis dataKey="a" />
         <PolarRadiusAxis angle={30} domain={[0, Math.max(...Object.values(actionCounts))]} />
         <Radar name="Count" dataKey="c" stroke="#EB459E" fill="#ed2b93" fillOpacity={0.35} />
