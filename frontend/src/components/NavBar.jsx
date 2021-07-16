@@ -54,7 +54,7 @@ export default function NavBar(props) {
       onClick={drawerOpen ? closeDrawer : null}
     >
       <Grid item xs={12} sm={3} className="navbarTitle">
-        <img className="circleImg" alt="SpaceXLaunchBot icon" src="/logo192.png" />
+        <img className="botAvatar circleImg" alt="SpaceXLaunchBot icon" src="/logo192.png" />
         <Link to="/"><h1>SpaceXLaunchBot</h1></Link>
         {lessThan600px && <Icon className="drawerOpener" onClick={drawerOpenClicked}>menu</Icon>}
       </Grid>

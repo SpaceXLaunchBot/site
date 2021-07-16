@@ -39,7 +39,7 @@ export default function UserInfo(props) {
     return <div className="invisible" />;
   }
 
-  const classes = lessThan820px ? 'circleImg avatarImgSmall' : 'circleImg';
+  const classes = lessThan820px ? 'circleImg userAvatarSmall' : 'circleImg';
 
   return (
     <div className="userInfo">

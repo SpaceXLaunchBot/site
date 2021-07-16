@@ -11,7 +11,7 @@ type CountRecord struct {
 // ActionCount contains information about each metric action and how many times it has happened.
 // Can be marshalled straight to JSON.
 type ActionCount struct {
-	Action string `db:"action" json:"a"`
+	Action string `db:"action_formatted" json:"a"`
 	Count  int    `db:"count" json:"c"`
 }
 
@@ -30,12 +30,14 @@ func (d Db) Stats() ([]CountRecord, []ActionCount, error) {
 		return counts, actionCounts, err
 	}
 
+	// Currently we just select commands used, maybe rename from ActionCount to CommandCount (and others)?
 	err = d.sqlxHandle.Select(&actionCounts, `
 		SELECT
-			action,
+			replace(replace(replace(action, 'command_', ''), '_cmd', ''), '_', '') as "action_formatted",
 			count(action) as "count"
 		FROM metrics
-		GROUP BY action;`,
+		WHERE action like 'command_%'
+		GROUP BY "action_formatted";`,
 	)
 	if err != nil {
 		return counts, actionCounts, err

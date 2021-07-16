@@ -1,17 +1,19 @@
 @import 'vars';
 
-.chart {
-  margin: auto auto 2em;
+.stats {
+  .chart {
+    margin: auto auto 2em;
 
-  .recharts-cartesian-axis-tick-value {
-    fill: $colour-text;
-  }
+    .recharts-text {
+      fill: $colour-text;
+    }
 
-  .recharts-default-tooltip {
-    // We want to do this here so we can access SCSS variables, it looks like important is the only way to do this.
-    background-color: $colour-background-secondary !important;
-    border-color: $colour-outline !important;
-    border-style: solid !important;
-    border-width: 0.1em !important;
+    .recharts-default-tooltip {
+      // We want to do this here so we can access SCSS variables, it looks like important is the only way to do this.
+      background-color: $colour-background-secondary !important;
+      border-color: $colour-outline !important;
+      border-style: solid !important;
+      border-width: 0.1em !important;
+    }
   }
 }

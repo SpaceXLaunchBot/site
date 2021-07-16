@@ -28,21 +28,18 @@
     align-items: center;
 
     .drawerOpener {
-      position: absolute;
-      right: 1em;
-      height: 1.5em;
-      width: 1.5em;
+      position: absolute; // For whatever reason this means we render on the right side.
+      right: 0.5em;
+    }
+
+    .botAvatar {
+      margin-right: 1em;
     }
 
     h1 {
-      // Overwrite style from a because this will be inside of one.
+      // Overwrite style from a because this will be inside of a Link which applies the global <a> styling.
       color: $colour-text;
       margin: 0;
-    }
-
-    img {
-      // Applies to spacex avatar not user avatar.
-      margin-right: 1em;
     }
   }
 
