@@ -21,13 +21,15 @@ func (g Guild) HasAdminPerms() bool {
 	return 8&g.Permissions != 0
 }
 
+// TODO: Does GuildList need to be its own type?
+
 // GuildList represents a list of Guilds.
 type GuildList []Guild
 
 // GetGuildList returns a GuildList of guilds that the user of the token is in.
 func (c Client) GetGuildList(bearerToken string) (GuildList, error) {
 	endpoint := "/users/@me/guilds"
-	body, err := c.apiRequest(endpoint, bearerToken)
+	body, err := c.apiRequestWithToken(endpoint, bearerToken)
 	if err != nil {
 		return GuildList{}, err
 	}

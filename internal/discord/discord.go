@@ -13,11 +13,13 @@ import (
 
 const apiBase = "https://discord.com/api"
 
-// ErrBadAuth described an error that occurs when a request fails due to bad authorization.
+// ErrBadAuth describes an error that occurs when a request fails due to bad authorization.
 var ErrBadAuth = errors.New("failed to authorize with the Discord API")
 
 // ErrRateLimit describes an error that occurs when the discord.Client is getting rate limited.
 var ErrRateLimit = errors.New("hit the Discord API rate limit, try again in a few seconds")
+
+// TODO: Make sure we don't crash if the Discord API returns something like {error: "", error_description: ""}.
 
 // Client contains methods for interacting with the Discord API.
 type Client struct {
@@ -30,19 +32,26 @@ type Client struct {
 	//  might still be able to make changes, but I think that's unlikely and also a fine tradeoff for not getting
 	//  banned from the Discord API.
 	cache *cache.Cache
+	// OAuth Info.
+	clientId     string
+	clientSecret string
+	redirectUri  string
 }
 
 // NewClient creates a new Client.
-func NewClient() Client {
+func NewClient(clientId, clientSecret, redirectUri string) Client {
 	return Client{
-		httpClient: &http.Client{Timeout: 10 * time.Second},
-		cache:      cache.New(10*time.Second, 10*time.Minute),
+		httpClient:   &http.Client{Timeout: 10 * time.Second},
+		cache:        cache.New(10*time.Second, 10*time.Minute),
+		clientId:     url.QueryEscape(clientId),
+		clientSecret: url.QueryEscape(clientSecret),
+		redirectUri:  url.QueryEscape(redirectUri),
 	}
 }
 
-// apiRequest performs a DiscordClient API request.
+// apiRequestWithToken performs a DiscordClient API request.
 // Caches all requests with default expiration.
-func (c Client) apiRequest(endpoint, bearerToken string) ([]byte, error) {
+func (c Client) apiRequestWithToken(endpoint, bearerToken string) ([]byte, error) {
 	cacheKey := endpoint + bearerToken
 
 	if cached, ok := c.cache.Get(cacheKey); ok {

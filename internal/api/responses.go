@@ -33,14 +33,14 @@ func (r *genericResponse) finalize() int {
 // This is because *genericResponse implements finalize and genericResponse doesn't.
 // This function doesn't actually "end" the ResponseWriter but it shouldn't be used after calling this.
 func endWithResponse(w http.ResponseWriter, r response) {
-	// TODO: Return json encode err?
+	// TODO: Should we do something about an encoding error?
 	w.WriteHeader(r.finalize())
 	_ = json.NewEncoder(w).Encode(r)
 }
 
 // Define some common responses.
 var responseAllOk = &genericResponse{Success: true}
-var responseNoAuthHeader = &genericResponse{Error: "No Authorization header", StatusCode: http.StatusUnauthorized}
+var responseNoSession = &genericResponse{Error: "No active session found", StatusCode: http.StatusUnauthorized}
 var responseDiscordApiError = &genericResponse{Error: "Error getting information from Discord API: ", StatusCode: http.StatusServiceUnavailable}
 var responseDatabaseError = &genericResponse{Error: "Database error :(", StatusCode: http.StatusInternalServerError}
 var responseChannelNotInGuild = &genericResponse{Error: "No channel with that ID in the given guild"}

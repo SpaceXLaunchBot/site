@@ -4,7 +4,7 @@ import {
   Drawer, Grid, Icon, MenuItem,
 } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Login from './Login';
+import LogInOutBtn from './LogInOutBtn';
 import '../css/NavBar.scss';
 import UserInfo from './UserInfo';
 
@@ -24,7 +24,7 @@ function ExternalLink(props) {
 }
 
 export default function NavBar(props) {
-  const { discordOAuthToken, loggedIn, logOut } = props;
+  const { loggedIn } = props;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const lessThan600px = useMediaQuery('(max-width:600px)');
   const lessThan750px = useMediaQuery('(max-width:750px)');
@@ -38,11 +38,11 @@ export default function NavBar(props) {
   };
 
   // TODO:
-  // The Grid onClick works but it closes the drawer wherever you click. It might be nicer to not
-  // close it when you select a menu item, since you can see them in the background a user might be
-  // clicking through multiple pages to see what they are.
-  // ALSO: Not sure about 2 copies of all links for header and drawer, maybe some way to DRY?
-  // ALSO: Logout menuitem isn't nested inside so user has to click on svg which is bad maybe
+  //  - The Grid onClick works but it closes the drawer wherever you click. It might be nicer to not
+  //    close it when you select a menu item, since you can see them in the background a user might
+  //    be clicking through multiple pages to see what they are.
+  //  - Not sure about 2 copies of all links for header and drawer, maybe some way to DRY?
+  //  - Logout menuitem isn't nested inside so user has to click on svg which is bad maybe
 
   return (
     <Grid
@@ -70,8 +70,8 @@ export default function NavBar(props) {
           <ExternalLink href="https://github.com/SpaceXLaunchBot/" text="GitHub" key={1} />,
           <ExternalLink href="https://www.buymeacoffee.com/psidex" text="Donate" key={2} />,
         ])}
-        <UserInfo discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
-        <Login loggedIn={loggedIn} logOut={logOut} />
+        <UserInfo loggedIn={loggedIn} />
+        <LogInOutBtn loggedIn={loggedIn} />
       </Grid>
       )}
       {lessThan600px
@@ -91,8 +91,8 @@ export default function NavBar(props) {
           <MenuItem>Donate</MenuItem>
         </ExternalLink>
         <MenuItem>
-          <UserInfo discordOAuthToken={discordOAuthToken} loggedIn={loggedIn} />
-          <Login loggedIn={loggedIn} logOut={logOut} />
+          <UserInfo loggedIn={loggedIn} />
+          <LogInOutBtn loggedIn={loggedIn} />
         </MenuItem>
       </Drawer>
       )}

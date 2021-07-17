@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"runtime"
 )
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
@@ -15,6 +16,15 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	host := "spacexlaunchbot.dev"
+	proto := "https:"
+	port := ""
+	if runtime.GOOS == "windows" {
+		host = "localhost"
+		proto = "http:"
+		port = ":8080"
+	}
+
 	c, err := config.Get()
 	if err != nil {
 		log.Fatalf("config.Get error: %s", err)
@@ -25,14 +35,18 @@ func main() {
 		log.Fatalf("database.NewDb error: %s", err)
 	}
 
-	d := discord.NewClient()
-	a := api.NewApi(db, d)
+	d := discord.NewClient("782810710546579476", c.ClientSecret, proto+"//"+host+port+"/api/login")
+	a := api.NewApi(db, d, host, proto)
 	r := mux.NewRouter().StrictSlash(true)
 
 	r.HandleFunc("/api/subscribed", a.SubscribedChannels).Methods("GET")
 	r.HandleFunc("/api/channel", a.DeleteChannel).Methods("DELETE")
 	r.HandleFunc("/api/channel", a.UpdateChannel).Methods("PUT")
 	r.HandleFunc("/api/stats", a.Stats).Methods("GET")
+	r.HandleFunc("/api/login", a.HandleDiscordLogin).Methods("GET")
+	r.HandleFunc("/api/logout", a.HandleDiscordLogout).Methods("GET")
+	r.HandleFunc("/api/hassession", a.HasSession).Methods("GET")
+	r.HandleFunc("/api/userinfo", a.UserInfo).Methods("GET")
 
 	// Due to React Router we have these routes that should all just server the index file.
 	r.HandleFunc("/", serveIndex)

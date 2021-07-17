@@ -7,11 +7,12 @@ import (
 
 // Config contains the application configuration, to be unmarshalled into by Viper.
 type Config struct {
-	DbHost string `mapstructure:"SLB_DB_HOST"`
-	DbPort int    `mapstructure:"SLB_DB_PORT"`
-	DbUser string `mapstructure:"POSTGRES_USER"`
-	DbPass string `mapstructure:"POSTGRES_PASSWORD"`
-	DbName string `mapstructure:"POSTGRES_DB"`
+	DbHost       string `mapstructure:"SLB_DB_HOST"`
+	DbPort       int    `mapstructure:"SLB_DB_PORT"`
+	DbUser       string `mapstructure:"POSTGRES_USER"`
+	DbPass       string `mapstructure:"POSTGRES_PASSWORD"`
+	DbName       string `mapstructure:"POSTGRES_DB"`
+	ClientSecret string `mapstructure:"DISCORD_OAUTH_CLIENT_SECRET"`
 }
 
 // Get looks in ./config.env and environment variables for needed values.

@@ -3,6 +3,8 @@ import '../css/Home.scss';
 import Invite from '../components/Invite';
 import Feature from '../components/Feature';
 
+// TODO: h2 should take up same width as features.
+
 export default function Home() {
   return (
     <div className="home">
