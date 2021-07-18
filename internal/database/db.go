@@ -12,6 +12,7 @@ import (
 //  - Do we need to use rebind if we put $1, $2, etc. in by hand?
 //  - Use sql / sqlx features more and appropriately.
 //  - Use transactions?
+//  - Invalidate old sessions, maybe have a goroutine that runs every hour or something.
 
 // Db is a wrapper around sqlx.DB which provides methods for interacting with the project specific tables.
 type Db struct {

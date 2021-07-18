@@ -83,7 +83,7 @@ func (a Api) HandleDiscordLogout(w http.ResponseWriter, r *http.Request) {
 	session := r.Context().Value("session").(database.SessionRecord)
 
 	// Erase the servers knowledge of it.
-	deleted, err := a.db.RemoveSession(session.Session)
+	deleted, err := a.db.RemoveSession(session.SessionID)
 	if err != nil || !deleted {
 		endWithResponse(w, responseDatabaseError)
 		return

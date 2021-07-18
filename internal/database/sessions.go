@@ -8,13 +8,13 @@ import (
 
 // SessionRecord represents a record in the sessions table.
 type SessionRecord struct {
-	Session               string `db:"session"` // The uuid string that is in the clients cookie.
+	SessionID             string `db:"session_id"`
 	AccessToken           string
 	AccessTokenEncrypted  []byte    `db:"access_token_encrypted"`
 	AccessTokenExpiresAt  time.Time `db:"access_token_expires_at"`
 	RefreshToken          string
 	RefreshTokenEncrypted []byte    `db:"refresh_token_encrypted"`
-	CreationTime          time.Time `db:"creation_time"`
+	RefreshTime           time.Time `db:"refresh_time"`
 }
 
 // SetSession creates a session record in the database.
@@ -73,9 +73,10 @@ func (d Db) GetSession(sessionId string, key []byte) (exists bool, record Sessio
 	}
 
 	session = sessionRecords[0]
-	if session.Session == "" {
+	if session.SessionID == "" {
 		// Not sure if this is actually something that would ever happen.
-		// We return nil in these because the error is not a database error, and we check for exists anyway.
+		// NOTE: We return nil in these because the error is not a database error, and we check for exists anyway.
+		// TODO: Perhaps return a bool that indicates if err is a db error?
 		return false, session, nil
 	}
 
