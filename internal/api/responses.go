@@ -48,6 +48,5 @@ var responseNotAdmin = &genericResponse{Error: "You are not an admin in that ser
 var responseNotAdminInAny = &genericResponse{Error: "You do not have admin permissions in any guilds"}
 var responseNoSubscribedInAny = &genericResponse{Error: "You do not have any subscribed channels in guilds that you administrate"}
 var responseBadJson = &genericResponse{Error: "Failed to decode JSON body", StatusCode: http.StatusBadRequest}
-var responseInvalidOAuthCode = &genericResponse{Error: "Discord API failed to validate given OAuth code", StatusCode: http.StatusBadRequest}
-
-//var responseInternalError = &genericResponse{Error: "Internal server error", StatusCode: http.StatusInternalServerError}
+var responseInvalidOAuthCode = &genericResponse{Error: "Invalid OAuth code", StatusCode: http.StatusBadRequest}
+var responseInternalError = &genericResponse{Error: "Internal server error", StatusCode: http.StatusInternalServerError}

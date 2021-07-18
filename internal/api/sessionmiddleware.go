@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"net/http"
 )
 
@@ -14,7 +15,18 @@ func (a Api) SessionMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		exists, session, err := a.db.GetSession(sessionCookie.Value)
+		sessionKeyCookie, err := r.Cookie("key")
+		if err != nil {
+			endWithResponse(w, responseNoSession)
+			return
+		}
+		sessionKey, err := hex.DecodeString(sessionKeyCookie.Value)
+		if err != nil {
+			endWithResponse(w, responseInternalError)
+			return
+		}
+
+		exists, session, err := a.db.GetSession(sessionCookie.Value, sessionKey)
 		if err != nil {
 			endWithResponse(w, responseDatabaseError)
 			return

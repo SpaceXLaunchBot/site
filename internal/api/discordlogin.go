@@ -1,31 +1,14 @@
 package api
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"github.com/SpaceXLaunchBot/site/internal/database"
+	"github.com/SpaceXLaunchBot/site/internal/encryption"
 	"github.com/satori/go.uuid"
 	"net/http"
 	"time"
 )
-
-// See this discussion as to why I chose to do it this way:
-// https://security.stackexchange.com/a/77316
-
-// New auth plan:
-//  - User logs in to discord, returns to "/api/login" with a "code" query param
-//  - Extract this param server-side, use it to request token(s) from Discord
-//  - Receive access and refresh tokens
-//  - Create a session id
-//    - Put this id in cookie and add to response
-//    - Save in db alongside access tokens and expiry time of access token
-//  - Redirect to homepage, now they have a session
-//  - Now when a user makes a request we look up their session and get their info
-
-// TODO:
-//  - Create an encryption key before saving stuff to db
-//  - Give this key to client in a cookie
-//  - Encrypt the tokens with this and store them in the db alongside another random value
-//  - Now when a user makes a request we have to decrypt tokens with their cookie before use
 
 type discordLoginJson struct {
 	Code string `json:"code"`
@@ -41,6 +24,10 @@ func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 		endWithResponse(w, responseBadJson)
 		return
 	}
+	if loginInfo.Code == "" {
+		endWithResponse(w, responseInvalidOAuthCode)
+		return
+	}
 
 	tokens, err := a.discordClient.TokensFromCode(loginInfo.Code)
 	if err != nil {
@@ -49,14 +36,19 @@ func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sessionId := uuid.NewV4().String()
+	sessionKey, err := encryption.GenerateKey()
+	if err != nil {
+		endWithResponse(w, responseInternalError)
+		return
+	}
 
-	changed, err := a.db.SetSession(sessionId, tokens.AccessToken, tokens.ExpiresIn, "")
+	changed, err := a.db.SetSession(sessionId, sessionKey, tokens.AccessToken, tokens.ExpiresIn, tokens.RefreshToken)
 	if err != nil || !changed {
 		endWithResponse(w, responseDatabaseError)
 		return
 	}
 
-	// Currently we don't store or use the refresh token, so the cookie expiry time can be the same as the access tokens.
+	// Currently we don't use the refresh token, so the cookie expiry time can be the same as the access tokens.
 	sessionCookie := &http.Cookie{
 		Name:     "session",
 		Value:    sessionId,
@@ -67,7 +59,21 @@ func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		SameSite: http.SameSiteStrictMode,
 	}
+
+	sessionKeyHex := hex.EncodeToString(sessionKey)
+	keyCookie := &http.Cookie{
+		Name:     "key",
+		Value:    sessionKeyHex,
+		Path:     "/",
+		Domain:   a.hostName,
+		MaxAge:   tokens.ExpiresIn,
+		Secure:   a.isHTTPS,
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+	}
+
 	http.SetCookie(w, sessionCookie)
+	http.SetCookie(w, keyCookie)
 	endWithResponse(w, responseAllOk)
 }
 
@@ -83,8 +89,8 @@ func (a Api) HandleDiscordLogout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Erase the client side session cookie by removing its value and set expiry time to 0.
-	c := &http.Cookie{
+	// Erase the client side cookies by removing their values and setting expiry times to 0.
+	sessionCookie := &http.Cookie{
 		Name:     "session",
 		Value:    "",
 		Path:     "/",
@@ -94,6 +100,19 @@ func (a Api) HandleDiscordLogout(w http.ResponseWriter, r *http.Request) {
 		SameSite: http.SameSiteStrictMode,
 		Expires:  time.Unix(0, 0),
 	}
-	http.SetCookie(w, c)
+
+	keyCookie := &http.Cookie{
+		Name:     "key",
+		Value:    "",
+		Path:     "/",
+		Domain:   a.hostName,
+		Secure:   a.isHTTPS,
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+		Expires:  time.Unix(0, 0),
+	}
+
+	http.SetCookie(w, sessionCookie)
+	http.SetCookie(w, keyCookie)
 	endWithResponse(w, responseAllOk)
 }

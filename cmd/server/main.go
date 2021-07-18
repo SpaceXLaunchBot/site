@@ -35,7 +35,7 @@ func main() {
 		log.Fatalf("database.NewDb error: %s", err)
 	}
 
-	d := discord.NewClient(c.ClientId, c.ClientSecret, proto+"//"+host+port+"/api/login")
+	d := discord.NewClient(c.ClientId, c.ClientSecret, proto+"//"+host+port+"/login")
 	a := api.NewApi(db, d, host, proto)
 	r := mux.NewRouter().StrictSlash(true)
 
