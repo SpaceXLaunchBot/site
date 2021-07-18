@@ -12,6 +12,7 @@ type Config struct {
 	DbUser       string `mapstructure:"POSTGRES_USER"`
 	DbPass       string `mapstructure:"POSTGRES_PASSWORD"`
 	DbName       string `mapstructure:"POSTGRES_DB"`
+	ClientId     string `mapstructure:"DISCORD_OAUTH_CLIENT_ID"`
 	ClientSecret string `mapstructure:"DISCORD_OAUTH_CLIENT_SECRET"`
 }
 
@@ -31,8 +32,10 @@ func Get() (Config, error) {
 	_ = viper.BindEnv("POSTGRES_USER")
 	_ = viper.BindEnv("POSTGRES_PASSWORD")
 	_ = viper.BindEnv("POSTGRES_DB")
+	_ = viper.BindEnv("DISCORD_OAUTH_CLIENT_ID")
+	_ = viper.BindEnv("DISCORD_OAUTH_CLIENT_SECRET")
 
-	// Will error if config is just env variables not from a env file.
+	// Will error if no config file, but we also load from env vars so no need to panic.
 	_ = viper.ReadInConfig()
 
 	var config Config
@@ -46,6 +49,7 @@ func Get() (Config, error) {
 	log.Printf("DbPort: %d", config.DbPort)
 	log.Printf("DbUser: %s", config.DbUser)
 	log.Printf("DbName: %s", config.DbName)
+	log.Printf("ClientId: %s", config.ClientId)
 
 	return config, nil
 }

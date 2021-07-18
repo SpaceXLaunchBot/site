@@ -1,17 +1,13 @@
 package database
 
 import (
-	"errors"
 	"github.com/jmoiron/sqlx"
 	"time"
 )
 
-// ErrNoSessionRecord describes an error that occurs when there are no records in the database for the given id.
-var ErrNoSessionRecord = errors.New("failed to find a session record in the database for the given id")
-
 // SessionRecord represents a record in the sessions table.
 type SessionRecord struct {
-	Session              string    `db:"session"` // The string that is in the clients cookie.
+	Session              string    `db:"session"` // The uuid string that is in the clients cookie.
 	AccessToken          string    `db:"access_token"`
 	AccessTokenExpiresAt time.Time `db:"access_token_expires_at"`
 	RefreshToken         *string   `db:"refresh_token"` // Pointer because it can be NULL in the db.
@@ -58,14 +54,20 @@ func (d Db) GetSession(sessionId string) (exists bool, record SessionRecord, err
 		return false, session, err
 	}
 	if len(sessionRecords) == 0 {
-		return false, session, ErrNoSessionRecord
+		return false, session, nil
 	}
-
-	// TODO: Set exists to false if AccessTokenExpiresAt is before now.
 
 	session = sessionRecords[0]
 	if session.Session == "" {
-		return false, session, err
+		// Not sure if this is actually something that would ever happen.
+		return false, session, nil
+	}
+
+	if session.AccessTokenExpiresAt.After(time.Now()) == false {
+		// Everything is valid but our access token is expired.
+		// TODO: Attempt to refresh with refresh token. Not sure where in codebase to do this.
+		_, err = d.RemoveSession(sessionId)
+		return false, session, nil
 	}
 	return true, session, nil
 }

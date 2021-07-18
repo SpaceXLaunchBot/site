@@ -7,6 +7,12 @@ import (
 	"github.com/jmoiron/sqlx"          // Mainly used so we can marshal rows straight to structs
 )
 
+// TODO:
+//  - sqlx.In should only be used if one of the args is a slice
+//  - Do we need to use rebind if we put $1, $2, etc. in by hand?
+//  - Use sql / sqlx features more and appropriately.
+//  - Use transactions?
+
 // Db is a wrapper around sqlx.DB which provides methods for interacting with the project specific tables.
 type Db struct {
 	sqlxHandle *sqlx.DB

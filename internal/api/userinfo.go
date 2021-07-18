@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/SpaceXLaunchBot/site/internal/discord"
 	"net/http"
 )
@@ -12,12 +13,7 @@ type userInfoResponse struct {
 
 func (a Api) UserInfo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
-	exists, session, err := a.getSessionFromCookie(r)
-	if err != nil || !exists {
-		endWithResponse(w, responseNoSession)
-		return
-	}
+	session := r.Context().Value("session").(database.SessionRecord)
 
 	userInfo, err := a.discordClient.GetUserInfo(session.AccessToken)
 	if err != nil {
@@ -27,7 +23,7 @@ func (a Api) UserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := &userInfoResponse{UserInfo: userInfo}
-	response.Success = true
-	endWithResponse(w, response)
+	resp := &userInfoResponse{UserInfo: userInfo}
+	resp.Success = true
+	endWithResponse(w, resp)
 }

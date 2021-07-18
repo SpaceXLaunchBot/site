@@ -1,6 +1,8 @@
 package api
 
 import (
+	"encoding/json"
+	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/satori/go.uuid"
 	"net/http"
 	"time"
@@ -24,21 +26,35 @@ import (
 //  - Give this key to client in a cookie
 //  - Encrypt the tokens with this and store them in the db alongside another random value
 //  - Now when a user makes a request we have to decrypt tokens with their cookie before use
-//  - If their token fails we want to refresh it using their refresh token with the Discord OAuth API
+
+type discordLoginJson struct {
+	Code string `json:"code"`
+}
 
 // HandleDiscordLogin is the endpoint handler for when a user authenticates using Discords OAuth flow.
 func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
-	oAuthCode := r.URL.Query().Get("code")
-	if oAuthCode == "" {
-		// TODO: Handle this error and all errors in all functions in this file.
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	var loginInfo discordLoginJson
+	err := json.NewDecoder(r.Body).Decode(&loginInfo)
+	if err != nil {
+		endWithResponse(w, responseBadJson)
 		return
 	}
 
-	tokens, _ := a.discordClient.TokensFromCode(oAuthCode)
+	tokens, err := a.discordClient.TokensFromCode(loginInfo.Code)
+	if err != nil {
+		endWithResponse(w, responseInvalidOAuthCode)
+		return
+	}
+
 	sessionId := uuid.NewV4().String()
 
-	// TODO: As well as error what do we do if SetSession returns changed as false?
-	_, _ = a.db.SetSession(sessionId, tokens.AccessToken, tokens.ExpiresIn, "")
+	changed, err := a.db.SetSession(sessionId, tokens.AccessToken, tokens.ExpiresIn, "")
+	if err != nil || !changed {
+		endWithResponse(w, responseDatabaseError)
+		return
+	}
 
 	// Currently we don't store or use the refresh token, so the cookie expiry time can be the same as the access tokens.
 	sessionCookie := &http.Cookie{
@@ -51,16 +67,22 @@ func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		SameSite: http.SameSiteStrictMode,
 	}
-
 	http.SetCookie(w, sessionCookie)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	endWithResponse(w, responseAllOk)
 }
 
 // HandleDiscordLogout is for when a user wants to invalidate their session that contains Discord OAuth info.
 func (a Api) HandleDiscordLogout(w http.ResponseWriter, r *http.Request) {
-	sessionCookie, _ := r.Cookie("session")
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	session := r.Context().Value("session").(database.SessionRecord)
+
 	// Erase the servers knowledge of it.
-	_, _ = a.db.RemoveSession(sessionCookie.Value)
+	deleted, err := a.db.RemoveSession(session.Session)
+	if err != nil || !deleted {
+		endWithResponse(w, responseDatabaseError)
+		return
+	}
+
 	// Erase the client side session cookie by removing its value and set expiry time to 0.
 	c := &http.Cookie{
 		Name:     "session",
@@ -73,5 +95,5 @@ func (a Api) HandleDiscordLogout(w http.ResponseWriter, r *http.Request) {
 		Expires:  time.Unix(0, 0),
 	}
 	http.SetCookie(w, c)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	endWithResponse(w, responseAllOk)
 }

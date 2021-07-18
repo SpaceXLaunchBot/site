@@ -33,14 +33,14 @@ func (r *genericResponse) finalize() int {
 // This is because *genericResponse implements finalize and genericResponse doesn't.
 // This function doesn't actually "end" the ResponseWriter but it shouldn't be used after calling this.
 func endWithResponse(w http.ResponseWriter, r response) {
-	// TODO: Should we do something about an encoding error?
+	// TODO: non-branch: Should we do something about an encoding error?
 	w.WriteHeader(r.finalize())
 	_ = json.NewEncoder(w).Encode(r)
 }
 
 // Define some common responses.
 var responseAllOk = &genericResponse{Success: true}
-var responseNoSession = &genericResponse{Error: "No active session found", StatusCode: http.StatusUnauthorized}
+var responseNoSession = &genericResponse{Error: "No active login session found", StatusCode: http.StatusUnauthorized}
 var responseDiscordApiError = &genericResponse{Error: "Error getting information from Discord API: ", StatusCode: http.StatusServiceUnavailable}
 var responseDatabaseError = &genericResponse{Error: "Database error :(", StatusCode: http.StatusInternalServerError}
 var responseChannelNotInGuild = &genericResponse{Error: "No channel with that ID in the given guild"}
@@ -48,3 +48,6 @@ var responseNotAdmin = &genericResponse{Error: "You are not an admin in that ser
 var responseNotAdminInAny = &genericResponse{Error: "You do not have admin permissions in any guilds"}
 var responseNoSubscribedInAny = &genericResponse{Error: "You do not have any subscribed channels in guilds that you administrate"}
 var responseBadJson = &genericResponse{Error: "Failed to decode JSON body", StatusCode: http.StatusBadRequest}
+var responseInvalidOAuthCode = &genericResponse{Error: "Discord API failed to validate given OAuth code", StatusCode: http.StatusBadRequest}
+
+//var responseInternalError = &genericResponse{Error: "Internal server error", StatusCode: http.StatusInternalServerError}

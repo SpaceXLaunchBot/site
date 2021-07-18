@@ -19,8 +19,6 @@ var ErrBadAuth = errors.New("failed to authorize with the Discord API")
 // ErrRateLimit describes an error that occurs when the discord.Client is getting rate limited.
 var ErrRateLimit = errors.New("hit the Discord API rate limit, try again in a few seconds")
 
-// TODO: Make sure we don't crash if the Discord API returns something like {error: "", error_description: ""}.
-
 // Client contains methods for interacting with the Discord API.
 type Client struct {
 	httpClient *http.Client
