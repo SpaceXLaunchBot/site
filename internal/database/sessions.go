@@ -1,14 +1,13 @@
 package database
 
 import (
-	"github.com/SpaceXLaunchBot/site/internal/encryption"
-	"github.com/jmoiron/sqlx"
 	"time"
 )
 
 // SessionRecord represents a record in the sessions table.
+// The 2 non-marshalled-to fields are because we pass this around and we will need store the unencrypted values.
 type SessionRecord struct {
-	SessionID             string `db:"session_id"`
+	SessionId             string `db:"session_id"`
 	AccessToken           string
 	AccessTokenEncrypted  []byte    `db:"access_token_encrypted"`
 	AccessTokenExpiresAt  time.Time `db:"access_token_expires_at"`
@@ -18,24 +17,13 @@ type SessionRecord struct {
 }
 
 // SetSession creates a session record in the database.
-func (d Db) SetSession(id string, key []byte, accessToken string, expiresIn int, refreshToken string) (changed bool, err error) {
-	accessTokenEncrypted, err := encryption.Encrypt(key, []byte(accessToken))
-	if err != nil {
-		return false, err
-	}
-
-	refreshTokenEncrypted, err := encryption.Encrypt(key, []byte(refreshToken))
-	if err != nil {
-		return false, err
-	}
-
+func (d Db) SetSession(id string, accessTokenEncrypted []byte, expiresIn int, refreshTokenEncrypted []byte) (changed bool, err error) {
 	expiresAt := time.Unix(time.Now().Unix()+int64(expiresIn), 0)
 	query := `
 		INSERT INTO sessions
-		    ("session", access_token_encrypted, access_token_expires_at, refresh_token_encrypted)
+		    (session_id, access_token_encrypted, access_token_expires_at, refresh_token_encrypted)
 		VALUES
-		    (?, ?, ?, ?);
-	`
+		    (?, ?, ?, ?);`
 
 	query = d.sqlxHandle.Rebind(query)
 	res, err := d.sqlxHandle.Exec(
@@ -54,17 +42,14 @@ func (d Db) SetSession(id string, key []byte, accessToken string, expiresIn int,
 }
 
 // GetSession gets a session record from the database with the given session id.
-func (d Db) GetSession(sessionId string, key []byte) (exists bool, record SessionRecord, err error) {
+func (d Db) GetSession(id string) (exists bool, record SessionRecord, err error) {
 	var sessionRecords []SessionRecord
 	var session SessionRecord
 
-	query, args, err := sqlx.In(`SELECT * FROM sessions WHERE "session"=(?);`, sessionId)
-	if err != nil {
-		return false, session, err
-	}
+	query := `SELECT * FROM sessions WHERE session_id=?;`
 
 	query = d.sqlxHandle.Rebind(query)
-	err = d.sqlxHandle.Select(&sessionRecords, query, args...)
+	err = d.sqlxHandle.Select(&sessionRecords, query, id)
 	if err != nil {
 		return false, session, err
 	}
@@ -73,45 +58,20 @@ func (d Db) GetSession(sessionId string, key []byte) (exists bool, record Sessio
 	}
 
 	session = sessionRecords[0]
-	if session.SessionID == "" {
+	if session.SessionId == "" {
 		// Not sure if this is actually something that would ever happen.
-		// NOTE: We return nil in these because the error is not a database error, and we check for exists anyway.
-		// TODO: Perhaps return a bool that indicates if err is a db error?
 		return false, session, nil
 	}
-
-	if session.AccessTokenExpiresAt.After(time.Now()) == false {
-		// Everything is valid but our access token is expired.
-		// TODO: Attempt to refresh with refresh token. Not sure where in codebase to do this.
-		_, err = d.RemoveSession(sessionId)
-		return false, session, nil
-	}
-
-	accessTokenBytes, err := encryption.Decrypt(key, session.AccessTokenEncrypted)
-	if err != nil {
-		return false, session, nil
-	}
-
-	refreshTokenBytes, err := encryption.Decrypt(key, session.RefreshTokenEncrypted)
-	if err != nil {
-		return false, session, nil
-	}
-
-	session.AccessToken = string(accessTokenBytes)
-	session.RefreshToken = string(refreshTokenBytes)
 
 	return true, session, nil
 }
 
 // RemoveSession remove a session record from the database with the given session id.
-func (d Db) RemoveSession(sessionId string) (deleted bool, err error) {
-	query, args, err := sqlx.In(`DELETE FROM sessions WHERE "session"=(?);`, sessionId)
-	if err != nil {
-		return false, err
-	}
+func (d Db) RemoveSession(id string) (deleted bool, err error) {
+	query := `DELETE FROM sessions WHERE session_id=?;`
 
 	query = d.sqlxHandle.Rebind(query)
-	res, err := d.sqlxHandle.Exec(query, args...)
+	res, err := d.sqlxHandle.Exec(query, id)
 	if err != nil {
 		return false, err
 	}

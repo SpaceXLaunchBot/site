@@ -3,6 +3,8 @@ package api
 import (
 	"encoding/hex"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/SpaceXLaunchBot/site/internal/encryption"
 	"github.com/satori/go.uuid"
@@ -10,8 +12,19 @@ import (
 	"time"
 )
 
+// These are only to be used by the login handler, as they will be returned in query params to "/".
+var errInvalidOauthCode = errors.New("invalid OAuth code")
+var errCryptoKeyGenFailed = errors.New("server failed to generate encryption key for secrets")
+var errEncryptionFailed = errors.New("the server failed to encrypt your secrets")
+var errDatabaseErr = errors.New("database error")
+
 type discordLoginJson struct {
 	Code string `json:"code"`
+}
+
+func loginError(w http.ResponseWriter, r *http.Request, err error) {
+	// Try to pass in a custom error rather than an unknown one to help prevent possible sensitive data leaks.
+	http.Redirect(w, r, fmt.Sprintf("/?login_error=%s", err.Error()), http.StatusSeeOther)
 }
 
 // HandleDiscordLogin is the endpoint handler for when a user authenticates using Discords OAuth flow.
@@ -21,36 +34,48 @@ func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 	var loginInfo discordLoginJson
 	err := json.NewDecoder(r.Body).Decode(&loginInfo)
 	if err != nil {
-		endWithResponse(w, responseBadJson)
+		loginError(w, r, err)
 		return
 	}
 	if loginInfo.Code == "" {
-		endWithResponse(w, responseInvalidOAuthCode)
+		loginError(w, r, errInvalidOauthCode)
 		return
 	}
 
 	tokens, err := a.discordClient.TokensFromCode(loginInfo.Code)
 	if err != nil {
-		endWithResponse(w, responseInvalidOAuthCode)
+		loginError(w, r, errInvalidOauthCode)
 		return
 	}
 
 	sessionId := uuid.NewV4().String()
 	sessionKey, err := encryption.GenerateKey()
 	if err != nil {
-		endWithResponse(w, responseInternalError)
+		loginError(w, r, errCryptoKeyGenFailed)
 		return
 	}
 
-	changed, err := a.db.SetSession(sessionId, sessionKey, tokens.AccessToken, tokens.ExpiresIn, tokens.RefreshToken)
+	accessTokenEncrypted, err := encryption.Encrypt(sessionKey, []byte(tokens.AccessToken))
+	if err != nil {
+		loginError(w, r, errEncryptionFailed)
+		return
+	}
+
+	refreshTokenEncrypted, err := encryption.Encrypt(sessionKey, []byte(tokens.RefreshToken))
+	if err != nil {
+		loginError(w, r, errEncryptionFailed)
+		return
+	}
+
+	changed, err := a.db.SetSession(sessionId, accessTokenEncrypted, tokens.ExpiresIn, refreshTokenEncrypted)
 	if err != nil || !changed {
-		endWithResponse(w, responseDatabaseError)
+		loginError(w, r, errDatabaseErr)
 		return
 	}
 
 	// Currently we don't use the refresh token, so the cookie expiry time can be the same as the access tokens.
 	sessionCookie := &http.Cookie{
-		Name:     "session",
+		Name:     "sessionId",
 		Value:    sessionId,
 		Path:     "/",
 		Domain:   a.hostName,
@@ -62,7 +87,7 @@ func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 
 	sessionKeyHex := hex.EncodeToString(sessionKey)
 	keyCookie := &http.Cookie{
-		Name:     "key",
+		Name:     "sessionKey",
 		Value:    sessionKeyHex,
 		Path:     "/",
 		Domain:   a.hostName,
@@ -74,7 +99,7 @@ func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, sessionCookie)
 	http.SetCookie(w, keyCookie)
-	endWithResponse(w, responseAllOk)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // HandleDiscordLogout is for when a user wants to invalidate their session that contains Discord OAuth info.
@@ -83,7 +108,7 @@ func (a Api) HandleDiscordLogout(w http.ResponseWriter, r *http.Request) {
 	session := r.Context().Value("session").(database.SessionRecord)
 
 	// Erase the servers knowledge of it.
-	deleted, err := a.db.RemoveSession(session.SessionID)
+	deleted, err := a.db.RemoveSession(session.SessionId)
 	if err != nil || !deleted {
 		endWithResponse(w, responseDatabaseError)
 		return
@@ -91,7 +116,7 @@ func (a Api) HandleDiscordLogout(w http.ResponseWriter, r *http.Request) {
 
 	// Erase the client side cookies by removing their values and setting expiry times to 0.
 	sessionCookie := &http.Cookie{
-		Name:     "session",
+		Name:     "sessionId",
 		Value:    "",
 		Path:     "/",
 		Domain:   a.hostName,
@@ -102,7 +127,7 @@ func (a Api) HandleDiscordLogout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	keyCookie := &http.Cookie{
-		Name:     "key",
+		Name:     "sessionKey",
 		Value:    "",
 		Path:     "/",
 		Domain:   a.hostName,

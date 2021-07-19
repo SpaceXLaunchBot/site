@@ -11,6 +11,8 @@ import (
 	"runtime"
 )
 
+// TODO: non-branch: Move from stdlib + gorilla mux to either gin or echo.
+
 func serveIndex(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./frontend_build/index.html")
 }
@@ -51,7 +53,8 @@ func main() {
 	rApi.HandleFunc("/stats", a.Stats).Methods("GET")
 	rApiSession.HandleFunc("/userinfo", a.UserInfo).Methods("GET")
 
-	rApi.HandleFunc("/auth/login", a.HandleDiscordLogin).Methods("GET")
+	rApi.HandleFunc("/login", a.HandleDiscordLogin).Methods("GET")
+
 	rApiSession.HandleFunc("/auth/logout", a.HandleDiscordLogout).Methods("GET")
 	rApiSession.HandleFunc("/auth/verify", a.VerifySession).Methods("GET")
 

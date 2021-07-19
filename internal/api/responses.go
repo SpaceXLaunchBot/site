@@ -50,3 +50,4 @@ var responseNoSubscribedInAny = &genericResponse{Error: "You do not have any sub
 var responseBadJson = &genericResponse{Error: "Failed to decode JSON body", StatusCode: http.StatusBadRequest}
 var responseInvalidOAuthCode = &genericResponse{Error: "Invalid OAuth code", StatusCode: http.StatusBadRequest}
 var responseInternalError = &genericResponse{Error: "Internal server error", StatusCode: http.StatusInternalServerError}
+var responseEncryptionFailed = &genericResponse{Error: "The server failed to encrypt your secrets", StatusCode: http.StatusInternalServerError}

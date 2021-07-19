@@ -27,7 +27,6 @@ func (d Db) SubscribedChannels(guildIds []string) ([]SubscribedChannelRecord, er
 
 	// Rebind takes query with sql bind vars ("?") from sqlx.In and turns them into $1, $2, etc. for Postgres.
 	query = d.sqlxHandle.Rebind(query)
-
 	err = d.sqlxHandle.Select(&channels, query, args...)
 	if err != nil {
 		return channels, err
