@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/SpaceXLaunchBot/site/internal/database"
@@ -31,18 +30,13 @@ func loginError(w http.ResponseWriter, r *http.Request, err error) {
 func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	var loginInfo discordLoginJson
-	err := json.NewDecoder(r.Body).Decode(&loginInfo)
-	if err != nil {
-		loginError(w, r, err)
-		return
-	}
-	if loginInfo.Code == "" {
+	oauthCode := r.URL.Query().Get("code")
+	if oauthCode == "" {
 		loginError(w, r, errInvalidOauthCode)
 		return
 	}
 
-	tokens, err := a.discordClient.TokensFromCode(loginInfo.Code)
+	tokens, err := a.discordClient.TokensFromCode(oauthCode)
 	if err != nil {
 		loginError(w, r, errInvalidOauthCode)
 		return

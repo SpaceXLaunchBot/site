@@ -16,13 +16,13 @@ export default function UserInfo(props) {
       } else {
         const res = await fetch('/api/userinfo');
         const json = await res.json();
-        if (json.success !== true) {
+        if (json.success === true) {
+          const newUserData = json.user_info;
+          setUserData(newUserData);
+          localStorage.setItem('user-data', JSON.stringify(newUserData));
+        } else {
           // TODO: Give a toast popup or something.
-          return;
         }
-        const newUserData = json.user_info;
-        setUserData(newUserData);
-        localStorage.setItem('user-data', JSON.stringify(newUserData));
       }
     }
   }, [loggedIn]);

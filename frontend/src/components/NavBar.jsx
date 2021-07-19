@@ -24,7 +24,7 @@ function ExternalLink(props) {
 }
 
 export default function NavBar(props) {
-  const { loggedIn } = props;
+  const { loggedIn, setLoggedIn } = props;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const lessThan600px = useMediaQuery('(max-width:600px)');
   const lessThan750px = useMediaQuery('(max-width:750px)');
@@ -71,7 +71,7 @@ export default function NavBar(props) {
           <ExternalLink href="https://www.buymeacoffee.com/psidex" text="Donate" key={2} />,
         ])}
         <UserInfo loggedIn={loggedIn} />
-        <LogInOutBtn loggedIn={loggedIn} />
+        <LogInOutBtn loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
       </Grid>
       )}
       {lessThan600px
@@ -92,7 +92,7 @@ export default function NavBar(props) {
         </ExternalLink>
         <MenuItem>
           <UserInfo loggedIn={loggedIn} />
-          <LogInOutBtn loggedIn={loggedIn} />
+          <LogInOutBtn loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
         </MenuItem>
       </Drawer>
       )}

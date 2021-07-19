@@ -60,7 +60,7 @@ func (a Api) SessionMiddleware(next http.Handler) http.Handler {
 
 		if session.AccessTokenExpiresAt.After(time.Now()) == false {
 			// Everything is valid but our access token is expired.
-			// TODO: non-branch: Attempt to refresh with refresh token. Not sure where in codebase to do this.
+			// TODO: Attempt to refresh with refresh token. Not sure where in codebase to do this.
 			endWithResponse(w, responseNoSession)
 			return
 		}

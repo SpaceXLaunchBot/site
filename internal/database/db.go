@@ -7,8 +7,8 @@ import (
 	"github.com/jmoiron/sqlx"          // Mainly used so we can marshal rows straight to structs
 )
 
-// TODO: non-branch: Use transactions?
-// TODO: non-branch: Invalidate old sessions, maybe have a goroutine that runs every hour or something.
+// TODO: Use transactions?
+// TODO: Invalidate old sessions, maybe have a goroutine that runs every hour or something.
 
 // Db is a wrapper around sqlx.DB which provides methods for interacting with the project specific tables.
 type Db struct {

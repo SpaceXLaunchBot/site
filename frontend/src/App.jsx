@@ -22,10 +22,14 @@ export default function App() {
 
   useEffect(async () => {
     // TODO: Do we need to show a loading symbol whilst we are doing this?
-    const res = await fetch('/api/hassession');
+    const res = await fetch('/api/auth/verify');
     const json = await res.json();
     if (json.success === true) {
       setLoggedIn(true);
+    } else {
+      // NOTE: The user may have been previously logged in but had their session invalidated by the
+      // server without having pressed "logout", so just in case we should remove cached stuff.
+      localStorage.removeItem('user-data');
     }
   }, []);
 
@@ -35,7 +39,7 @@ export default function App() {
       <StylesProvider injectFirst>
         <CssBaseline />
         <BrowserRouter>
-          <NavBar loggedIn={loggedIn} />
+          <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
           <Suspense fallback={<Loader />}>
             <Switch>
               <Route path="/commands">

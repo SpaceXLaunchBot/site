@@ -33,7 +33,7 @@ func (r *genericResponse) finalize() int {
 // This is because *genericResponse implements finalize and genericResponse doesn't.
 // This function doesn't actually "end" the ResponseWriter but it shouldn't be used after calling this.
 func endWithResponse(w http.ResponseWriter, r response) {
-	// TODO: non-branch: Should we do something about an encoding error?
+	// TODO: Should we do something about an encoding error?
 	w.WriteHeader(r.finalize())
 	_ = json.NewEncoder(w).Encode(r)
 }

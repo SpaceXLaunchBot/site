@@ -28,7 +28,7 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: non-branch: 3 data structures is ez but possibly not the most efficient.
+	// TODO: 3 data structures is ez but possibly not the most efficient.
 	var adminGuilds []string
 	adminGuildNames := make(map[string]string)
 	adminGuildIcons := make(map[string]string)
