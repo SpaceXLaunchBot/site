@@ -96,4 +96,22 @@ Updates a subscribed channel in the database with the given information.
 
 ## `GET` `/api/stats`
 
-Returns some basic stats about the bot. Currently a WIP.
+Returns some basic stats about the bot.
+
+TODO: This and the below documentation.
+
+## `GET` `/api/userinfo`
+
+Returns the logged-in users username and avatar url.
+
+## `GET` `/api/auth/verify`
+
+Verify if the user has a valid session.
+
+## `GET` `/api/auth/logout`
+
+Invalidate the current session.
+
+## `GET` `/login?code=`
+
+Not actually part of the REST API, this is the endpoint that Discords OAuth redirects the client to.
