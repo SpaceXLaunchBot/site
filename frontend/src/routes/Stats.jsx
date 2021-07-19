@@ -17,6 +17,8 @@ import getStats from '../internalapi/stats';
 import '../css/Stats.scss';
 import scssVars from '../css/vars.module.scss';
 
+// TODO: Put charts in grid of some sort on bigger screens.
+
 export default function Stats() {
   const [counts, setCounts] = useState([]);
   const [actionCounts, setActionCounts] = useState([]);

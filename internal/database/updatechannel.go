@@ -13,13 +13,18 @@ func (d Db) UpdateSubscribedChannel(channelId, guildId, notificationType, launch
 		String: launchMentions,
 		Valid:  strings.TrimSpace(launchMentions) != "",
 	}
-	const query = `
-		UPDATE subscribed_channels SET (notification_type, launch_mentions) = ($1, $2)
-		WHERE channel_id = $3 AND guild_id = $4;`
+
+	query := `
+		UPDATE subscribed_channels
+		SET (notification_type, launch_mentions) = (?, ?)
+		WHERE channel_id = ? AND guild_id = ?;`
+
+	query = d.sqlxHandle.Rebind(query)
 	res, err := d.sqlxHandle.Exec(query, notificationType, sqlLaunchMentions, channelId, guildId)
 	if err != nil {
 		return false, err
 	}
+
 	num, err := res.RowsAffected()
 	return num > 0, err
 }

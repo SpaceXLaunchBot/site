@@ -6,7 +6,7 @@ import getSubscribed from '../internalapi/subscribed';
 import '../css/Settings.scss';
 
 export default function Settings(props) {
-  const { discordOAuthToken, loggedIn } = props;
+  const { loggedIn } = props;
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState('');
   const [subscribedInfo, setSubscribedInfo] = useState({});
@@ -14,9 +14,10 @@ export default function Settings(props) {
   useEffect(async () => {
     if (loggedIn) {
       try {
-        const json = await getSubscribed(discordOAuthToken);
+        const json = await getSubscribed();
         setSubscribedInfo(json);
       } catch (e) {
+        // Happens if we are developing and running `yarn start`.
         // https://davidwalsh.name/detect-error-type-javascript
         if (e.constructor === SyntaxError) {
           setError('Server returned invalid JSON');
@@ -57,7 +58,6 @@ export default function Settings(props) {
           key={channel.id}
           info={channel}
           guildId={guildId}
-          discordOAuthToken={discordOAuthToken}
         />,
       );
     }

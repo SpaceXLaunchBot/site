@@ -13,8 +13,10 @@ import { useToasts } from 'react-toast-notifications';
 import updateChannel from '../internalapi/update';
 import deleteChannel from '../internalapi/delete';
 
+// TODO: When deleteBtnClicked is called the Channel should not be rendering anymore.
+
 export default function Channel(props) {
-  const { info, guildId, discordOAuthToken } = props;
+  const { info, guildId } = props;
   const [notificationType, setNotificationType] = useState(info.notification_type);
   const [launchMentions, setLaunchMentions] = useState(info.launch_mentions);
   const { addToast } = useToasts();
@@ -34,7 +36,7 @@ export default function Channel(props) {
       notification_type: notificationType,
       launch_mentions: launchMentions,
     };
-    const json = await updateChannel(discordOAuthToken, body);
+    const json = await updateChannel(body);
     if (json.success === true) {
       addToast(`Saved settings for ${info.name}`, { appearance: 'success' });
     } else {
@@ -48,7 +50,7 @@ export default function Channel(props) {
       id: info.id,
       guild_id: guildId,
     };
-    const json = await deleteChannel(discordOAuthToken, body);
+    const json = await deleteChannel(body);
     if (json.success === true) {
       addToast(`Unsubscribed ${info.name}`, { appearance: 'success' });
     } else {

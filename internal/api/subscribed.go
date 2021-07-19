@@ -56,9 +56,9 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := subscribedResponse{}
-	response.Success = true
-	response.Subscribed = make(map[string]*guildDetails)
+	resp := subscribedResponse{}
+	resp.Success = true
+	resp.Subscribed = make(map[string]*guildDetails)
 
 	nonNilStr := ""
 
@@ -68,10 +68,10 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 			channel.LaunchMentions = &nonNilStr
 		}
 
-		if details, ok := response.Subscribed[channel.GuildId]; ok {
+		if details, ok := resp.Subscribed[channel.GuildId]; ok {
 			details.SubscribedChannels = append(details.SubscribedChannels, channel)
 		} else {
-			response.Subscribed[channel.GuildId] = &guildDetails{
+			resp.Subscribed[channel.GuildId] = &guildDetails{
 				Name:               adminGuildNames[channel.GuildId],
 				Icon:               adminGuildIcons[channel.GuildId],
 				SubscribedChannels: []database.SubscribedChannelRecord{channel},
@@ -79,5 +79,5 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	endWithResponse(w, &response)
+	endWithResponse(w, &resp)
 }

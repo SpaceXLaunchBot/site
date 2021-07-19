@@ -2,22 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../css/UserInfo.scss';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-async function getUserData(token) {
-  const res = await fetch('https://discord.com/api/users/@me', {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const json = await res.json();
-  return {
-    userName: json.username,
-    avatarUrl: `https://cdn.discordapp.com/avatars/${json.id}/${json.avatar}.png`,
-  };
-}
-
 export default function UserInfo(props) {
-  const { discordOAuthToken, loggedIn } = props;
+  const { loggedIn } = props;
   const [userData, setUserData] = useState({});
   const lessThan820px = useMediaQuery('(max-width:820px)');
 
@@ -28,9 +14,15 @@ export default function UserInfo(props) {
         console.log('Using cached userData');
         setUserData(storedUD);
       } else {
-        const newUserData = await getUserData(discordOAuthToken);
-        setUserData(newUserData);
-        localStorage.setItem('user-data', JSON.stringify(newUserData));
+        const res = await fetch('/api/userinfo');
+        const json = await res.json();
+        if (json.success === true) {
+          const newUserData = json.user_info;
+          setUserData(newUserData);
+          localStorage.setItem('user-data', JSON.stringify(newUserData));
+        } else {
+          // TODO: Give a toast popup or something.
+        }
       }
     }
   }, [loggedIn]);
@@ -43,9 +35,9 @@ export default function UserInfo(props) {
 
   return (
     <div className="userInfo">
-      <img className={classes} src={userData.avatarUrl} alt={'User\'s avatar'} />
+      <img className={classes} src={userData.avatar_url} alt={'User\'s avatar'} />
       {/* https://reactjs.org/docs/conditional-rendering.html#inline-if-with-logical--operator */}
-      {lessThan820px === false && <p className="userName">{userData.userName}</p>}
+      {lessThan820px === false && <p className="userName">{userData.username}</p>}
     </div>
   );
 }

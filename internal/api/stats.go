@@ -32,10 +32,10 @@ func (a Api) Stats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := statsResponse{}
-	response.Success = true
-	response.CountRecords = countRecords
-	response.ActionCounts = actionCounts
-	a.cache.Set(cacheKey, response, cache.DefaultExpiration)
-	endWithResponse(w, &response)
+	resp := statsResponse{}
+	resp.Success = true
+	resp.CountRecords = countRecords
+	resp.ActionCounts = actionCounts
+	a.cache.Set(cacheKey, resp, cache.DefaultExpiration)
+	endWithResponse(w, &resp)
 }
