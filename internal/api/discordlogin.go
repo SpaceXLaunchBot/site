@@ -12,6 +12,7 @@ import (
 )
 
 // These are only to be used by the login handler, as they will be returned in query params to "/".
+var errNoOauthCode = errors.New("no OAuth code query parameter")
 var errInvalidOauthCode = errors.New("invalid OAuth code")
 var errCryptoKeyGenFailed = errors.New("server failed to generate encryption key for secrets")
 var errEncryptionFailed = errors.New("the server failed to encrypt your secrets")
@@ -32,7 +33,7 @@ func (a Api) HandleDiscordLogin(w http.ResponseWriter, r *http.Request) {
 
 	oauthCode := r.URL.Query().Get("code")
 	if oauthCode == "" {
-		loginError(w, r, errInvalidOauthCode)
+		loginError(w, r, errNoOauthCode)
 		return
 	}
 
