@@ -4,5 +4,5 @@ Set-Location frontend
 yarn build
 Set-Location ..
 Move-Item frontend\build frontend_build
-go build -o main.exe .\cmd\server\main.go
+go build -v -o main.exe .\cmd\server\main.go
 .\main.exe

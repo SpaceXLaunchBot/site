@@ -4,7 +4,7 @@
 package api
 
 import (
-	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
@@ -29,13 +29,11 @@ func (r *genericResponse) finalize() int {
 	return r.StatusCode
 }
 
-// endWithResponse writes the response r to w. The struct that implements response must be passed as a pointer.
+// endWithResponse writes the response r to c. The struct that implements response must be passed as a pointer.
 // This is because *genericResponse implements finalize and genericResponse doesn't.
-// This function doesn't actually "end" the ResponseWriter but it shouldn't be used after calling this.
-func endWithResponse(w http.ResponseWriter, r response) {
-	// TODO: Should we do something about an encoding error?
-	w.WriteHeader(r.finalize())
-	_ = json.NewEncoder(w).Encode(r)
+// This function doesn't actually "end" the connection but it shouldn't be used after calling this.
+func endWithResponse(c *gin.Context, r response) {
+	c.JSON(r.finalize(), r)
 }
 
 // Define some common responses.
@@ -48,6 +46,4 @@ var responseNotAdmin = &genericResponse{Error: "You are not an admin in that ser
 var responseNotAdminInAny = &genericResponse{Error: "You do not have admin permissions in any guilds"}
 var responseNoSubscribedInAny = &genericResponse{Error: "You do not have any subscribed channels in guilds that you administrate"}
 var responseBadJson = &genericResponse{Error: "Failed to decode JSON body", StatusCode: http.StatusBadRequest}
-var responseInvalidOAuthCode = &genericResponse{Error: "Invalid OAuth code", StatusCode: http.StatusBadRequest}
 var responseInternalError = &genericResponse{Error: "Internal server error", StatusCode: http.StatusInternalServerError}
-var responseEncryptionFailed = &genericResponse{Error: "The server failed to encrypt your secrets", StatusCode: http.StatusInternalServerError}

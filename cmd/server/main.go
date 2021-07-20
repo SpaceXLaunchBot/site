@@ -5,19 +5,16 @@ import (
 	"github.com/SpaceXLaunchBot/site/internal/config"
 	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/SpaceXLaunchBot/site/internal/discord"
-	"github.com/gorilla/mux"
+	"github.com/gin-contrib/static"
+	"github.com/gin-gonic/gin"
 	"log"
-	"net/http"
 	"runtime"
 )
 
-// TODO: Move from stdlib + gorilla mux to either gin or echo.
-
-func serveIndex(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./frontend_build/index.html")
-}
+// TODO: Use Gin's logging instead of log.whatever?
 
 func main() {
+	// Assume that our dev environment in always Windows and production is always not.
 	host := "spacexlaunchbot.dev"
 	proto := "https:"
 	port := ""
@@ -25,7 +22,12 @@ func main() {
 		host = "localhost"
 		proto = "http:"
 		port = ":8080"
+	} else {
+		gin.SetMode(gin.ReleaseMode)
 	}
+
+	baseUrl := proto + "//" + host + port
+	log.Printf("Base URL: %s", baseUrl)
 
 	c, err := config.Get()
 	if err != nil {
@@ -37,35 +39,36 @@ func main() {
 		log.Fatalf("database.NewDb error: %s", err)
 	}
 
-	d := discord.NewClient(c.ClientId, c.ClientSecret, proto+"//"+host+port+"/login")
+	d := discord.NewClient(c.OAuthClientId, c.OAuthClientSecret, baseUrl+"/login")
 	a := api.NewApi(db, d, host, proto)
-	r := mux.NewRouter().StrictSlash(true)
 
-	rApi := r.PathPrefix("/api").Subrouter()
-	// Routes under rApiSession get passed context about the users current session.
-	rApiSession := r.PathPrefix("/api").Subrouter()
-	rApiSession.Use(a.SessionMiddleware)
+	router := gin.Default()
 
-	rApiSession.HandleFunc("/subscribed", a.SubscribedChannels).Methods("GET")
-	rApiSession.HandleFunc("/channel", a.DeleteChannel).Methods("DELETE")
-	rApiSession.HandleFunc("/channel", a.UpdateChannel).Methods("PUT")
+	// https://fantashit.com/inability-to-use-for-static-files/
+	router.Use(static.Serve("/", static.LocalFile("./frontend_build", false)))
 
-	rApi.HandleFunc("/stats", a.Stats).Methods("GET")
-	rApiSession.HandleFunc("/userinfo", a.UserInfo).Methods("GET")
+	routerApi := router.Group("/api")
+	routerApiAuthorized := routerApi.Group("/", a.SessionMiddleware())
+	routerApiWithGuilds := routerApiAuthorized.Group("/", a.GuildListMiddleware())
 
-	rApiSession.HandleFunc("/auth/logout", a.HandleDiscordLogout).Methods("GET")
-	rApiSession.HandleFunc("/auth/verify", a.VerifySession).Methods("GET")
+	routerApiWithGuilds.GET("/subscribed", a.SubscribedChannels)
+	routerApiWithGuilds.DELETE("/channel", a.DeleteChannel)
+	routerApiWithGuilds.PUT("/channel", a.UpdateChannel)
 
-	r.HandleFunc("/login", a.HandleDiscordLogin).Methods("GET")
+	routerApi.GET("/stats", a.Stats)
+	routerApiAuthorized.GET("/userinfo", a.UserInfo)
+
+	routerApiAuthorized.GET("/auth/logout", a.HandleDiscordLogout)
+	routerApiAuthorized.GET("/auth/verify", a.VerifySession)
+
+	router.GET("/login", a.HandleDiscordLogin)
 
 	// Due to React Router we have these routes that should all just server the index file.
-	r.HandleFunc("/", serveIndex)
-	r.HandleFunc("/commands", serveIndex)
-	r.HandleFunc("/settings", serveIndex)
-	r.HandleFunc("/stats", serveIndex)
+	indexPath := "./frontend_build/index.html"
+	router.StaticFile("/", indexPath)
+	router.StaticFile("/commands", indexPath)
+	router.StaticFile("/settings", indexPath)
+	router.StaticFile("/stats", indexPath)
 
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./frontend_build")))
-
-	log.Println("Serving http on all available interfaces @ port 8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(router.Run())
 }

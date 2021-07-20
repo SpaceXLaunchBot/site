@@ -1,8 +1,8 @@
 package api
 
 import (
-	"encoding/json"
-	"net/http"
+	"github.com/SpaceXLaunchBot/site/internal/discord"
+	"github.com/gin-gonic/gin"
 )
 
 // deleteChannelJson is a struct to marshal the api request data into.
@@ -12,18 +12,12 @@ type deleteChannelJson struct {
 }
 
 // DeleteChannel deletes ("unsubscribes") a channel from the database.
-func (a Api) DeleteChannel(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
-	guilds, sentErr := a.getGuildList(w, r)
-	if sentErr == true {
-		return
-	}
+func (a Api) DeleteChannel(c *gin.Context) {
+	guilds := c.MustGet("guilds").(discord.GuildList)
 
 	var requestedDelete deleteChannelJson
-	err := json.NewDecoder(r.Body).Decode(&requestedDelete)
-	if err != nil {
-		endWithResponse(w, responseBadJson)
+	if err := c.ShouldBind(&requestedDelete); err != nil {
+		endWithResponse(c, responseBadJson)
 		return
 	}
 
@@ -34,7 +28,7 @@ func (a Api) DeleteChannel(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if !allowedToEdit {
-		endWithResponse(w, responseNotAdmin)
+		endWithResponse(c, responseNotAdmin)
 		return
 	}
 
@@ -43,13 +37,13 @@ func (a Api) DeleteChannel(w http.ResponseWriter, r *http.Request) {
 		requestedDelete.GuildID,
 	)
 	if err != nil {
-		endWithResponse(w, responseDatabaseError)
+		endWithResponse(c, responseDatabaseError)
 		return
 	}
 	if !changed {
-		endWithResponse(w, responseChannelNotInGuild)
+		endWithResponse(c, responseChannelNotInGuild)
 		return
 	}
 
-	endWithResponse(w, responseAllOk)
+	endWithResponse(c, responseAllOk)
 }

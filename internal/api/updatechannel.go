@@ -1,8 +1,8 @@
 package api
 
 import (
-	"encoding/json"
-	"net/http"
+	"github.com/SpaceXLaunchBot/site/internal/discord"
+	"github.com/gin-gonic/gin"
 )
 
 // updateChannelJson is a struct to marshal the api request data into.
@@ -14,18 +14,12 @@ type updateChannelJson struct {
 }
 
 // UpdateChannel updates information about a channel in the database.
-func (a Api) UpdateChannel(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
-	guilds, sentErr := a.getGuildList(w, r)
-	if sentErr == true {
-		return
-	}
+func (a Api) UpdateChannel(c *gin.Context) {
+	guilds := c.MustGet("guilds").(discord.GuildList)
 
 	var requestedUpdate updateChannelJson
-	err := json.NewDecoder(r.Body).Decode(&requestedUpdate)
-	if err != nil {
-		endWithResponse(w, responseBadJson)
+	if err := c.ShouldBind(&requestedUpdate); err != nil {
+		endWithResponse(c, responseBadJson)
 		return
 	}
 
@@ -36,7 +30,7 @@ func (a Api) UpdateChannel(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if !allowedToEdit {
-		endWithResponse(w, responseNotAdmin)
+		endWithResponse(c, responseNotAdmin)
 		return
 	}
 
@@ -51,13 +45,13 @@ func (a Api) UpdateChannel(w http.ResponseWriter, r *http.Request) {
 		requestedUpdate.LaunchMentions,
 	)
 	if err != nil {
-		endWithResponse(w, responseDatabaseError)
+		endWithResponse(c, responseDatabaseError)
 		return
 	}
 	if !changed {
-		endWithResponse(w, responseChannelNotInGuild)
+		endWithResponse(c, responseChannelNotInGuild)
 		return
 	}
 
-	endWithResponse(w, responseAllOk)
+	endWithResponse(c, responseAllOk)
 }

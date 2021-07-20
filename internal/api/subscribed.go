@@ -3,7 +3,8 @@ package api
 import (
 	"fmt"
 	"github.com/SpaceXLaunchBot/site/internal/database"
-	"net/http"
+	"github.com/SpaceXLaunchBot/site/internal/discord"
+	"github.com/gin-gonic/gin"
 )
 
 // subscribedResponse is the API response for the subscribed channels API route.
@@ -20,13 +21,8 @@ type guildDetails struct {
 }
 
 // SubscribedChannels returns a list of information about guilds user is authed in that are subscribed to the notification service.
-func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
-	guilds, sentErr := a.getGuildList(w, r)
-	if sentErr == true {
-		return
-	}
+func (a Api) SubscribedChannels(c *gin.Context) {
+	guilds := c.MustGet("guilds").(discord.GuildList)
 
 	// TODO: 3 data structures is ez but possibly not the most efficient.
 	var adminGuilds []string
@@ -42,17 +38,17 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(adminGuilds) == 0 {
-		endWithResponse(w, responseNotAdminInAny)
+		endWithResponse(c, responseNotAdminInAny)
 		return
 	}
 
 	subbedChannels, err := a.db.SubscribedChannels(adminGuilds)
 	if err != nil {
-		endWithResponse(w, responseDatabaseError)
+		endWithResponse(c, responseDatabaseError)
 		return
 	}
 	if len(subbedChannels) == 0 {
-		endWithResponse(w, responseNoSubscribedInAny)
+		endWithResponse(c, responseNoSubscribedInAny)
 		return
 	}
 
@@ -79,5 +75,5 @@ func (a Api) SubscribedChannels(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	endWithResponse(w, &resp)
+	endWithResponse(c, &resp)
 }

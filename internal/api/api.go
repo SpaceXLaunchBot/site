@@ -3,8 +3,8 @@ package api
 import (
 	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/SpaceXLaunchBot/site/internal/discord"
+	"github.com/gin-gonic/gin"
 	"github.com/patrickmn/go-cache"
-	"net/http"
 	"time"
 )
 
@@ -36,18 +36,21 @@ func NewApi(db database.Db, client discord.Client, hostName, protocol string) Ap
 	}
 }
 
-// getGuildList acts like a middleware and gets a GuildList using the Authorization header (or sends an error to the client).
-func (a Api) getGuildList(w http.ResponseWriter, r *http.Request) (list discord.GuildList, sentErr bool) {
-	session := r.Context().Value("session").(database.SessionRecord)
+// GuildListMiddleware gets a GuildList using the clients session.
+func (a Api) GuildListMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := c.MustGet("session").(database.SessionRecord)
 
-	guilds, err := a.discordClient.GetGuildList(session.AccessToken)
-	if err != nil {
-		resp := responseDiscordApiError
-		// Add context to general error message.
-		resp.Error += err.Error()
-		endWithResponse(w, resp)
-		return discord.GuildList{}, true
+		guilds, err := a.discordClient.GetGuildList(session.AccessToken)
+		if err != nil {
+			resp := responseDiscordApiError
+			// Add context to general error message.
+			resp.Error += err.Error()
+			endWithResponse(c, resp)
+			return
+		}
+
+		c.Set("guilds", guilds)
+		c.Next()
 	}
-
-	return guilds, false
 }

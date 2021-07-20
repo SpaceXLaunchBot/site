@@ -10,7 +10,9 @@ import (
 )
 
 var tokenUrl = "https://discord.com/api/oauth2/token"
-var ErrInvalidRequest = errors.New("discord API returned invalid request")
+
+// ErrInvalidRequest defines an error when the Discord API returns an invalid request error.
+var ErrInvalidRequest = errors.New("discord API returned invalid request error")
 
 // TokenResponse is to marshal the Discord OAuth token response into.
 type TokenResponse struct {
