@@ -1,4 +1,4 @@
-# SpaceXLaunchBot Site Backend
+# SpaceXLaunchBot Site
 
 [![Build status](https://github.com/SpaceXLaunchBot/site/workflows/CI/badge.svg)](https://github.com/SpaceXLaunchBot/site/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/SpaceXLaunchBot/site)](https://goreportcard.com/report/github.com/SpaceXLaunchBot/site)
