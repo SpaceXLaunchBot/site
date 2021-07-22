@@ -19,18 +19,15 @@ type TokenResponse struct {
 	AccessToken  string `json:"access_token"`
 	ExpiresIn    int    `json:"expires_in"`
 	RefreshToken string `json:"refresh_token"`
-	Scope        string `json:"scope"`
-	TokenType    string `json:"token_type"`
+	//Scope        string `json:"scope"`
+	//TokenType string `json:"token_type"`
 }
 
-// TokensFromCode takes an OAuth code provided by Discord and fetches access and refresh tokens.
-func (c Client) TokensFromCode(code string) (TokenResponse, error) {
+// apiRequestOAuth is similar to apiRequestGet but is specifically for the OAuth API which requires POSTing.
+func (c Client) apiRequestOAuth(payloadStr string) (TokenResponse, error) {
 	tr := TokenResponse{}
 
-	payload := strings.NewReader(fmt.Sprintf(
-		"client_id=%s&client_secret=%s&grant_type=authorization_code&code=%s&redirect_uri=%s",
-		c.clientId, c.clientSecret, code, c.redirectUri,
-	))
+	payload := strings.NewReader(payloadStr)
 
 	req, err := http.NewRequest("POST", tokenUrl, payload)
 	if err != nil {
@@ -58,4 +55,20 @@ func (c Client) TokensFromCode(code string) (TokenResponse, error) {
 		return tr, err
 	}
 	return tr, err
+}
+
+// TokensFromCode takes an OAuth code provided by Discord and fetches access and refresh tokens.
+func (c Client) TokensFromCode(code string) (TokenResponse, error) {
+	return c.apiRequestOAuth(fmt.Sprintf(
+		"client_id=%s&client_secret=%s&grant_type=authorization_code&code=%s&redirect_uri=%s",
+		c.clientId, c.clientSecret, code, c.redirectUri,
+	))
+}
+
+// RefreshTokens takes an OAuth refresh token provided by Discord and fetches new access and refresh tokens.
+func (c Client) RefreshTokens(refreshToken string) (TokenResponse, error) {
+	return c.apiRequestOAuth(fmt.Sprintf(
+		"client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s",
+		c.clientId, c.clientSecret, refreshToken,
+	))
 }

@@ -47,9 +47,9 @@ func NewClient(clientId, clientSecret, redirectUri string) Client {
 	}
 }
 
-// apiRequestWithToken performs a DiscordClient API request.
+// apiRequestGet performs a Discord API GET request to the given endpoint with the given token.
 // Caches all requests with default expiration.
-func (c Client) apiRequestWithToken(endpoint, bearerToken string) ([]byte, error) {
+func (c Client) apiRequestGet(endpoint, bearerToken string) ([]byte, error) {
 	cacheKey := endpoint + bearerToken
 
 	if cached, ok := c.cache.Get(cacheKey); ok {

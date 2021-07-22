@@ -29,7 +29,7 @@ func (c Client) GetUserInfo(bearerToken string) (UserInfo, error) {
 
 	endpoint := "/users/@me"
 
-	body, err := c.apiRequestWithToken(endpoint, bearerToken)
+	body, err := c.apiRequestGet(endpoint, bearerToken)
 	if err != nil {
 		return userInfo, err
 	}

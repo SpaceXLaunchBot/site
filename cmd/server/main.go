@@ -11,20 +11,22 @@ import (
 	"runtime"
 )
 
-// TODO: Use Gin's logging instead of log.whatever?
+// Assume that our dev environment in always Windows and production is always not.
+var inDev = runtime.GOOS == "windows"
+
+// devString returns one of the given strings depending on if we are in development mode or not.
+func devString(devVar string, notDevVar string) string {
+	if inDev {
+		return devVar
+	}
+	return notDevVar
+}
 
 func main() {
-	// Assume that our dev environment in always Windows and production is always not.
-	host := "spacexlaunchbot.dev"
-	proto := "https:"
-	port := ""
-	if runtime.GOOS == "windows" {
-		host = "localhost"
-		proto = "http:"
-		port = ":8080"
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-	}
+	host := devString("localhost", "spacexlaunchbot.dev")
+	proto := devString("http:", "https:")
+	port := devString(":8080", "")
+	gin.SetMode(devString(gin.DebugMode, gin.ReleaseMode))
 
 	baseUrl := proto + "//" + host + port
 	log.Printf("Base URL: %s", baseUrl)
@@ -70,5 +72,6 @@ func main() {
 	router.StaticFile("/settings", indexPath)
 	router.StaticFile("/stats", indexPath)
 
+	log.Println("Starting Gin")
 	log.Fatal(router.Run())
 }

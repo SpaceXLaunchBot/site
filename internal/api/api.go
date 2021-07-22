@@ -43,6 +43,10 @@ func (a Api) GuildListMiddleware() gin.HandlerFunc {
 
 		guilds, err := a.discordClient.GetGuildList(session.AccessToken)
 		if err != nil {
+			if err == discord.ErrBadAuth {
+				a.endWithInvalidateSession(c, session.SessionId)
+				return
+			}
 			resp := responseDiscordApiError
 			// Add context to general error message.
 			resp.Error += err.Error()

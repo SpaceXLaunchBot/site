@@ -29,7 +29,7 @@ type GuildList []Guild
 // GetGuildList returns a GuildList of guilds that the user of the token is in.
 func (c Client) GetGuildList(bearerToken string) (GuildList, error) {
 	endpoint := "/users/@me/guilds"
-	body, err := c.apiRequestWithToken(endpoint, bearerToken)
+	body, err := c.apiRequestGet(endpoint, bearerToken)
 	if err != nil {
 		return GuildList{}, err
 	}

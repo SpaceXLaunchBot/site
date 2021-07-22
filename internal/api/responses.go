@@ -29,11 +29,11 @@ func (r *genericResponse) finalize() int {
 	return r.StatusCode
 }
 
-// endWithResponse writes the response r to c. The struct that implements response must be passed as a pointer.
-// This is because *genericResponse implements finalize and genericResponse doesn't.
-// This function doesn't actually "end" the connection but it shouldn't be used after calling this.
+// endWithResponse writes the response r to c using AbortWithStatusJSON.
+// The struct that implements response must be passed as a pointer, because *genericResponse implements finalize and
+// genericResponse doesn't. c should not be used again after calling this function.
 func endWithResponse(c *gin.Context, r response) {
-	c.JSON(r.finalize(), r)
+	c.AbortWithStatusJSON(r.finalize(), r)
 }
 
 // Define some common responses.

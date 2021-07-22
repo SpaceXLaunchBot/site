@@ -17,6 +17,10 @@ func (a Api) UserInfo(c *gin.Context) {
 
 	userInfo, err := a.discordClient.GetUserInfo(session.AccessToken)
 	if err != nil {
+		if err == discord.ErrBadAuth {
+			a.endWithInvalidateSession(c, session.SessionId)
+			return
+		}
 		resp := responseDiscordApiError
 		resp.Error += err.Error()
 		endWithResponse(c, resp)
