@@ -93,7 +93,6 @@ func (a Api) HandleDiscordLogout(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("sessionId", "", 0, "/", a.hostName, a.isHTTPS, true)
-	c.SetCookie("sessionKey", "", 0, "/", a.hostName, a.isHTTPS, true)
+	a.removeSessionCookies(c)
 	endWithResponse(c, responseAllOk)
 }

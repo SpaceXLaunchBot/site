@@ -24,6 +24,8 @@ type guildDetails struct {
 func (a Api) SubscribedChannels(c *gin.Context) {
 	guilds := c.MustGet("guilds").(discord.GuildList)
 
+	// TODO: Use cache.
+
 	// TODO: 3 data structures is ez but possibly not the most efficient.
 	var adminGuilds []string
 	adminGuildNames := make(map[string]string)

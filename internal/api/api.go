@@ -8,9 +8,6 @@ import (
 	"time"
 )
 
-// TODO: Maybe cache in Api http handlers instead of in the discord package, reduces overall computation
-//  because we wont have to go thru all the guild admin testing.
-
 // Api contains methods that interface with the database and the Discord API through a REST API.
 type Api struct {
 	db            database.Db

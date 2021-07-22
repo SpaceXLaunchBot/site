@@ -21,8 +21,6 @@ func (g Guild) HasAdminPerms() bool {
 	return 8&g.Permissions != 0
 }
 
-// TODO: Does GuildList need to be its own type?
-
 // GuildList represents a list of Guilds.
 type GuildList []Guild
 
