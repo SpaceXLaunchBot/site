@@ -1,38 +1,35 @@
 @import 'vars.module';
 
 .settings {
-  width: 75%;
-  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 
-  .guild {
-    .guildHeader{
-      margin-top: 0.5em;
-      margin-bottom: 0.5em;
+  .channelSettings {
+    align-self: flex-start;
+    max-width: 25em;
+    background-color: $colour-background-secondary;
+    border-radius: 1em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    margin-bottom: 1em;
 
-      .guildIcon {
+    .channelSettingsGuild {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
         margin-right: 1em;
       }
-
-      .guildName {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
+    }
+    .channelSettingsChannel {
+      color: $colour-text-secondary;
+      h3 {
+        margin-top: 0;
       }
     }
-
-    .channelGrid {
-      background-color: $colour-background-secondary;
-      margin-bottom: 1em;
-      border-radius: 1em;
-
-      .launchMentionsInput {
-        margin: 1em 0.5em;
-      }
-
-      .radioButton {
-        margin-left: 0;
-        margin-right: 0.5em;
-      }
-    }
+    //.channelSettingsSettings {}
+    //.channelSettingsButtons {}
   }
 
   .MuiRadio-colorSecondary {
@@ -53,11 +50,5 @@
   .MuiFormLabel-root {
     // "Launch Mentions"
     color: $colour-text-secondary;
-  }
-}
-
-@media (max-width: $mui-breakpoint-sm) {
-  .settings {
-    width: 100%;
   }
 }

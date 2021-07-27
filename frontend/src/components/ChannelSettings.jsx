@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   FormControl,
   FormControlLabel,
-  Grid,
   Icon,
   IconButton,
   Radio,
@@ -13,12 +12,14 @@ import { useToasts } from 'react-toast-notifications';
 import updateChannel from '../internalapi/update';
 import deleteChannel from '../internalapi/delete';
 
-// TODO: When deleteBtnClicked is called the Channel should not be rendering anymore.
+// TODO: Delete should remove the rendered channel.
 
-export default function Channel(props) {
-  const { info, guildId } = props;
-  const [notificationType, setNotificationType] = useState(info.notification_type);
-  const [launchMentions, setLaunchMentions] = useState(info.launch_mentions);
+export default function ChannelSettings(props) {
+  const {
+    guildId, guildName, guildIcon, channelInfo,
+  } = props;
+  const [notificationType, setNotificationType] = useState(channelInfo.notification_type);
+  const [launchMentions, setLaunchMentions] = useState(channelInfo.launch_mentions);
   const { addToast } = useToasts();
 
   const textFieldChanged = (e) => {
@@ -29,47 +30,45 @@ export default function Channel(props) {
   };
 
   const saveBtnClicked = async () => {
-    addToast(`Saving settings for ${info.name}`, { appearance: 'info' });
+    addToast(`Saving settings for ${channelInfo.name}`, { appearance: 'info' });
     const body = {
-      id: info.id,
+      id: channelInfo.id,
       guild_id: guildId,
       notification_type: notificationType,
       launch_mentions: launchMentions,
     };
     const json = await updateChannel(body);
     if (json.success === true) {
-      addToast(`Saved settings for ${info.name}`, { appearance: 'success' });
+      addToast(`Saved settings for ${channelInfo.name}`, { appearance: 'success' });
     } else {
-      addToast(`Error saving settings for ${info.name}: ${json.error}`, { appearance: 'error' });
+      addToast(`Error saving settings for ${channelInfo.name}: ${json.error}`, { appearance: 'error' });
     }
   };
 
   const deleteBtnClicked = async () => {
-    addToast(`Unsubscribing channel ${info.name}`, { appearance: 'info' });
+    addToast(`Unsubscribing channel ${channelInfo.name}`, { appearance: 'info' });
     const body = {
-      id: info.id,
+      id: channelInfo.id,
       guild_id: guildId,
     };
     const json = await deleteChannel(body);
     if (json.success === true) {
-      addToast(`Unsubscribed ${info.name}`, { appearance: 'success' });
+      addToast(`Unsubscribed ${channelInfo.name}`, { appearance: 'success' });
     } else {
-      addToast(`Error unsubscribing channel ${info.name}: ${json.error}`, { appearance: 'error' });
+      addToast(`Error unsubscribing channel ${channelInfo.name}: ${json.error}`, { appearance: 'error' });
     }
   };
 
   return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="center"
-      alignItems="center"
-      className="channelGrid"
-    >
-      <Grid item xs={12}>
-        <h3>{info.name}</h3>
-      </Grid>
-      <Grid item xs={12}>
+    <div className="channelSettings">
+      <div className="channelSettingsGuild">
+        <img className="circleImg guildIcon" alt="guild icon" src={guildIcon} />
+        <h2 className="guildName">{guildName}</h2>
+      </div>
+      <div className="channelSettingsChannel">
+        <h3>{`#${channelInfo.name}`}</h3>
+      </div>
+      <div className="channelSettingsSettings">
         <FormControl component="fieldset">
           <RadioGroup row name="subscription-type" value={notificationType} onChange={radioChanged}>
             <FormControlLabel
@@ -95,8 +94,6 @@ export default function Channel(props) {
             />
           </RadioGroup>
         </FormControl>
-      </Grid>
-      <Grid item xs={12}>
         <TextField
           label="Launch Mentions"
           value={launchMentions}
@@ -104,15 +101,15 @@ export default function Channel(props) {
           className="launchMentionsInput"
           multiline
         />
-      </Grid>
-      <Grid item xs={12}>
+      </div>
+      <div className="channelSettingsButtons">
         <IconButton onClick={saveBtnClicked}>
           <Icon>save</Icon>
         </IconButton>
         <IconButton onClick={deleteBtnClicked}>
           <Icon>delete</Icon>
         </IconButton>
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   );
 }

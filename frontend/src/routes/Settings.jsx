@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Loader from '../components/Loader';
-import Channel from '../components/Channel';
-import Guild from '../components/Guild';
+import ChannelSettings from '../components/ChannelSettings';
 import getSubscribed from '../internalapi/subscribed';
 import '../css/Settings.scss';
 
 export default function Settings(props) {
-  const { loggedIn } = props;
+  const { loggedIn } = { props };
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState('');
   const [subscribedInfo, setSubscribedInfo] = useState({});
@@ -40,33 +39,28 @@ export default function Settings(props) {
   }
 
   // The IDs are used as keys, just because they are there and are unique.
-  const guilds = [];
+  const channels = [];
 
   // TODO: fix
   // eslint-disable-next-line guard-for-in
   for (const guildId in subscribedInfo.subscribed) {
-    const subbedChannelsElems = [];
-    for (const channel of subscribedInfo.subscribed[guildId].subscribed_channels) {
-      subbedChannelsElems.push(
-        <Channel
-          key={channel.id}
-          info={channel}
+    const guildInfo = subscribedInfo.subscribed[guildId];
+    for (const channelInfo of guildInfo.subscribed_channels) {
+      channels.push(
+        <ChannelSettings
+          key={channelInfo.id}
           guildId={guildId}
+          guildName={guildInfo.name}
+          guildIcon={guildInfo.icon}
+          channelInfo={channelInfo}
         />,
       );
     }
-
-    const guildInfo = subscribedInfo.subscribed[guildId];
-    guilds.push(
-      <Guild key={guildId} name={guildInfo.name} icon={guildInfo.icon}>
-        {subbedChannelsElems}
-      </Guild>,
-    );
   }
 
   return (
     <div className="settings">
-      {guilds}
+      {channels}
     </div>
   );
 }
