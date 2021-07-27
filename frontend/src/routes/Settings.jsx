@@ -17,13 +17,7 @@ export default function Settings(props) {
         const json = await getSubscribed();
         setSubscribedInfo(json);
       } catch (e) {
-        // Happens if we are developing and running `yarn start`.
-        // https://davidwalsh.name/detect-error-type-javascript
-        if (e.constructor === SyntaxError) {
-          setError('Server returned invalid JSON');
-        } else {
-          setError(e.toString());
-        }
+        setError(e.toString());
       }
       setLoaded(true);
     }

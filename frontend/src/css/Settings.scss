@@ -1,20 +1,15 @@
 @import 'vars.module';
 
 .settings {
-  .guild {
-    border-style: solid;
-    border-radius: 1em;
-    border-color: $colour-background-secondary;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+  width: 75%;
+  margin: auto;
 
+  .guild {
     .guildHeader{
       margin-top: 0.5em;
       margin-bottom: 0.5em;
 
       .guildIcon {
-        border-radius: 50%;
-        width: 5em;
         margin-right: 1em;
       }
 
@@ -26,16 +21,11 @@
 
     .channelGrid {
       background-color: $colour-background-secondary;
-      // Centers it with space at bottom
-      margin: 0 auto 1em;
+      margin-bottom: 1em;
       border-radius: 1em;
-      width: 75%;
 
       .launchMentionsInput {
-        // Space at bottom when screen width is small
-        margin-bottom: 1em;
-        margin-left: 0.5em;
-        margin-right: 0.5em;
+        margin: 1em 0.5em;
       }
 
       .radioButton {
@@ -46,18 +36,28 @@
   }
 
   .MuiRadio-colorSecondary {
+    // Unselected radio buttons
     color: $colour-outline;
   }
 
   .material-icons, .MuiRadio-colorSecondary.Mui-checked {
+    // Icons and radio buttons
     color: $colour-highlight;
   }
 
-  .MuiInput-input[type="text"] {
+  .MuiInputBase-input {
+    // Launch mentions
     color: $colour-text;
   }
 
   .MuiFormLabel-root {
-    color: $colour-outline;
+    // "Launch Mentions"
+    color: $colour-text-secondary;
+  }
+}
+
+@media (max-width: $mui-breakpoint-sm) {
+  .settings {
+    width: 100%;
   }
 }

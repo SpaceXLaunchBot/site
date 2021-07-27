@@ -62,14 +62,14 @@ export default function Channel(props) {
     <Grid
       container
       direction="row"
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       className="channelGrid"
     >
       <Grid item xs={12}>
         <h3>{info.name}</h3>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12}>
         <FormControl component="fieldset">
           <RadioGroup row name="subscription-type" value={notificationType} onChange={radioChanged}>
             <FormControlLabel
@@ -96,12 +96,13 @@ export default function Channel(props) {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12}>
         <TextField
           label="Launch Mentions"
           value={launchMentions}
           onChange={textFieldChanged}
           className="launchMentionsInput"
+          multiline
         />
       </Grid>
       <Grid item xs={12}>

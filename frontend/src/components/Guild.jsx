@@ -8,11 +8,11 @@ export default function Guild(props) {
       <Grid
         container
         direction="row"
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         className="guildHeader"
       >
-        <img className="guildIcon" alt="guild icon" src={icon} />
+        <img className="circleImg guildIcon" alt="guild icon" src={icon} />
         <h2 className="guildName">{name}</h2>
       </Grid>
       {children}

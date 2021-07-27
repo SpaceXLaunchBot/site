@@ -48,7 +48,7 @@ export default function NavBar(props) {
     <Grid
       container
       direction="row"
-      justify="space-evenly"
+      justifyContent="space-evenly"
       alignItems="stretch"
       className="navbar"
       onClick={drawerOpen ? closeDrawer : null}
