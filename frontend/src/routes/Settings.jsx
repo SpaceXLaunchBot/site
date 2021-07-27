@@ -5,7 +5,7 @@ import getSubscribed from '../internalapi/subscribed';
 import '../css/Settings.scss';
 
 export default function Settings(props) {
-  const { loggedIn } = { props };
+  const { loggedIn } = props;
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState('');
   const [subscribedInfo, setSubscribedInfo] = useState({});
