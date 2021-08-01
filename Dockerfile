@@ -10,7 +10,6 @@ FROM node:14.17 AS frontend-builder
 ENV PATH /app/node_modules/.bin:$PATH
 WORKDIR /app
 COPY frontend/. .
-COPY .git/refs/heads/main ./public/version
 RUN yarn install
 RUN yarn build
 

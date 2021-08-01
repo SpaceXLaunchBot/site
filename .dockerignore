@@ -1,11 +1,9 @@
 .idea
+.git
 .github
 frontend_build
 storage
 node_modules
-
-.git
-!.git/refs/heads/main
 
 *.syso
 *.zip

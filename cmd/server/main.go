@@ -23,6 +23,7 @@ func devString(devVar string, notDevVar string) string {
 }
 
 func main() {
+	staticDir := devString("./frontend/build", "./frontend_build")
 	host := devString("localhost", "spacexlaunchbot.dev")
 	proto := devString("http:", "https:")
 	port := devString(":8080", "")
@@ -47,7 +48,7 @@ func main() {
 	router := gin.Default()
 
 	// https://fantashit.com/inability-to-use-for-static-files/
-	router.Use(static.Serve("/", static.LocalFile("./frontend_build", false)))
+	router.Use(static.Serve("/", static.LocalFile(staticDir, false)))
 
 	routerApi := router.Group("/api")
 	routerApiAuthorized := routerApi.Group("/", a.SessionMiddleware())
@@ -66,7 +67,7 @@ func main() {
 	router.GET("/login", a.HandleDiscordLogin)
 
 	// Due to React Router we have these routes that should all just server the index file.
-	indexPath := "./frontend_build/index.html"
+	indexPath := staticDir + "/index.html"
 	router.StaticFile("/", indexPath)
 	router.StaticFile("/commands", indexPath)
 	router.StaticFile("/settings", indexPath)
