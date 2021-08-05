@@ -1,18 +1,19 @@
 package main
 
 import (
+	"log"
+	"runtime"
+
 	"github.com/SpaceXLaunchBot/site/internal/api"
 	"github.com/SpaceXLaunchBot/site/internal/config"
 	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/SpaceXLaunchBot/site/internal/discord"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-	"log"
-	"runtime"
 )
 
 // Assume that our dev environment in always Windows and production is always not.
-var inDev = runtime.GOOS == "windows"
+const inDev bool = runtime.GOOS == "windows"
 
 // devString returns one of the given strings depending on if we are in development mode or not.
 func devString(devVar string, notDevVar string) string {
@@ -23,12 +24,17 @@ func devString(devVar string, notDevVar string) string {
 }
 
 func main() {
+	if inDev {
+		log.Println("Running in development mode")
+	}
+
+	gin.SetMode(devString(gin.DebugMode, gin.ReleaseMode))
+	
 	staticDir := devString("./frontend/build", "./frontend_build")
+	
 	host := devString("localhost", "spacexlaunchbot.dev")
 	proto := devString("http:", "https:")
 	port := devString(":8080", "")
-	gin.SetMode(devString(gin.DebugMode, gin.ReleaseMode))
-
 	baseUrl := proto + "//" + host + port
 	log.Printf("Base URL: %s", baseUrl)
 
