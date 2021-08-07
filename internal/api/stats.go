@@ -1,25 +1,18 @@
 package api
 
 import (
-	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/gin-gonic/gin"
 	"github.com/patrickmn/go-cache"
 )
 
-// subscribedResponse is the API response for the stats API route.
-type statsResponse struct {
-	genericResponse
-	CountRecords []database.CountRecord `json:"counts"`
-	ActionCounts []database.ActionCount `json:"action_counts"`
-}
+// Can be anything, having it as route makes sense to me.
+const statsCacheKey string = "/api/stats"
 
 // Stats is the endpoint handler for statistics derived from collected metrics.
 func (a Api) Stats(c *gin.Context) {
-	// We can cache this endpoint per IP to prevent refresh spam.
-	cacheKey := c.FullPath() + c.ClientIP()
-	if cachedResp, ok := a.cache.Get(cacheKey); ok {
-		if cachedResponseAsserted, ok := cachedResp.(statsResponse); ok {
-			endWithResponse(c, &cachedResponseAsserted)
+	if cached, ok := a.cache.Get(statsCacheKey); ok {
+		if cachedResponse, ok := cached.(statsResponse); ok {
+			endWithResponse(c, &cachedResponse)
 			return
 		}
 	}
@@ -34,6 +27,6 @@ func (a Api) Stats(c *gin.Context) {
 	resp.Success = true
 	resp.CountRecords = countRecords
 	resp.ActionCounts = actionCounts
-	a.cache.Set(cacheKey, resp, cache.DefaultExpiration)
+	a.cache.Set(statsCacheKey, resp, cache.DefaultExpiration)
 	endWithResponse(c, &resp)
 }

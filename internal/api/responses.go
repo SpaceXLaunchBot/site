@@ -1,11 +1,13 @@
-// Contains generic response related variables and functions.
-// Other files in this directory may contain other response declarations.
+// Contains response definitions and related variables and functions.
 
 package api
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/SpaceXLaunchBot/site/internal/database"
+	"github.com/SpaceXLaunchBot/site/internal/discord"
+	"github.com/gin-gonic/gin"
 )
 
 // response defines the interface for API responses.
@@ -19,6 +21,32 @@ type genericResponse struct {
 	Success    bool   `json:"success"`
 	Error      string `json:"error,omitempty"`
 	StatusCode int    `json:"status_code"` // Should be a HTTP code.
+}
+
+// userInfoResponse is the API response for the userinfo API route.
+type userInfoResponse struct {
+	genericResponse
+	UserInfo discord.UserInfo `json:"user_info"`
+}
+
+// subscribedResponse is the API response for the subscribed channels API route.
+type subscribedResponse struct {
+	genericResponse
+	Subscribed map[string]*subscribedResponseGuildDetails `json:"subscribed"`
+}
+
+// subscribedResponseGuildDetails holds information about a guild for subscribedResponse.
+type subscribedResponseGuildDetails struct {
+	Name               string                             `json:"name"`
+	Icon               string                             `json:"icon"`
+	SubscribedChannels []database.SubscribedChannelRecord `json:"subscribed_channels"`
+}
+
+// statsResponse is the API response for the stats API route.
+type statsResponse struct {
+	genericResponse
+	CountRecords []database.CountRecord `json:"counts"`
+	ActionCounts []database.ActionCount `json:"action_counts"`
 }
 
 // finalize makes sure the genericResponse is ready to be sent to the client, and returns the used status code.
@@ -36,7 +64,7 @@ func endWithResponse(c *gin.Context, r response) {
 	c.AbortWithStatusJSON(r.finalize(), r)
 }
 
-// Define some common responses.
+// Common responses.
 var responseAllOk = &genericResponse{Success: true}
 var responseNoSession = &genericResponse{Error: "No active login session found", StatusCode: http.StatusUnauthorized}
 var responseDiscordApiError = &genericResponse{Error: "Error getting information from Discord API: ", StatusCode: http.StatusServiceUnavailable}

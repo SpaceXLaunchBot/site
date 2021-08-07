@@ -5,19 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// updateChannelJson is a struct to marshal the api request data into.
-type updateChannelJson struct {
-	ID               string `json:"id"`
-	GuildID          string `json:"guild_id"`
-	NotificationType string `json:"notification_type"`
-	LaunchMentions   string `json:"launch_mentions"`
-}
-
 // UpdateChannel updates information about a channel in the database.
 func (a Api) UpdateChannel(c *gin.Context) {
 	guilds := c.MustGet("guilds").(discord.GuildList)
 
-	var requestedUpdate updateChannelJson
+	var requestedUpdate updateChannelRequest
 	if err := c.ShouldBind(&requestedUpdate); err != nil {
 		endWithResponse(c, responseBadJson)
 		return

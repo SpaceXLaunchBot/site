@@ -5,17 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// deleteChannelJson is a struct to marshal the api request data into.
-type deleteChannelJson struct {
-	ID      string `json:"id"`
-	GuildID string `json:"guild_id"`
-}
-
 // DeleteChannel deletes ("unsubscribes") a channel from the database.
 func (a Api) DeleteChannel(c *gin.Context) {
 	guilds := c.MustGet("guilds").(discord.GuildList)
 
-	var requestedDelete deleteChannelJson
+	var requestedDelete deleteChannelRequest
 	if err := c.ShouldBind(&requestedDelete); err != nil {
 		endWithResponse(c, responseBadJson)
 		return

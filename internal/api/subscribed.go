@@ -2,29 +2,17 @@ package api
 
 import (
 	"fmt"
+
 	"github.com/SpaceXLaunchBot/site/internal/database"
 	"github.com/SpaceXLaunchBot/site/internal/discord"
 	"github.com/gin-gonic/gin"
 )
 
-// subscribedResponse is the API response for the subscribed channels API route.
-type subscribedResponse struct {
-	genericResponse
-	Subscribed map[string]*guildDetails `json:"subscribed"`
-}
-
-// guildDetails holds information about a guild.
-type guildDetails struct {
-	Name               string                             `json:"name"`
-	Icon               string                             `json:"icon"`
-	SubscribedChannels []database.SubscribedChannelRecord `json:"subscribed_channels"`
-}
-
 // SubscribedChannels returns a list of information about guilds user is authed in that are subscribed to the notification service.
 func (a Api) SubscribedChannels(c *gin.Context) {
 	guilds := c.MustGet("guilds").(discord.GuildList)
 
-	// TODO: Use cache.
+	// TODO: Cache this response for short amount of time per user.
 
 	// TODO: 3 data structures is ez but possibly not the most efficient.
 	var adminGuilds []string
@@ -56,7 +44,7 @@ func (a Api) SubscribedChannels(c *gin.Context) {
 
 	resp := subscribedResponse{}
 	resp.Success = true
-	resp.Subscribed = make(map[string]*guildDetails)
+	resp.Subscribed = make(map[string]*subscribedResponseGuildDetails)
 
 	nonNilStr := ""
 
@@ -69,7 +57,7 @@ func (a Api) SubscribedChannels(c *gin.Context) {
 		if details, ok := resp.Subscribed[channel.GuildId]; ok {
 			details.SubscribedChannels = append(details.SubscribedChannels, channel)
 		} else {
-			resp.Subscribed[channel.GuildId] = &guildDetails{
+			resp.Subscribed[channel.GuildId] = &subscribedResponseGuildDetails{
 				Name:               adminGuildNames[channel.GuildId],
 				Icon:               adminGuildIcons[channel.GuildId],
 				SubscribedChannels: []database.SubscribedChannelRecord{channel},
