@@ -72,7 +72,7 @@ export default function Stats() {
   return (
     <div className="stats">
       <h3>Server Count</h3>
-      <LineChart className="chart" width={chartWidth} height={250} data={counts}>
+      <LineChart syncId="countchart" className="chart" width={chartWidth} height={250} data={counts}>
         <Line strokeWidth={2} dot={false} name="Server Count" type="monotone" dataKey="g" stroke="#a7a3ff" />
         <CartesianGrid stroke={scssVars.colourOutline} />
         <XAxis tickMargin={10} dataKey="d" />
@@ -80,7 +80,7 @@ export default function Stats() {
         <Tooltip />
       </LineChart>
       <h3>Subscribed Channel Count</h3>
-      <LineChart className="chart" width={chartWidth} height={250} data={counts}>
+      <LineChart syncId="countchart" className="chart" width={chartWidth} height={250} data={counts}>
         <Line strokeWidth={2} dot={false} name="Subscribed Channel Count" type="monotone" dataKey="s" stroke="#13f088" />
         <CartesianGrid stroke={scssVars.colourOutline} />
         <XAxis tickMargin={10} dataKey="d" />
