@@ -29,9 +29,9 @@ func main() {
 	}
 
 	gin.SetMode(devString(gin.DebugMode, gin.ReleaseMode))
-	
+
 	staticDir := devString("./frontend/build", "./frontend_build")
-	
+
 	host := devString("localhost", "spacexlaunchbot.dev")
 	proto := devString("http:", "https:")
 	port := devString(":8080", "")

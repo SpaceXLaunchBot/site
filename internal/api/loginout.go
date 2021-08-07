@@ -17,6 +17,7 @@ import (
 var errNoOauthCode = errors.New("no OAuth code query parameter")
 var errInvalidOauthCode = errors.New("invalid OAuth code")
 var errCryptoKeyGenFailed = errors.New("server failed to generate encryption key for secrets")
+
 // var errEncryptionFailed = errors.New("the server failed to encrypt your secrets")
 // var errDatabaseErr = errors.New("database error")
 

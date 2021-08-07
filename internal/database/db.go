@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+
 	"github.com/SpaceXLaunchBot/site/internal/config"
 	_ "github.com/jackc/pgx/v4/stdlib" // Provides Postgres "pgx" driver for sql
 	"github.com/jmoiron/sqlx"          // Mainly used so we can marshal rows straight to structs
