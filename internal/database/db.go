@@ -32,7 +32,7 @@ func NewDb(c config.Config) (Db, error) {
 // sessionReaper checks every dur for sessions that are more than 6 months old and rms them.
 func (d Db) sessionReaper(dur time.Duration) {
 	for {
-		query := `delete from sessions where session_creation_time < now() - INTERVAL '1 MINUTE';`
+		query := `delete from sessions where session_creation_time < now() - INTERVAL '6 MONTHS';`
 
 		res, _ := d.sqlxHandle.Exec(query)
 		// TODO: Logging for errors.
