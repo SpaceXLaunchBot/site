@@ -2,16 +2,6 @@ package database
 
 import "github.com/jmoiron/sqlx"
 
-// SubscribedChannelRecord represents a record of a subscribed channel from the database.
-// Can be marshalled straight to JSON, be careful of nil pointers.
-type SubscribedChannelRecord struct {
-	Id               string  `db:"channel_id" json:"id"`
-	GuildId          string  `db:"guild_id"`
-	Name             string  `db:"channel_name" json:"name"`
-	NotificationType string  `db:"notification_type" json:"notification_type"`
-	LaunchMentions   *string `db:"launch_mentions" json:"launch_mentions"` // Pointer because it can be NULL in the db.
-}
-
 // SubscribedChannels returns a slice of SubscribedChannels that exist in the given guild ids.
 func (d Db) SubscribedChannels(guildIds []string) ([]SubscribedChannelRecord, error) {
 	var channels []SubscribedChannelRecord

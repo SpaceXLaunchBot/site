@@ -29,16 +29,15 @@ func (a Api) encryptAndSetTokens(sessionId string, sessionKey []byte, tokens dis
 	return nil
 }
 
+// endWithInvalidateSession is similar to endWithResponse but is used to invalidate the users session.
+func (a Api) endWithInvalidateSession(c *gin.Context, id string) {
+	_, _ = a.db.RemoveSession(id)
+	a.removeSessionCookies(c)
+	endWithResponse(c, responseNoSession)
+}
+
 // removeSessionCookies removes the session cookies for the given context.
 func (a Api) removeSessionCookies(c *gin.Context) {
 	c.SetCookie("sessionId", "", 0, "/", a.hostName, a.isHTTPS, true)
 	c.SetCookie("sessionKey", "", 0, "/", a.hostName, a.isHTTPS, true)
-}
-
-// endWithInvalidateSession is similar to endWithResponse but is used to invalidate the users session.
-func (a Api) endWithInvalidateSession(c *gin.Context, id string) {
-	// TODO: What happens if we remove cookies but fail to remove from db?
-	_, _ = a.db.RemoveSession(id)
-	a.removeSessionCookies(c)
-	endWithResponse(c, responseNoSession)
 }

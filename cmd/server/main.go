@@ -48,9 +48,10 @@ func main() {
 		log.Fatalf("database.NewDb error: %s", err)
 	}
 
-	d := discord.NewClient(c.OAuthClientId, c.OAuthClientSecret, baseUrl+"/login")
+	d := discord.NewClient(c, baseUrl+"/login")
 	a := api.NewApi(db, d, host, proto)
 
+	// TODO: Application logs -> stdout, gin logs -> file or none.
 	router := gin.Default()
 
 	// https://fantashit.com/inability-to-use-for-static-files/

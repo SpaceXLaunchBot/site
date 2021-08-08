@@ -1,20 +1,6 @@
 package database
 
-import (
-	"time"
-)
-
-// SessionRecord represents a record in the sessions table.
-// The 2 non-marshalled-to fields are because we pass this around and we will need store the unencrypted values.
-type SessionRecord struct {
-	SessionId             string `db:"session_id"`
-	AccessToken           string
-	AccessTokenEncrypted  []byte    `db:"access_token_encrypted"`
-	AccessTokenExpiresAt  time.Time `db:"access_token_expires_at"`
-	RefreshToken          string
-	RefreshTokenEncrypted []byte    `db:"refresh_token_encrypted"`
-	RefreshTime           time.Time `db:"refresh_time"`
-}
+import "time"
 
 // SetSession creates a session record in the database.
 func (d Db) SetSession(id string, accessTokenEncrypted []byte, expiresIn int, refreshTokenEncrypted []byte) (changed bool, err error) {

@@ -3,12 +3,14 @@ package discord
 import (
 	"errors"
 	"fmt"
-	"github.com/patrickmn/go-cache"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
 	"time"
+
+	"github.com/SpaceXLaunchBot/site/internal/config"
+	"github.com/patrickmn/go-cache"
 )
 
 const apiBase = "https://discord.com/api"
@@ -37,12 +39,12 @@ type Client struct {
 }
 
 // NewClient creates a new Client.
-func NewClient(clientId, clientSecret, redirectUri string) Client {
+func NewClient(c config.Config, redirectUri string) Client {
 	return Client{
 		httpClient:   &http.Client{Timeout: 10 * time.Second},
 		cache:        cache.New(10*time.Second, 10*time.Minute),
-		clientId:     url.QueryEscape(clientId),
-		clientSecret: url.QueryEscape(clientSecret),
+		clientId:     url.QueryEscape(c.OAuthClientId),
+		clientSecret: url.QueryEscape(c.OAuthClientSecret),
 		redirectUri:  url.QueryEscape(redirectUri),
 	}
 }

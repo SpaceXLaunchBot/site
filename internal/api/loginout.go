@@ -12,6 +12,11 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// Cookies expire in 6 months (roughly). We use this as sessionReaper removes sessions
+// older than 6 months.
+// seconds in a day * minutes * hours * days in 6 months (half year).
+const cookieExpiry int = 60 * 60 * 24 * (365 / 2)
+
 // These errors are only to be used by HandleDiscordLogin, as they will be returned to
 // the user as plaintext in the redirect query params.
 var errNoOauthCode = errors.New("no OAuth code query parameter")
@@ -55,10 +60,10 @@ func (a Api) HandleDiscordLogin(c *gin.Context) {
 	}
 
 	// Currently we don't use the refresh token, so the cookie expiry time can be the same as the access tokens.
-	c.SetCookie("sessionId", sessionId, tokens.ExpiresIn, "/", a.hostName, a.isHTTPS, true)
+	c.SetCookie("sessionId", sessionId, cookieExpiry, "/", a.hostName, a.isHTTPS, true)
 
 	sessionKeyHex := hex.EncodeToString(sessionKey)
-	c.SetCookie("sessionKey", sessionKeyHex, tokens.ExpiresIn, "/", a.hostName, a.isHTTPS, true)
+	c.SetCookie("sessionKey", sessionKeyHex, cookieExpiry, "/", a.hostName, a.isHTTPS, true)
 
 	c.Redirect(http.StatusSeeOther, "/")
 }
