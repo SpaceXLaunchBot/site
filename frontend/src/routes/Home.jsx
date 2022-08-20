@@ -31,7 +31,7 @@ export default function Home() {
         <Feature
           icon="notifications_active"
           feature="Launch Notifications"
-          description="Subscribe a channel to the notification service and never miss a launch again!"
+          description="Subscribe a channel to the notification service and get instant notifications for launches"
         />
         <Feature
           icon="notifications"

@@ -87,9 +87,6 @@ export default function NavBar(props) {
         <ExternalLink href="https://github.com/SpaceXLaunchBot/">
           <MenuItem>GitHub</MenuItem>
         </ExternalLink>
-        <ExternalLink href="https://www.buymeacoffee.com/psidex">
-          <MenuItem>Donate</MenuItem>
-        </ExternalLink>
         <MenuItem>
           <UserInfo loggedIn={loggedIn} />
           <LogInOutBtn loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
